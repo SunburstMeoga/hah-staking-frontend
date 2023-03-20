@@ -136,6 +136,7 @@ export default {
         userVote() {
             if (!this.amount) {
                 Toast.fail('请输入金额');
+                return;
             }
             // console.log(this.$store.state.walletBalance, this.getInputValue())
             if (this.getUserCalculateBalance() < this.getInputValue()) {
@@ -163,6 +164,7 @@ export default {
         userRedeem() {
             if (!this.amount) {
                 Toast.fail('请输入金额');
+                return;
             }
             if (this.isRewardMode === 0) {
                 if (this.calculateRewardMode < this.getInputValue()) {
