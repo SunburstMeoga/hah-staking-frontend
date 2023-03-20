@@ -98,6 +98,8 @@ export default {
         getUserCalculateBalance() {
             if (this.$store.state.walletBalance) {
                 return (this.Web3.utils.toWei(this.$store.state.walletBalance, 'ether')) * 1
+                // return this.Web3.utils.toWei(this.$store.state.walletBalance, 'ether')
+
             } else {
                 return 0
             }
@@ -132,7 +134,10 @@ export default {
         },
         //投票
         userVote() {
-            console.log(this.$store.state.walletBalance)
+            if (!this.amount) {
+                Toast.fail('请输入金额');
+            }
+            // console.log(this.$store.state.walletBalance, this.getInputValue())
             if (this.getUserCalculateBalance() < this.getInputValue()) {
                 console.log('余额不足')
                 Toast.fail('余额不足');
@@ -156,7 +161,9 @@ export default {
         },
         //撤投
         userRedeem() {
-            Toast.success('成功文案');
+            if (!this.amount) {
+                Toast.fail('请输入金额');
+            }
             if (this.isRewardMode === 0) {
                 if (this.calculateRewardMode < this.getInputValue()) {
                     console.log('撤投金额不能大于你已投票的金额')

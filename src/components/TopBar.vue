@@ -47,7 +47,6 @@ export default {
             });
             if (typeof window.ethereum !== 'undefined') {
                 await window.ethereum.request({ method: 'eth_requestAccounts' })
-                console.log('init...')
                 console.log(window.ethereum.selectedAddress)
                 this.$store.commit('changeConnectStatus', true)
                 this.$store.commit('getWalletAddress', window.ethereum.selectedAddress)
@@ -55,6 +54,7 @@ export default {
             } else {
                 Toast.fail('当前浏览器不支持');
             }
+            $emit('clickLogin')
         },
     }
 }
