@@ -15,7 +15,14 @@ export default {
     }
   },
   mounted() {
-    this.login()
+    // this.login()
+    window.ethereum.on('accountsChanged', (accounts) => {
+      console.log(accounts, '---------------------')
+      if (accounts.length === 0) {
+        this.$store.commit('changeConnectStatus', false)
+        this.$store.commit('getWalletAddress', '')
+      }
+    })
   },
   methods: {
     handleNewAccounts(newAccounts) {
@@ -44,7 +51,7 @@ export default {
 
         console.log('isMetaMaskConnected', this.isMetaMaskConnected)
         if (this.isMetaMaskConnected) {
-          // window.ethereum.on('accountsChanged', this.handleNewAccounts)
+          window.ethereum.on('accountsChanged', this.handleNewAccounts)
           this.$store.commit('changeConnectStatus', true)
         }
         console.log('newAccounts', newAccounts)
