@@ -36,11 +36,11 @@ export default {
         },
         rewardMode: {
             type: String,
-            default: ''
+            default: '-'
         },
         ordinary: {
             type: String,
-            default: ''
+            default: '-'
         }
     },
 }

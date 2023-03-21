@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
     "babel-plugin-import": "^1.13.6",
     "element-ui": "^2.15.6",
     "eth-sig-util": "^3.0.1",

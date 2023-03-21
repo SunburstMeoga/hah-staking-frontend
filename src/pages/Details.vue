@@ -9,7 +9,7 @@
         <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-1 sm:text-bold sm:text-2xl sm:w-9/12"> 节点地址：</div>
         <div class="w-11/12 bg-black rounded-md py-2 px-2 ml-auto mr-auto mb-4 sm:py-5 sm:px-4 sm:w-9/12">
             <div class="text-primary text-base text-bold break-all sm:text-bold sm:text-xl sm:font-semibold">
-                {{ $store.state.nodeAddress }}
+                {{ nodeAddress }}
             </div>
         </div>
         <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> 复利：</div>
@@ -83,12 +83,9 @@ export default {
             calculateRewardMode: 0
         }
     },
-    mounted() {
+    created() {
+        console.log('this.$store.state.walletAddress', this.$store.state.walletAddress)
         this.nodeAddress = this.$route.query.nodeAddress
-        this.Web3.eth.getBalance(window.ethereum.selectedAddress).then((res) => {
-            console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
-            this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
-        })
         if (this.$store.state.walletAddress) {
             this.getNodeDetails()
         }

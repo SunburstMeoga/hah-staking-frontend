@@ -23,6 +23,7 @@ import TopBar from '@/components/TopBar'
 import VoteNodeCard from '@/components/VoteNodeCard'
 import WalletAddress from '@/components/WalletAddress'
 import BottomBar from '@/components/BottomBar'
+import { Toast } from 'vant'
 export default {
     components: { TopBar, VoteNodeCard, WalletAddress, BottomBar },
     data() {
@@ -30,16 +31,22 @@ export default {
             nodeList: [],
             voteTotal: '',
             delegateCount: 0,
-            rewardMode: '',
-            ordinary: ''
+            rewardMode: '-',
+            ordinary: '-'
         }
     },
-    mounted() {
+    created() {
         this.getNodeInfo()
     },
     methods: {
         //跳转详情页面
         toDetails(item) {
+            if (!this.$store.state.walletAddress) {
+
+                Toast.fail('请先链接钱包');
+                return
+            }
+
             this.$store.commit('getNodeAddress', item)
             this.$router.push({
                 path: '/details',
@@ -49,10 +56,14 @@ export default {
             })
         },
         clickLogin() {
-            getNodeInfo()
+            this.getNodeInfo()
         },
         //获取节点列表数据
         getNodeInfo() {
+            Toast.loading({
+                forbidClick: true,
+                duration: 0
+            });
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
             web3Contract.methods.getDelegateAddress(0).call().then((result) => {
                 console.log('节点列表', result)
@@ -60,23 +71,29 @@ export default {
                 web3Contract.methods.getDelegateTotalVotes(this.nodeList[0]).call().then((result) => {
                     console.log('地址的投票总额', result)
                     this.voteTotal = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
+                    if (this.$store.state.isConnected) {
+                        web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 0).call().then((result) => {
+                            console.log('复利', result)
+                            this.rewardMode = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
+                        })
+                        web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 1).call().then((result) => {
+                            console.log('普通', result)
+                            this.ordinary = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
+                        })
+                    }
                 })
-                web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 0).call().then((result) => {
-                    console.log('复利', result)
-                    this.rewardMode = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
-                })
-                web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 1).call().then((result) => {
-                    console.log('普通', result)
-                    this.ordinary = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
-                })
-
+            }).catch(err => {
+                console.log("节点列表", err)
+                Toast.clear()
             })
             web3Contract.methods.getPageSize().call().then((result) => {
                 console.log('每页投票地址数量', result)
+                Toast.clear()
             })
             web3Contract.methods.getDelegateCount().call().then((result) => {
                 console.log('投票地址总数', result)
                 this.delegateCount = result
+                Toast.clear()
             })
 
         },

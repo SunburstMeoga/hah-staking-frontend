@@ -8,8 +8,8 @@
                 </div>
             </a>
             <div class="bg-second text-white rounded py-1 px-4 text-sm sm:py-2 sm:px-7" @click="login()"
-                v-show="!$store.state.haveWallet">
-                {{ $store.state.haveWallet ? '断开连接' : '连接' }}
+                v-show="!$store.state.isConnected">
+                {{ $store.state.isConnected ? '断开连接' : '连接' }}
             </div>
         </div>
         <div v-else class="h-full flex relative  justify-center items-center text-2xl text-primary font-bold">
@@ -32,31 +32,55 @@ export default {
             type: Boolean
         }
     },
-    // mounted() {
-    //     console.log(window.ethereum.selectedAddress)
-    // },
+    data() {
+        return {
+            accounts: [],
+            isMetaMaskConnected: false
+        }
+    },
     methods: {
-        //返回上一级页面
+        //go back pre page
         goBackPage() {
             this.$router.back(1)
         },
-        async login() {
+        handleNewAccounts(newAccounts) {
+            this.accounts = newAccounts
+            console.log(newAccounts, this.accounts)
+        },
+        login() {
             Toast.loading({
                 message: '连接中...',
                 forbidClick: true,
             });
-            if (typeof window.ethereum !== 'undefined') {
-                await window.ethereum.request({ method: 'eth_requestAccounts' })
-                console.log(window.ethereum.selectedAddress)
-                this.$store.commit('changeConnectStatus', true)
-                this.$store.commit('getWalletAddress', window.ethereum.selectedAddress)
-                Toast.success('连接成功')
-            } else {
-                Toast.fail('当前浏览器不支持');
-            }
-            $emit('clickLogin')
+            window.ethereum.request({
+                method: 'eth_requestAccounts',
+            }).then(newAccounts => {
+                this.handleNewAccounts(newAccounts)
+                if (this.accounts && this.accounts.length > 0) {
+                    this.isMetaMaskConnected = true
+                } else {
+                    this.isMetaMaskConnected = false
+                }
+                this.$store.commit('getWalletAddress', this.accounts[0])
+                this.Web3.eth.getBalance(newAccounts[0]).then((res) => {
+                    console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
+                    this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
+                })
+                console.log('isMetaMaskConnected', this.isMetaMaskConnected)
+                if (this.isMetaMaskConnected) {
+                    // window.ethereum.on('accountsChanged', this.handleNewAccounts)
+                    this.$store.commit('changeConnectStatus', true)
+                }
+                console.log('newAccounts', newAccounts)
+            }).catch(error => {
+                console.error(error)
+            })
+
+            Toast.clear()
+            this.$emit('clickLogin')
         },
-    }
+    },
+
 }
 </script>
 

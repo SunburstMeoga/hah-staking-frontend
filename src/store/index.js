@@ -8,14 +8,15 @@ const store = new Vuex.Store({
         walletAddress: '',
         haveWallet: false,
         walletBalance: '',
-        nodeAddress: ''
+        nodeAddress: '',
+        isConnected: false
     },
     mutations: {
         getWalletAddress(state, newVal) {
             state.walletAddress = newVal
         },
         changeConnectStatus(state, val) {
-            state.haveWallet = val
+            state.isConnected = val
         },
         getNodeAddress(state, newVal) {
             state.nodeAddress = newVal
