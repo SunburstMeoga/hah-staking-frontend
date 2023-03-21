@@ -44,39 +44,23 @@ export default {
             this.$router.back(1)
         },
         handleNewAccounts(newAccounts) {
-            this.accounts = newAccounts
-            console.log(newAccounts, this.accounts)
+            if (newAccounts && newAccounts.length > 0) {
+                this.$store.commit('getWalletAddress', newAccounts[0])
+                this.$store.commit('changeConnectStatus', true)
+            } else {
+                this.$store.commit('getWalletAddress', '')
+                this.$store.commit('changeConnectStatus', false)
+            }
         },
-        login() {
-            Toast.loading({
-                message: '连接中...',
-                forbidClick: true,
-            });
-            window.ethereum.request({
-                method: 'eth_requestAccounts',
-            }).then(newAccounts => {
-                this.handleNewAccounts(newAccounts)
-                if (this.accounts && this.accounts.length > 0) {
-                    this.isMetaMaskConnected = true
-                } else {
-                    this.isMetaMaskConnected = false
-                }
-                this.$store.commit('getWalletAddress', this.accounts[0])
-                this.Web3.eth.getBalance(newAccounts[0]).then((res) => {
-                    console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
-                    this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
+        async login() {
+            try {
+                const newAccounts = await ethereum.request({
+                    method: 'eth_requestAccounts',
                 })
-                console.log('isMetaMaskConnected', this.isMetaMaskConnected)
-                if (this.isMetaMaskConnected) {
-                    // window.ethereum.on('accountsChanged', this.handleNewAccounts)
-                    this.$store.commit('changeConnectStatus', true)
-                }
-                console.log('newAccounts', newAccounts)
-            }).catch(error => {
+                this.handleNewAccounts(newAccounts)
+            } catch (error) {
                 console.error(error)
-            })
-
-            Toast.clear()
+            }
             this.$emit('clickLogin')
         },
     },

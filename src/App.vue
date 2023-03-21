@@ -15,7 +15,7 @@ export default {
     }
   },
   mounted() {
-    // this.login()
+    this.initMetaMask()
     window.ethereum.on('accountsChanged', (accounts) => {
       console.log(accounts, '---------------------')
       if (accounts.length === 0) {
@@ -26,40 +26,23 @@ export default {
   },
   methods: {
     handleNewAccounts(newAccounts) {
-      this.accounts = newAccounts
-      console.log(newAccounts, this.accounts)
+      if (newAccounts && newAccounts.length > 0) {
+        this.$store.commit('getWalletAddress', newAccounts[0])
+        this.$store.commit('changeConnectStatus', true)
+      } else {
+        this.$store.commit('getWalletAddress', '')
+        this.$store.commit('changeConnectStatus', false)
+      }
     },
-    login() {
-      Toast.loading({
-        message: '连接中...',
-        forbidClick: true,
-      });
-      window.ethereum.request({
-        method: 'eth_requestAccounts',
-      }).then(newAccounts => {
-        this.handleNewAccounts(newAccounts)
-        this.$store.commit('getWalletAddress', this.accounts[0])
-        this.Web3.eth.getBalance(newAccounts[0]).then((res) => {
-          console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
-          this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
+    async initMetaMask() {
+      try {
+        const newAccounts = await ethereum.request({
+          method: 'eth_requestAccounts',
         })
-        if (this.accounts && this.accounts.length > 0) {
-          this.isMetaMaskConnected = true
-        } else {
-          this.isMetaMaskConnected = false
-        }
-
-        console.log('isMetaMaskConnected', this.isMetaMaskConnected)
-        if (this.isMetaMaskConnected) {
-          window.ethereum.on('accountsChanged', this.handleNewAccounts)
-          this.$store.commit('changeConnectStatus', true)
-        }
-        console.log('newAccounts', newAccounts)
-      }).catch(error => {
+        this.handleNewAccounts(newAccounts)
+      } catch (error) {
         console.error(error)
-      })
-
-      Toast.clear()
+      }
     },
   },
 }

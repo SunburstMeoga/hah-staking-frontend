@@ -3,7 +3,7 @@
         <div class="sticky top-0 left-0 sm:hidden">
             <top-bar />
         </div>
-        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12">
+        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.isConnected">
             <wallet-address />
         </div>
         <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-1 sm:text-bold sm:text-2xl sm:w-9/12"> 节点地址：</div>

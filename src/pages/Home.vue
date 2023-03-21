@@ -3,7 +3,7 @@
         <div class="sticky top-0 left-0">
             <top-bar isHome @clickLogin="clickLogin" />
         </div>
-        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.walletAddress">
+        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.isConnected">
             <wallet-address />
         </div>
         <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12"> 节点列表: 共({{ delegateCount }})个
