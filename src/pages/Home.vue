@@ -9,9 +9,9 @@
         <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12"> 节点列表: 共({{ delegateCount }})个
         </div>
         <div class="w-11/12 ml-auto mr-auto flex flex-col justify-start items-center sm:w-9/12">
-            <div class="w-full mb-2 shadow-xl" v-for="(item, index) in nodeList" :key="index"
+            <div class="w-full mb-3 shadow-xl" v-for="(item, index) in nodeList" :key="index"
                 @click="toDetails(item, index)">
-                <vote-node-card :nodeAddress="item" :voteTotal="voteTotal" :ordinary="ordinary" :rewardMode="rewardMode" />
+                <vote-node-card :nodeAddress="item.address" :voteTotal="item.voteTotal" />
             </div>
         </div>
         <bottom-bar></bottom-bar>
@@ -51,7 +51,7 @@ export default {
             this.$router.push({
                 path: '/details',
                 query: {
-                    'nodeAddress': item
+                    'nodeAddress': item.address
                 }
             })
         },
@@ -67,21 +67,19 @@ export default {
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
             web3Contract.methods.getDelegateAddress(0).call().then((result) => {
                 console.log('节点列表', result)
-                this.nodeList = result
-                web3Contract.methods.getDelegateTotalVotes(this.nodeList[0]).call().then((result) => {
-                    console.log('地址的投票总额', result)
-                    this.voteTotal = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
-                    if (this.$store.state.isConnected) {
-                        web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 0).call().then((result) => {
-                            console.log('复利', result)
-                            this.rewardMode = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
-                        })
-                        web3Contract.methods.getUserVotes(this.nodeList[0], this.$store.state.walletAddress, 1).call().then((result) => {
-                            console.log('普通', result)
-                            this.ordinary = ((this.Web3.utils.fromWei(result, 'ether')) * 1).toFixed(4)
-                        })
-                    }
+                let arr = []
+                arr = result
+                arr.map(item => {
+                    web3Contract.methods.getDelegateTotalVotes(item).call().then((resTotal) => {
+                        console.log('地址的投票总额', resTotal)
+                        let obj = {}
+                        obj.address = item
+                        obj.voteTotal = ((this.Web3.utils.fromWei(resTotal, 'ether')) * 1).toFixed(4)
+                        this.nodeList.push(obj)
+                    })
                 })
+                console.log('nodeList', this.nodeList)
+
             }).catch(err => {
                 console.log("节点列表", err)
                 Toast.clear()

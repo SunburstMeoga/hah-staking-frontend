@@ -14,11 +14,19 @@ export default {
       isMetaMaskConnected: false
     }
   },
-  created() {
+  mounted() {
     this.initMetaMask()
     // if(!this.$store.state.walletAddress) {
 
     // }
+    // console.log('window.ethereum', window.ethereum, window.ethereum.selectedAddress)
+    // if (window.ethereum.selectedAddress) {
+    //   this.$store.commit('getWalletAddress', window.ethereum.selectedAddress)
+    //   this.$store.commit('changeConnectStatus', true)
+    //   console.log('walletAddress', this.$store.state.walletAddress)
+    // }
+    console.log(window.ethereum.selectedAddress)
+
     window.ethereum.on('accountsChanged', (accounts) => {
       console.log(accounts, '---------------------')
       if (accounts.length === 0) {

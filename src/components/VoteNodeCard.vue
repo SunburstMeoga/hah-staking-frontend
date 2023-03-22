@@ -3,14 +3,14 @@
         <div class="flex justify-between items-center">
             <div class="w-11/12">
                 <div class="w-full text-primary font-semibold">
-                    <div class="w-full truncate mb-3 sm:text-xl">
+                    <div class="w-full truncate mb-1 sm:text-xl">
                         {{ nodeAddress }}
                     </div>
-                    <div
+                    <!-- <div
                         class="w-full flex justify-between font-extrabold text-xs mb-2 sm:justify-start sm:text-lg sm:font-normal">
                         <div>复利：<span class="text-second">{{ rewardMode }} HAH</span></div>
                         <div class="sm:ml-8">普通：<span class="text-second">{{ ordinary }} HAH</span></div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex justify-start items-center text-second sm:font-semibold">
                     <div class="text-base sm:text-lg">总金额： </div>
