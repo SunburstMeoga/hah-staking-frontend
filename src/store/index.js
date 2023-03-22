@@ -9,7 +9,8 @@ const store = new Vuex.Store({
         haveWallet: false,
         walletBalance: '',
         nodeAddress: '',
-        isConnected: false
+        isConnected: false,
+        chainId: ''
     },
     mutations: {
         getWalletAddress(state, newVal) {
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
         },
         getWalletBalance(state, newVal) {
             state.walletBalance = newVal
+        },
+        getChainId(state, newVal) {
+            state.chainId = newVal
         }
     }
 })

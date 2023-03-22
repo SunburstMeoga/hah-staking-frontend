@@ -64,6 +64,7 @@ export default {
                 forbidClick: true,
                 duration: 0
             });
+            this.nodeList = []
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
             web3Contract.methods.getDelegateAddress(0).call().then((result) => {
                 console.log('节点列表', result)
