@@ -135,7 +135,7 @@ export default {
                 Toast.fail('请输入金额');
                 return;
             }
-            // console.log(this.$store.state.walletBalance, this.getInputValue())
+            console.log(this.getUserCalculateBalance(), this.getInputValue())
             if (this.getUserCalculateBalance() < this.getInputValue()) {
                 console.log('余额不足')
                 Toast.fail('余额不足');

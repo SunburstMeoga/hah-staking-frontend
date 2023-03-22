@@ -29,6 +29,10 @@ export default {
       if (newAccounts && newAccounts.length > 0) {
         this.$store.commit('getWalletAddress', newAccounts[0])
         this.$store.commit('changeConnectStatus', true)
+        this.Web3.eth.getBalance(newAccounts[0]).then((res) => {
+          console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
+          this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
+        })
       } else {
         this.$store.commit('getWalletAddress', '')
         this.$store.commit('changeConnectStatus', false)
