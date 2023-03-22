@@ -20,7 +20,7 @@ export default {
   mounted() {
     this.initMetaMask()
     window.ethereum.on('accountsChanged', (accounts) => {
-      console.log(accounts, '---------------------')
+      console.log('accountsChanged', accounts)
       if (accounts.length === 0) {
         this.$store.commit('changeConnectStatus', false)
         this.$store.commit('getWalletAddress', '')
@@ -34,18 +34,15 @@ export default {
           message: '目前此页面仅在 HAH 中受支持',
           confirmButtonText: '在“钱包”中切换网络'
         }).then(() => {
-          // on close
           this.switchNetwork()
         });
-
       }
-
     })
   },
   methods: {
     async getNetworkAndChainId() {
       try {
-        const chainId = await ethereum.request({
+        const chainId = await window.ethereum.request({
           method: 'eth_chainId',
         })
         this.handleNewChain(chainId)
@@ -58,8 +55,6 @@ export default {
       this.$store.commit('getChainId', chainId)
       console.log('getChainId', chainId)
     },
-
-
     handleNewAccounts(newAccounts) {
       if (newAccounts && newAccounts.length > 0) {
         this.$store.commit('getWalletAddress', newAccounts[0])
@@ -73,10 +68,9 @@ export default {
         this.$store.commit('changeConnectStatus', false)
       }
     },
-
     async switchNetwork() {
       try {
-        const newAccounts = await ethereum.request({
+        const newAccounts = await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: '0x11623' }],
         })
@@ -86,10 +80,9 @@ export default {
         console.error(error)
       }
     },
-
     async initMetaMask() {
       try {
-        const newAccounts = await ethereum.request({
+        const newAccounts = await window.ethereum.request({
           method: 'eth_requestAccounts',
         })
         this.handleNewAccounts(newAccounts)
