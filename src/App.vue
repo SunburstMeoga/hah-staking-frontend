@@ -14,8 +14,11 @@ export default {
       isMetaMaskConnected: false
     }
   },
-  mounted() {
+  created() {
     this.initMetaMask()
+    // if(!this.$store.state.walletAddress) {
+
+    // }
     window.ethereum.on('accountsChanged', (accounts) => {
       console.log(accounts, '---------------------')
       if (accounts.length === 0) {

@@ -3,7 +3,7 @@
         <div class="sticky top-0 left-0 sm:hidden">
             <top-bar />
         </div>
-        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.isConnected">
+        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.walletAddress">
             <wallet-address />
         </div>
         <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-1 sm:text-bold sm:text-2xl sm:w-9/12"> 节点地址：</div>
@@ -91,12 +91,22 @@ export default {
         }
 
     },
+    computed: {
+        isFollow() {
+            return this.$store.state.walletAddress;
+        }
+    },
+    watch: {
+        isFollow(newVal, oldVal) {
+            console.log('watch', newVal, oldVal)
+            console.log('watch', this.$store.state.walletAddress)
+            this.getNodeDetails()
+        }
+    },
     methods: {
         getUserCalculateBalance() {
             if (this.$store.state.walletBalance) {
                 return (this.Web3.utils.toWei(this.$store.state.walletBalance, 'ether')) * 1
-                // return this.Web3.utils.toWei(this.$store.state.walletBalance, 'ether')
-
             } else {
                 return 0
             }
