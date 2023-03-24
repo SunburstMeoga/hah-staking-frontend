@@ -18,6 +18,14 @@ export default {
     }
   },
   mounted() {
+    console.log('navigator.language', navigator.language)
+    console.log('localStorage.getItem', localStorage.getItem('language'))
+
+    if (localStorage.getItem('language')) {
+      this.$i18n.locale = localStorage.getItem('language')
+    } else {
+      this.$i18n.locale = navigator.language
+    }
     this.initMetaMask()
     window.ethereum.on('accountsChanged', (accounts) => {
       console.log('accountsChanged', accounts)

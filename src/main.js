@@ -5,6 +5,7 @@ import App from './App'
 import './assets/css/iconfont.css'
 import 'tailwindcss/tailwind.css'
 import 'vant/lib/index.css';
+import i18n from './i18n';
 
 import store from './store'
 import router from './router'
@@ -23,6 +24,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   components: { App },
   template: '<App/>'
 })

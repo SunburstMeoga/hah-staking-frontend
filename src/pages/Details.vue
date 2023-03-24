@@ -6,13 +6,15 @@
         <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.walletAddress">
             <wallet-address />
         </div>
-        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-1 sm:text-bold sm:text-2xl sm:w-9/12"> 节点地址：</div>
+        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-1 sm:text-bold sm:text-2xl sm:w-9/12"> {{
+            $t('details.nodeAddress') }} </div>
         <div class="w-11/12 bg-black rounded-md py-2 px-2 ml-auto mr-auto mb-4 sm:py-5 sm:px-4 sm:w-9/12">
             <div class="text-primary text-base text-bold break-all sm:text-bold sm:text-xl sm:font-semibold">
                 {{ nodeAddress }}
             </div>
         </div>
-        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> 复利：</div>
+        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> {{
+            $t('details.compoundInterest') }} </div>
         <div class="w-11/12 bg-black rounded-md py-2 px-2 ml-auto mr-auto mb-2 sm:py-5 sm:px-4 sm:w-9/12"
             @click="clickAddress(0)">
             <div class="flex justify-start items-center">
@@ -20,12 +22,13 @@
                     <div v-show="isRewardMode === 0" class="w-4 h-4 rounded-full bg-primary" />
                 </div>
                 <div class="text-primary flex-1 flex justify-between items-start sm:text-xl sm:font-semibold">
-                    <div class="text-bold h-5 pl-4">已投金额: </div>
+                    <div class="text-bold h-5 pl-4"> {{ $t('details.amountInvested') }} </div>
                     <div class="text-bold text-second">{{ rewardMode }} <span class="text-primary">HAH</span> </div>
                 </div>
             </div>
         </div>
-        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> 普通：</div>
+        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> {{ $t('details.ordinary') }}
+        </div>
         <div class="w-11/12 bg-black rounded-md py-2 px-2 ml-auto mr-auto mb-2 sm:py-5 sm:px-4 sm:w-9/12"
             @click="clickAddress(1)">
             <div class="flex justify-start items-center">
@@ -33,17 +36,18 @@
                     <div v-show="isRewardMode === 1" class="w-4 h-4 rounded-full bg-primary" />
                 </div>
                 <div class="text-primary flex-1 flex justify-between items-start sm:text-xl sm:font-semibold">
-                    <div class="text-bold h-5 pl-4">已投金额: </div>
+                    <div class="text-bold h-5 pl-4">{{ $t('details.amountInvested') }} </div>
                     <div class="text-bold text-second">{{ ordinary }} <span class="text-primary">HAH</span> </div>
                 </div>
             </div>
         </div>
-        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> 金额：</div>
+        <div class="w-11/12 ml-auto mr-auto text-primary text-sm mb-2 sm:text-2xl sm:w-9/12"> {{ $t('details.amount') }}
+        </div>
         <div class="w-11/12 bg-black rounded-md py-2 px-2 ml-auto mr-auto sm:py-5 sm:px-4 sm:w-9/12">
             <div class="flex justify-start items-center">
                 <div class="text-primary flex-1 flex justify-between items-start">
                     <div class="text-bold h-5 flex-1 text-second">
-                        <input type="number" v-model="amount" placeholder="请输入金额" />
+                        <input type="number" v-model="amount" :placeholder="$t('placeholder.inputAmount')" />
                     </div>
                     <div class="text-bold ">HAH</div>
                 </div>
@@ -53,10 +57,10 @@
             <div class="w-11/12 mr-auto ml-auto flex justify-between sm:w-9/12 sm:justify-around">
                 <div class="w-2/5 flex justify-center bg-primary text-white rounded-full py-3 sm:py-4 sm:text-2xl sm:w-1/5"
                     @click="userVote()">
-                    投票</div>
+                    {{ $t('details.voteBtn') }}</div>
                 <div class="w-2/5 flex justify-center bg-second text-white rounded-full py-3 sm:py-4 sm:text-2xl sm:w-1/5"
                     @click="userRedeem()">
-                    撤投</div>
+                    {{ $t('details.redeemBtn') }}</div>
             </div>
         </div>
     </div>
@@ -226,5 +230,4 @@ input:focus {
 
 input::placeholder {
     color: #612591;
-}
-</style>
+}</style>

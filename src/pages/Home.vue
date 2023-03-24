@@ -6,7 +6,8 @@
         <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.walletAddress">
             <wallet-address />
         </div>
-        <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12"> 节点列表: 共({{ delegateCount }})个
+        <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12">
+            {{ $t('home.nodeList', { count: delegateCount }) }}
         </div>
         <div class="w-11/12 ml-auto mr-auto flex flex-col justify-start items-center sm:w-9/12">
             <div class="w-full mb-3 shadow-xl" v-for="(item, index) in nodeList" :key="index"
@@ -43,7 +44,7 @@ export default {
         toDetails(item) {
             if (!this.$store.state.walletAddress) {
 
-                Toast.fail('请先链接钱包');
+                Toast.fail(this.$('toast.linkWallet'));
                 return
             }
 

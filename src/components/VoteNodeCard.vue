@@ -13,7 +13,7 @@
                     </div> -->
                 </div>
                 <div class="flex justify-start items-center text-second sm:font-semibold">
-                    <div class="text-base sm:text-lg">总金额： </div>
+                    <div class="text-base sm:text-lg"> {{ $t('home.totalAmount') }} </div>
                     <div class="text-xl font-bold text-second truncate sm:text-2xl">{{ voteTotal }} HAH</div>
                 </div>
             </div>

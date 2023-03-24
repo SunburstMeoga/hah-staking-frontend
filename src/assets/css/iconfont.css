@@ -1,9 +1,9 @@
 @font-face {
     font-family: "icon";
     /* Project id 1539691 */
-    src: url('//at.alicdn.com/t/c/font_1539691_gkbhhb2y6xo.woff2?t=1679280231561') format('woff2'),
-        url('//at.alicdn.com/t/c/font_1539691_gkbhhb2y6xo.woff?t=1679280231561') format('woff'),
-        url('//at.alicdn.com/t/c/font_1539691_gkbhhb2y6xo.ttf?t=1679280231561') format('truetype');
+    src: url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.woff2?t=1679671985341') format('woff2'),
+        url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.woff?t=1679671985341') format('woff'),
+        url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.ttf?t=1679671985341') format('truetype');
 }
 
 .icon {
@@ -12,6 +12,10 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-malllanguage:before {
+    content: "\e630";
 }
 
 .icon-mallfacebookfacebook52:before {
