@@ -6,7 +6,7 @@ import enus from './en-US'
 Vue.use(VueI18n);
 const i18n = new VueI18n({
     // set default language
-    locale: 'zh-CN', // language flag
+    locale: 'en-US', // language flag
     messages: {
         'zh-CN': zhcn,
         'en-US': enus
