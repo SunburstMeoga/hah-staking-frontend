@@ -9,7 +9,7 @@
         <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12">
             {{ $t('home.nodeList', { count: delegateCount }) }}
         </div>
-        <div class="w-11/12 ml-auto mr-auto flex flex-col justify-start items-center sm:w-9/12">
+        <div class="w-11/12 ml-auto mr-auto flex flex-col justify-start items-center sm:w-9/12 pb-20">
             <div class="w-full mb-3 shadow-xl" v-for="(item, index) in nodeList" :key="index"
                 @click="toDetails(item, index)">
                 <vote-node-card :nodeAddress="item.address" :voteTotal="item.voteTotal" />
