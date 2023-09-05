@@ -14,8 +14,8 @@ export default new Router({
       component: Home
     },
     {
-      path: '/details',
-      name: 'details',
+      path: '/node/:address',
+      name: 'node',
       component: Details
     }
   ]

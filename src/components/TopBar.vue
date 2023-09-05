@@ -1,5 +1,5 @@
 <template>
-    <div class="h-14 shadow-md w-full bg-black mb-2 sm:h-20 sm:mb-4">
+    <!-- <div class="h-14 shadow-md w-full bg-black mb-2 sm:h-20 sm:mb-4">
         <div class="flex justify-between items-center h-full text-black text-center w-11/12 ml-auto mr-auto" v-if="isHome">
             <a href="https://hashahead.org/home" target="_blank" class="w-5/12 sm:w-1/12">
                 <div class="">
@@ -21,13 +21,34 @@
             </div>
             {{ $t('details.pageTitle') }}
         </div>
+    </div> -->
+    <div class="py-3 border-b bg-white border-ligthborder mb-3 sm:mb-10">
+        <div class="flex justify-between items-center w-11/12 mr-auto ml-auto text-lighttable sm:w-10/12">
+            <div class="w-28">
+                <img class="w-full" src="../assets/logo.png" alt="">
+            </div>
+            <div class="flex justify-end items-center">
+                <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
+                    @click="handleConnect">
+                    {{ $store.state.walletInfo.address && $store.state.chainId === '0x11623' ? $t('topBar.disconnect') :
+                        $t('topBar.connect') }}
+                </div>
+                <div class="border rounded border-lightborder h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center"
+                    @click="switchLanguage">
+                    <div class="text-xl icon iconfont icon-language" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import { Toast } from 'vant';
+import { nodeList } from '@/request/api'
+import { amountFormat } from '@/utils/format'
 
 export default {
+
     components: { Toast },
     props: {
         isHome: {
@@ -38,10 +59,36 @@ export default {
     data() {
         return {
             accounts: [],
-            isMetaMaskConnected: false
+            isMetaMaskConnected: false,
+            isConnect: false
         }
     },
     methods: {
+        amountFormat,
+        getNodeList() {
+            Toast.loading({
+                duration: 0,
+                forbidClick: true,
+            })
+            nodeList({ pageSize: 1, address: window.ethereum.selectedAddress }).then(res => {
+                let earningsInfo = {
+                    ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
+                    indexReturns: res.income0 ? this.amountFormat(res.income0) : null,
+                    totalEarnings: res.income0 || res.income1 ? (res.income0 + res.income1).toFixed(4) : null,
+                    ordinaryVote: res.vote1 ? this.amountFormat(res.vote1) : null,
+                    returnsVote: res.vote0 ? this.amountFormat(res.vote0) : null,
+                    totalVotes: res.vote0 || res.vote1 ? this.amountFormat(res.vote0 + res.vote1) : null,
+                }
+                localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
+                this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
+                console.log('vuex的值', this.$store.state.earningsInfo)
+                Toast.clear()
+            }).catch(err => {
+                console.log(err)
+                Toast.clear()
+
+            })
+        },
         switchLanguage() {
             if (this.$i18n.locale === 'zh-CN') {
                 this.$i18n.locale = 'en-US'
@@ -50,33 +97,52 @@ export default {
             }
             localStorage.setItem('language', this.$i18n.locale)
         },
-        //go back pre page
-        goBackPage() {
-            this.$router.back(1)
+        getWalletBalance(address) {
+            this.Web3.eth.getBalance(address).then((res) => {
+                let walletInfo = {
+                    address: address,
+                    balance: this.Web3.utils.fromWei(res, 'ether')
+                }
+                // this.getNodeList()
+                localStorage.setItem('walletInfo', JSON.stringify(walletInfo))
+                localStorage.setItem('connectStatus', 'connect')
+                this.isConnect = true
+                this.$store.commit('getWalletInfo', JSON.parse(localStorage.getItem('walletInfo')))
+                console.log('store', this.$store.state.walletInfo)
+            }).catch(err => {
+                console.log('getbalance err', err)
+            })
         },
-        handleNewAccounts(newAccounts) {
-            if (newAccounts && newAccounts.length > 0) {
-                this.$store.commit('getWalletAddress', newAccounts[0])
-                this.$store.commit('changeConnectStatus', true)
-                this.Web3.eth.getBalance(newAccounts[0]).then((res) => {
-                    console.log('余额', this.Web3.utils.fromWei(res, 'ether'))
-                    this.$store.commit('getWalletBalance', this.Web3.utils.fromWei(res, 'ether'))
-                })
-            } else {
-                this.$store.commit('getWalletAddress', '')
-                this.$store.commit('changeConnectStatus', false)
+
+        handleConnect() {
+            console.log(localStorage.getItem('connectStatus'))
+            if (localStorage.getItem('connectStatus') === 'connect') {
+                this.loginOut()
+            } else if (!localStorage.getItem('connectStatus') || localStorage.getItem('connectStatus') === 'disconnect') {
+                this.login()
             }
+
         },
+
+        loginOut() {
+            console.log('Login out')
+            localStorage.removeItem('walletInfo')
+            // localStorage.removeItem('earningsInfo')
+            localStorage.setItem('connectStatus', 'disconnect')
+            this.isConnect = false
+            this.$store.commit('getWalletInfo', {})
+        },
+
         async login() {
+            console.log('Login')
             try {
-                const newAccounts = await ethereum.request({
+                const accounts = await ethereum.request({
                     method: 'eth_requestAccounts',
                 })
-                this.handleNewAccounts(newAccounts)
+                this.getWalletBalance(accounts[0])
             } catch (error) {
                 console.error(error)
             }
-            this.$emit('clickLogin')
         },
     },
 

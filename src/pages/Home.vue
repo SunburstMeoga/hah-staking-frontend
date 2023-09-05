@@ -1,101 +1,103 @@
 <template>
     <div>
-        <div class="sticky top-0 left-0">
-            <top-bar isHome @clickLogin="clickLogin" />
+        <div v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
+            class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-8 sm:w-9/12"
+            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+            <wallet-info />
         </div>
-        <div class="w-11/12 ml-auto mr-auto mb-1 sm:w-9/12" v-if="$store.state.walletAddress">
-            <wallet-address />
+        <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12" v-if="votedDataList.length !== 0">
+            <module-title :title="$t('home.votedCount')" :count="$t('home.votedNode', { count: votedDataList.length })" />
         </div>
-        <div class="text-primary text-sm w-11/12 ml-auto mr-auto mb-1 sm:text-xl sm:w-9/12">
-            {{ $t('home.nodeList', { count: delegateCount }) }}
-        </div>
-        <div class="w-11/12 ml-auto mr-auto flex flex-col justify-start items-center sm:w-9/12 pb-20">
-            <div class="w-full mb-3 shadow-xl" v-for="(item, index) in nodeList" :key="index"
-                @click="toDetails(item, index)">
-                <vote-node-card :nodeAddress="item.address" :voteTotal="item.voteTotal" />
+        <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-6 sm:w-9/12" v-if="votedDataList.length !== 0"
+            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+            <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
+            <div v-if="nodeListLoadStatus === 'finished'">
+                <voted-node-card :dataList="votedDataList" />
             </div>
         </div>
-        <bottom-bar></bottom-bar>
+        <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
+            <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
+        </div>
+        <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-6 sm:w-9/12"
+            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+            <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
+            <div v-if="nodeListLoadStatus === 'finished'">
+                <vote-node-card :dataList="nodeDataList" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import TopBar from '@/components/TopBar'
+import ModuleTitle from '@/components/ModuleTitle'
+import WalletInfo from '@/components/WalletInfo'
 import VoteNodeCard from '@/components/VoteNodeCard'
-import WalletAddress from '@/components/WalletAddress'
-import BottomBar from '@/components/BottomBar'
+import VotedNodeCard from '@/components/VotedNodeCard'
+
+import HLoading from '@/components/HLoading'
+
+import { nodeList } from '@/request/api'
+import { amountFormat } from '@/utils/format'
 import { Toast } from 'vant'
 export default {
-    components: { TopBar, VoteNodeCard, WalletAddress, BottomBar },
+    components: { WalletInfo, ModuleTitle, VoteNodeCard, VotedNodeCard, HLoading },
     data() {
         return {
-            nodeList: [],
+            nodeDataList: [],
+            votedDataList: [],
             voteTotal: '',
             delegateCount: 0,
             rewardMode: '-',
-            ordinary: '-'
+            ordinary: '-',
+            nodeListLoadStatus: 'loading'
         }
     },
     created() {
-        this.getNodeInfo()
+        console.log('init ........')
+        console.log('登录状态', localStorage.getItem('connectStatus'))
+        this.getNodeList()
     },
     methods: {
-        //跳转详情页面
-        toDetails(item) {
-            if (!this.$store.state.walletAddress) {
-
-                Toast.fail(this.$('toast.linkWallet'));
-                return
-            }
-
-            this.$store.commit('getNodeAddress', item)
-            this.$router.push({
-                path: '/details',
-                query: {
-                    'nodeAddress': item.address
-                }
-            })
-        },
-        clickLogin() {
-            this.getNodeInfo()
-        },
+        amountFormat,
         //获取节点列表数据
-        getNodeInfo() {
-            Toast.loading({
-                forbidClick: true,
-                duration: 0
-            });
-            this.nodeList = []
-            let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
-            web3Contract.methods.getDelegateAddress(0).call().then((result) => {
-                console.log('节点列表', result)
-                let arr = []
-                arr = result
-                arr.map(item => {
-                    web3Contract.methods.getDelegateTotalVotes(item).call().then((resTotal) => {
-                        console.log('地址的投票总额', resTotal)
-                        let obj = {}
-                        obj.address = item
-                        obj.voteTotal = ((this.Web3.utils.fromWei(resTotal, 'ether')) * 1).toFixed(4)
-                        this.nodeList.push(obj)
-                    })
+        getNodeList() {
+            this.nodeListLoadStatus = 'loading'
+            nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(res => {
+                console.log('节点列表----', res)
+                res.data.map((item, index) => {
+                    item.rank = index + 1
                 })
-                console.log('nodeList', this.nodeList)
-
+                if (res.data.length === 0) {
+                    this.nodeListLoadStatus = 'empty'
+                    return
+                }
+                this.nodeDataList = res.data
+                this.delegateCount = res.total
+                let earningsInfo = {
+                    ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
+                    indexReturns: res.income0 ? this.amountFormat(res.income0) : null,
+                    totalEarnings: res.income0 || res.income1 ? (res.income0 + res.income1).toFixed(4) : null,
+                    ordinaryVote: res.vote1 ? this.amountFormat(res.vote1) : null,
+                    returnsVote: res.vote0 ? this.amountFormat(res.vote0) : null,
+                    totalVotes: res.vote0 || res.vote1 ? this.amountFormat(res.vote0 + res.vote1) : null,
+                    amount: res.amount ? this.amountFormat(res.amount) : null,
+                    income: res.income ? this.amountFormat(res.income) : null,
+                }
+                res.data.map((item, index) => {
+                    if (item.amount !== '0') {
+                        this.votedDataList.push(item)
+                    }
+                })
+                localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
+                this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
+                console.log('vuex的值', this.$store.state.earningsInfo)
+                this.nodeListLoadStatus = 'finished'
             }).catch(err => {
-                console.log("节点列表", err)
-                Toast.clear()
-            })
-            web3Contract.methods.getPageSize().call().then((result) => {
-                console.log('每页投票地址数量', result)
-                Toast.clear()
-            })
-            web3Contract.methods.getDelegateCount().call().then((result) => {
-                console.log('投票地址总数', result)
-                this.delegateCount = result
-                Toast.clear()
-            })
+                this.nodeListLoadStatus = 'error'
 
+                console.log(err)
+                Toast.clear()
+            })
         },
     }
 }

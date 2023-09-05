@@ -19,16 +19,19 @@
                     <div class="text-grayicon">{{ $t('table.apy') }}</div>
                     <div class="">{{ item.apy }}</div>
                 </div>
+                <div class="node-item">
+                    <div class="text-grayicon">{{ $t('wallet.votedAmount') }}</div>
+                    <div class="">{{ item.amount }}</div>
+                </div>
 
                 <div class="node-item">
-                    <div class="text-grayicon">{{ $t('table.votes') }}</div>
-                    <div class="">{{ Number(item.votes).toFixed(4) }}</div>
+                    <div class="text-grayicon">{{ $t('wallet.earnings') }}</div>
+                    <div class="">{{ item.income }} HAH</div>
                 </div>
                 <div class="node-item">
                     <div class="text-grayicon">{{ $t('table.nodeRank') }}</div>
                     <div class="">{{ item.rank }}</div>
                 </div>
-
                 <div class="node-item">
                     <div class="text-grayicon">{{ $t('table.point') }}</div>
                     <div class="">{{ item.scale }} %</div>
@@ -63,16 +66,16 @@
 
                         </div>
                         <div class="w-80">
-                            {{ Number(item.votes).toFixed(4) }}
+                            {{ Number(item.amount).toFixed(4) }}
                         </div>
                         <div class="w-80">
                             {{ item.rank }}
                         </div>
                         <div class="w-80">
-                            {{ item.scale }}%
+                            {{ Number(item.income).toFixed(4) }}
                         </div>
                         <div class="w-80">
-                            {{ timeFormat(item.uptime) }}
+                            {{ item.apy }}
                         </div>
                     </div>
                 </div>
@@ -96,7 +99,7 @@ export default {
 
     computed: {
         tableTitleList() {
-            return [this.$t('table.name'), this.$t('table.address'), this.$t('table.votes'), this.$t('table.nodeRank'), this.$t('table.point'), this.$t('details.time'),]
+            return [this.$t('table.name'), this.$t('table.address'), this.$t('wallet.votedAmount'), this.$t('table.nodeRank'), this.$t('wallet.earnings'), this.$t('table.apy')]
         }
     },
     methods: {

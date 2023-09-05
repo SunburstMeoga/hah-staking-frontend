@@ -1,47 +1,208 @@
 @font-face {
-    font-family: "icon";
-    /* Project id 1539691 */
-    src: url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.woff2?t=1679671985341') format('woff2'),
-        url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.woff?t=1679671985341') format('woff'),
-        url('//at.alicdn.com/t/c/font_1539691_wcogqp1avr9.ttf?t=1679671985341') format('truetype');
+    font-family: "iconfont";
+    /* Project id 3976864 */
+    src: url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.woff2?t=1683172816110') format('woff2'),
+        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.woff?t=1683172816110') format('woff'),
+        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.ttf?t=1683172816110') format('truetype'),
+        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.svg?t=1683172816110#iconfont') format('svg');
 }
 
-.icon {
-    font-family: "icon" !important;
+.iconfont {
+    font-family: "iconfont" !important;
     font-size: 16px;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-malllanguage:before {
-    content: "\e630";
+.icon-a-ziyuan5:before {
+    content: "\e602";
 }
 
-.icon-mallfacebookfacebook52:before {
+.icon-discord3:before {
+    content: "\e633";
+}
+
+.icon-dicord:before {
+    content: "\e60a";
+}
+
+.icon-gmail:before {
+    content: "\e61d";
+}
+
+.icon-icon_linkdin:before {
+    content: "\e660";
+}
+
+.icon-jiaoyi:before {
     content: "\e617";
 }
 
-.icon-mallinstagram:before {
-    content: "\e731";
+.icon-qianbao:before {
+    content: "\e851";
 }
 
-.icon-mallfacebookfacebook11:before {
-    content: "\e735";
+.icon-jiaoyijine:before {
+    content: "\e64c";
 }
 
-.icon-mallGitHub:before {
-    content: "\ea0a";
+.icon-jiaoyizongshu:before {
+    content: "\e610";
 }
 
-.icon-malltuite:before {
-    content: "\ee49";
+.icon-qianwang:before {
+    content: "\e715";
 }
 
-.icon-mallright:before {
-    content: "\e73b";
+.icon-error:before {
+    content: "\e656";
 }
 
-.icon-mallleft-arrow:before {
-    content: "\e601";
+.icon-request-error:before {
+    content: "\e6c1";
+}
+
+.icon-updata:before {
+    content: "\e63e";
+}
+
+.icon-updata1:before {
+    content: "\e66b";
+}
+
+.icon-zhongwen:before {
+    content: "\e6c8";
+}
+
+.icon-a-zhongyingwenzhongwen:before {
+    content: "\e609";
+}
+
+.icon-zhongyingwenqiehuan-xianshizhongyingwen:before {
+    content: "\e604";
+}
+
+.icon-zhongyingwenqiehuan-yingwen:before {
+    content: "\e616";
+}
+
+.icon-yingwenxianshi:before {
+    content: "\e853";
+}
+
+.icon-copy:before {
+    content: "\e706";
+}
+
+.icon-loading:before {
+    content: "\e62e";
+}
+
+.icon-loading1:before {
+    content: "\e6a6";
+}
+
+.icon-loading2:before {
+    content: "\e962";
+}
+
+.icon-loading3:before {
+    content: "\e7f1";
+}
+
+.icon-loading4:before {
+    content: "\e64b";
+}
+
+.icon-wushuju:before {
+    content: "\e60b";
+}
+
+.icon-jiazailoading-A:before {
+    content: "\e8fc";
+}
+
+.icon-Loading:before {
+    content: "\e65d";
+}
+
+.icon-down:before {
+    content: "\e6da";
+}
+
+.icon-facebook:before {
+    content: "\eab7";
+}
+
+.icon-instagram-fill:before {
+    content: "\e88f";
+}
+
+.icon-tuite:before {
+    content: "\e652";
+}
+
+.icon-twitter-fill:before {
+    content: "\e63d";
+}
+
+.icon-zimuH:before {
+    content: "\e692";
+}
+
+.icon-github:before {
+    content: "\e657";
+}
+
+.icon-close:before {
+    content: "\e69a";
+}
+
+.icon-shouhuodizhi:before {
+    content: "\e64e";
+}
+
+.icon-jiaoyiguanli:before {
+    content: "\e608";
+}
+
+.icon-qukuai:before {
+    content: "\e994";
+}
+
+.icon-enter:before {
+    content: "\e75e";
+}
+
+.icon-Enter-Pin:before {
+    content: "\ee04";
+}
+
+.icon-search:before {
+    content: "\e621";
+}
+
+.icon-arrow-right:before {
+    content: "\e665";
+}
+
+.icon-right:before {
+    content: "\e667";
+}
+
+.icon-language:before {
+    content: "\e693";
+}
+
+.icon-daytime-mode:before {
+    content: "\e839";
+}
+
+.icon-night-mode:before {
+    content: "\e83e";
+}
+
+.icon-menu:before {
+    content: "\e709";
 }

@@ -9,6 +9,7 @@ import i18n from './i18n';
 
 import store from './store'
 import router from './router'
+import '@vant/touch-emulator';
 
 import Web3 from 'web3'
 import { config } from './const/config'
