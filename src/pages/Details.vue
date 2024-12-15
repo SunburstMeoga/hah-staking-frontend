@@ -323,10 +323,10 @@ export default {
                 this.operatingList[2].point = this.getAPY(dpos.apy) * 0.8
                 this.operatingList[3].point = this.getAPY(dpos.apy) * 0.7
                 this.operatingList[4].point = this.getAPY(dpos.apy) * 0.6
-
                 this.getAPY(dpos.apy)
                 this.getNodeList(this.walletAddress)
                 this.getWalletBalance(this.walletAddress)
+                console.log('object', this.dataList)
                 Toast.clear()
             }).catch(err => {
                 this.detailsLoadStatus = 'error'
@@ -385,7 +385,7 @@ export default {
             });
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
             console.log('参数', item.vote_addr, item.pledge_type, item.cycles, item.nonce)
-            web3Contract.methods.pledgeReqRedeem(item.vote_addr, item.pledge_type, item.cycles, item.nonce).send({
+            web3Contract.methods.pledgeReqRedeem(this.dposAddress, item.pledge_type, item.cycles, item.nonce).send({
                 from: JSON.parse(localStorage.getItem('walletInfo')).address,
             }).then(res => {
                 this.getNodeDetails()

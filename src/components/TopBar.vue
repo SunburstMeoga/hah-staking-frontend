@@ -28,9 +28,14 @@
                 <img class="w-full" src="../assets/logo.png" alt="">
             </div>
             <div class="flex justify-end items-center">
-                <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
+                <!-- <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
                     @click="handleConnect">
                     {{ $store.state.walletInfo.address && $store.state.chainId === '0x11623' ? $t('topBar.disconnect') :
+                        $t('topBar.connect') }}
+                </div> -->
+                <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
+                    @click="handleConnect">
+                    {{ $store.state.walletInfo.address ? $t('topBar.disconnect') :
                         $t('topBar.connect') }}
                 </div>
                 <div class="border rounded border-lightborder h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center"
