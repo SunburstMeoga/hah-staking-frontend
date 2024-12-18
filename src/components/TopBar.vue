@@ -22,25 +22,23 @@
             {{ $t('details.pageTitle') }}
         </div>
     </div> -->
-    <div class="py-3 border-b bg-white border-ligthborder mb-3 sm:mb-10">
+    <div class="py-4  bg-#313131">
         <div class="flex justify-between items-center w-11/12 mr-auto ml-auto text-lighttable sm:w-10/12">
             <div class="w-28">
                 <img class="w-full" src="../assets/logo.png" alt="">
             </div>
             <div class="flex justify-end items-center">
+
                 <!-- <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
-                    @click="handleConnect">
-                    {{ $store.state.walletInfo.address && $store.state.chainId === '0x11623' ? $t('topBar.disconnect') :
-                        $t('topBar.connect') }}
-                </div> -->
-                <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
                     @click="handleConnect">
                     {{ $store.state.walletInfo.address ? $t('topBar.disconnect') :
                         $t('topBar.connect') }}
+                </div> -->
+                <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleConnect">
+                    <div class="text-xl icon iconfont icon-duankailianjie text-white" />
                 </div>
-                <div class="border rounded border-lightborder h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center"
-                    @click="switchLanguage">
-                    <div class="text-xl icon iconfont icon-language" />
+                <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="switchLanguage">
+                    <div class="text-xl icon iconfont icon-duoyuyan text-white" />
                 </div>
             </div>
         </div>

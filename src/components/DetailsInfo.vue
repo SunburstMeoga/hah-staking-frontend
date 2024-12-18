@@ -45,50 +45,27 @@
                 </div>
             </div>
         </div> -->
-        <div class="w-full flex flex-col justify-start items-center">
+        <div class="w-full flex flex-col justify-start items-center ">
             <div class="w-11/12 flex flex-col justify-start items-start">
-                <div class="w-full flex justify-start items-center mb-4">
-                    <div class="w-1/3 h-1 bg-#EAAE36 rounded-full"></div>
-                </div>
-                <div class="w-full flex justify-between items-center text-base mb-2">
+                <div class="w-full flex justify-between items-center text-base my-4">
                     <div class="text-#00FFEA">钱包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
                     <div class="icon iconfont icon-fuzhi text-white text-lg"></div>
                 </div>
-                <div class="w-full border-b border-dashed border-black flex justify-between items-center pb-2 mb-4">
-                    <div class="flex flex-col justify-start items-start pl-2 w-1/2">
-                        <div class="text-#FFFFFF73 mb-1 text-sm">总收益</div>
-                        <div class="text-#EAAE36 text-3xl font-bold">{{ Math.floor(totalIncome) }}</div>
+                <div class="w-full flex justify-between items-center pb-2 mb-2">
+                    <div class="flex flex-col justify-start items-start w-1/2">
+                        <div class="text-#FFFFFF73 mb-1 text-xs">该节点投票量</div>
+                        <div class="flex justify-start items-baseline">
+                            <div class="text-#EAAE36 text-4xl font-bold">{{ Math.floor(votes) }}</div>
+                            <div class="text-#846934 ml-1 text-sm" v-if="!Math.floor(votes)">暂无投票</div>
+                        </div>
                     </div>
                     <div class="border-l border-#00000061 h-10 w-1"></div>
                     <div class="flex flex-col justify-start items-start w-1/2 pl-6">
-                        <div class="text-#FFFFFF73 mb-1 text-sm">全网投票量</div>
+                        <div class="text-#FFFFFF73 mb-1 text-xs">收益</div>
                         <div class="flex justify-start items-baseline">
-                            <div class="text-#EAAE36 text-3xl font-bold">{{ Math.floor(totalVotes) }}</div>
-                            <div class="text-#846934 ml-1 text-sm" v-show="Math.floor(totalVotes) === 0">暂无投票</div>
+                            <div class="text-#EAAE36 text-4xl font-bold">{{ Math.floor(income) }}</div>
+                            <div class="text-#846934 ml-1 text-sm">HAH</div>
                         </div>
-                    </div>
-                </div>
-                <div class="flex justify-evenly items-center pb-4 w-full">
-                    <div class="flex flex-col justify-start items-center w-1/3">
-                        <div class="flex justify-start items-center mb-3">
-                            <div class="w-2 h-2 rounded-full bg-#00FFEA"></div>
-                            <div class="text-xs ml-2 text-#FFFFFF73">进行中</div>
-                        </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['0'] }}</div>
-                    </div>
-                    <div class="flex flex-col justify-start items-center w-1/3">
-                        <div class="flex justify-start items-center mb-3">
-                            <div class="w-2 h-2 rounded-full bg-#A5A5A5"></div>
-                            <div class="text-xs ml-2 text-#FFFFFF73">已赎回</div>
-                        </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['2'] }}</div>
-                    </div>
-                    <div class="flex flex-col justify-start items-center w-1/3">
-                        <div class="flex justify-start items-center mb-3">
-                            <div class="w-2 h-2 rounded-full bg-#FFD667"></div>
-                            <div class="text-xs ml-2 text-#FFFFFF73">停止复投中</div>
-                        </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['1'] }}</div>
                     </div>
                 </div>
             </div>
@@ -101,36 +78,32 @@ import { addressFilter, amountFormat } from '@/utils/format'
 import { Toast } from 'vant'
 
 export default {
+    props: {
+        votes: {
+            type: Number,
+            default: 0
+        },
+        income: {
+            type: Number,
+            default: 0
+        }
+    },
     data() {
         return {
 
         }
     },
-    props: {
-        totalIncome: {
-            type: Number,
-            default: 0
-        },
-        totalVotes: {
-            type: Number,
-            default: 0
-        },
-        counts: {
-            type: Object,
-            default: () => { }
-        }
+    mounted() {
+        console.log(this.walletInfoList)
     },
     computed: {
         walletInfoList() {
             return [
                 { title: this.$t('wallet.address'), copy: this.$store.state.walletInfo.address, content: this.$store.state.walletInfo.address || '-' },
                 { title: this.$t('wallet.balance'), content: this.amountFormat(this.$store.state.walletInfo.balance) + ' HAH' || '00000000' },
-                // { title: this.$t('wallet.ordinaryVote'), content: this.earningsInfo.ordinaryVote ? this.earningsInfo.ordinaryVote + ' HAH' : this.$t('wallet.notVotes') },
-                // { title: this.$t('wallet.returnsVote'), content: this.earningsInfo.returnsVote ? this.earningsInfo.returnsVote + ' HAH' : this.$t('wallet.notVotes') },
                 { title: this.$t('wallet.totalVotes'), content: this.earningsInfo.totalVotes ? this.earningsInfo.totalVotes + ' HAH' : this.$t('wallet.notVotes') },
                 { title: this.$t('table.votes'), content: this.earningsInfo.amount ? this.earningsInfo.amount + ' HAH' : this.$t('wallet.notVotes') },
                 { title: this.$t('wallet.earnings'), content: this.earningsInfo.income ? this.earningsInfo.income + ' HAH' : this.$t('wallet.notEarning') },
-
             ]
         },
         earningsInfo() {

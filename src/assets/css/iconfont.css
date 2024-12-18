@@ -1,208 +1,65 @@
 @font-face {
-    font-family: "iconfont";
-    /* Project id 3976864 */
-    src: url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.woff2?t=1683172816110') format('woff2'),
-        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.woff?t=1683172816110') format('woff'),
-        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.ttf?t=1683172816110') format('truetype'),
-        url('//at.alicdn.com/t/c/font_3976864_6wuc5z23evj.svg?t=1683172816110#iconfont') format('svg');
+  font-family: "iconfont";
+  /* Project id 4784018 */
+  src: url('//at.alicdn.com/t/c/font_4784018_p7x8mrz0krb.woff2?t=1734426671838') format('woff2'),
+    url('//at.alicdn.com/t/c/font_4784018_p7x8mrz0krb.woff?t=1734426671838') format('woff'),
+    url('//at.alicdn.com/t/c/font_4784018_p7x8mrz0krb.ttf?t=1734426671838') format('truetype'),
+    url('//at.alicdn.com/t/c/font_4784018_p7x8mrz0krb.svg?t=1734426671838#iconfont') format('svg');
 }
 
 .iconfont {
-    font-family: "iconfont" !important;
-    font-size: 16px;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: "iconfont" !important;
+
 }
 
-.icon-a-ziyuan5:before {
-    content: "\e602";
+.icon-down1:before {
+  content: "\e615";
 }
 
-.icon-discord3:before {
-    content: "\e633";
-}
-
-.icon-dicord:before {
-    content: "\e60a";
-}
-
-.icon-gmail:before {
-    content: "\e61d";
-}
-
-.icon-icon_linkdin:before {
-    content: "\e660";
-}
-
-.icon-jiaoyi:before {
-    content: "\e617";
-}
-
-.icon-qianbao:before {
-    content: "\e851";
-}
-
-.icon-jiaoyijine:before {
-    content: "\e64c";
-}
-
-.icon-jiaoyizongshu:before {
-    content: "\e610";
-}
-
-.icon-qianwang:before {
-    content: "\e715";
-}
-
-.icon-error:before {
-    content: "\e656";
-}
-
-.icon-request-error:before {
-    content: "\e6c1";
-}
-
-.icon-updata:before {
-    content: "\e63e";
-}
-
-.icon-updata1:before {
-    content: "\e66b";
-}
-
-.icon-zhongwen:before {
-    content: "\e6c8";
-}
-
-.icon-a-zhongyingwenzhongwen:before {
-    content: "\e609";
-}
-
-.icon-zhongyingwenqiehuan-xianshizhongyingwen:before {
-    content: "\e604";
-}
-
-.icon-zhongyingwenqiehuan-yingwen:before {
-    content: "\e616";
-}
-
-.icon-yingwenxianshi:before {
-    content: "\e853";
-}
-
-.icon-copy:before {
-    content: "\e706";
-}
-
-.icon-loading:before {
-    content: "\e62e";
-}
-
-.icon-loading1:before {
-    content: "\e6a6";
-}
-
-.icon-loading2:before {
-    content: "\e962";
-}
-
-.icon-loading3:before {
-    content: "\e7f1";
-}
-
-.icon-loading4:before {
-    content: "\e64b";
-}
-
-.icon-wushuju:before {
-    content: "\e60b";
-}
-
-.icon-jiazailoading-A:before {
-    content: "\e8fc";
-}
-
-.icon-Loading:before {
-    content: "\e65d";
+.icon-down2:before {
+  content: "\e69a";
 }
 
 .icon-down:before {
-    content: "\e6da";
+  content: "\e613";
 }
 
-.icon-facebook:before {
-    content: "\eab7";
-}
-
-.icon-instagram-fill:before {
-    content: "\e88f";
-}
-
-.icon-tuite:before {
-    content: "\e652";
-}
-
-.icon-twitter-fill:before {
-    content: "\e63d";
-}
-
-.icon-zimuH:before {
-    content: "\e692";
+.icon-discord:before {
+  content: "\e66e";
 }
 
 .icon-github:before {
-    content: "\e657";
+  content: "\e603";
 }
 
-.icon-close:before {
-    content: "\e69a";
+.icon-linkedin:before {
+  content: "\e60b";
 }
 
-.icon-shouhuodizhi:before {
-    content: "\e64e";
+.icon-instagram:before {
+  content: "\e6df";
 }
 
-.icon-jiaoyiguanli:before {
-    content: "\e608";
+.icon-tuite:before {
+  content: "\e604";
 }
 
-.icon-qukuai:before {
-    content: "\e994";
+.icon-Right:before {
+  content: "\e612";
 }
 
-.icon-enter:before {
-    content: "\e75e";
+.icon-fuzhi:before {
+  content: "\e8b0";
 }
 
-.icon-Enter-Pin:before {
-    content: "\ee04";
+.icon-duankailianjie:before {
+  content: "\e9c5";
 }
 
-.icon-search:before {
-    content: "\e621";
+.icon-_lianjie:before {
+  content: "\e657";
 }
 
-.icon-arrow-right:before {
-    content: "\e665";
-}
-
-.icon-right:before {
-    content: "\e667";
-}
-
-.icon-language:before {
-    content: "\e693";
-}
-
-.icon-daytime-mode:before {
-    content: "\e839";
-}
-
-.icon-night-mode:before {
-    content: "\e83e";
-}
-
-.icon-menu:before {
-    content: "\e709";
+.icon-duoyuyan:before {
+  content: "\e659";
 }

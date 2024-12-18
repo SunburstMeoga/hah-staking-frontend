@@ -1,8 +1,9 @@
 import axios from 'axios'
 
 const service = axios.create({
-    baseURL: process.env.VUE_APP_AXIOS_BASE_URL,
-    timeout: 5000
+    // baseURL: process.env.VUE_APP_AXIOS_BASE_URL,
+    baseURL: 'https://testnet.hashahead.org/api/',
+    timeout: 50000
 })
 
 service.interceptors.request.use(

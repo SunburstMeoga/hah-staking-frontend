@@ -22,7 +22,7 @@ const zh = {
         compoundInterest: '复利：',
         ordinary: '普通：',
         amountInvested: '已投金额：',
-        amount: '金额：',
+        amount: '金额',
         voteBtn: '投票',
         redeemBtn: '撤投',
         canUse: '可用：',

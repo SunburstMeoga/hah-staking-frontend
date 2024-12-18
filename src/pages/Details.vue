@@ -1,33 +1,17 @@
 <template>
-    <div>
-        <div v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
-            class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-8 sm:w-9/12"
+    <div class="bg-#1F1F1F pt-5">
+        <div class="mb-3 w-11/12 mx-auto bg-#282828 rounded-2xl overflow-hidden"
+            v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <wallet-info />
+            <details-info :votes="votes" :income="income" />
         </div>
-        <div class="sm:hidden w-11/12 mr-auto ml-auto text-red-600 text-xs mb-2 mt-4">
-            {{ $t('tips.amount') }}
-        </div>
-
-        <div class="w-11/12 ml-auto mr-auto sm:flex sm:justify-between sm:items-start sm:w-9/12">
-            <div class="sm:w-5/12">
-                <div class="flex justify-start items-center w-full ml-auto mr-auto mb-2 sm:mb-4">
-                    <module-title :title="$t('details.pageTitle')" />
-                    <div class="text-grayicon icon iconfont icon-updata1 cursor-pointer"
-                        :class="detailsLoadStatus === 'loading' ? 'animate-spin' : ''" @click="getNodeDetails" />
-                </div>
-
-                <div class="w-full ml-auto mr-auto rounded-lg mb-3 sm:mb-6"
-                    style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-
-                    <h-loading :loadStatus="detailsLoadStatus" @reload="getNodeDetails" />
-                    <div v-if="detailsLoadStatus === 'finished'">
-                        <node-details-card ref="nodeDetails" :getDetailsInfo="nodeInfo" />
-                    </div>
-                </div>
+        <div class="w-11/12 ml-auto mr-auto mb-5">
+            <div v-if="detailsLoadStatus === 'finished'"
+                class="w-full duration-150 transition transform ease-linear active:scale-95">
+                <node-details-card ref="nodeDetails" :getDetailsInfo="nodeInfo" />
             </div>
 
-            <div class="sm:w-6/12">
+            <!-- <div class="sm:w-6/12">
                 <div class="w-full ml-auto mr-auto mb-2 sm:mb-4">
                     <module-title :title="$t('rules.title')" />
                 </div>
@@ -35,16 +19,75 @@
                     style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
                     <voting-rules />
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
+        <!-- <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
             <module-title :title="$t('details.voteBtn')" />
-        </div>
+        </div> -->
 
-        <div class="w-11/12 ml-auto mr-auto rounded-lg sm:mb-6 sm:w-9/12"
+        <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 mb-3"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <div class="sm:ml-auto sm:mr-auto">
+            <div class="w-11/12 mx-auto pt-6 mb-6">
+                <module-title :title="$t('details.voteBtn')" />
+            </div>
+            <div
+                class="w-full border-b border-#C2B9D01E flex flex-nowrap justify-start items-center overflow-x-auto mb-10">
+                <div class="flex flex-col justify-start items-start w-32 border-b-2 ml-7 pb-2"
+                    :class="`${currentMode === index ? 'border-#EAAE36' : 'border-transparent'}`"
+                    v-for="(item, index) in operatingList" :key="index" @click="handleMode(item, index)">
+                    <div class="text-xs font-light mb-2"
+                        :class="`${currentMode === index ? 'text-#EAAE36' : 'text-#A5A5A5'}`">{{
+                item.title }}</div>
+                    <div class="text-2xl" :class="`${currentMode === index ? 'text-#EAAE36' : 'text-#A5A5A5'}`">
+                        {{ item.point.toFixed(0) }}%
+                    </div>
+                </div>
+            </div>
+            <div class="w-11/12 mx-auto flex justify-between items-center mb-6">
+                <div class=" text-white">
+                    {{ $t('details.amount') }}
+                </div>
+                <div class="h-8 w-56 rounded-lg overflow-hidden flex justify-center items-center bg-black">
+                    <input type="number" v-model="voteAmount" @focus="amountFocus(0)" @input="validateAmount"
+                        :placeholder="$t('placeholder.inputAmount')"
+                        class="text-left bg-transparent w-full indent-4 text-white" :min="100" step="0.01" />
+                </div>
+                <div class="text-#A5A5A5 text-xs font-light">
+                    HAH
+                </div>
+            </div>
+            <div class="mb-11 w-11/12 mx-auto">
+                <van-slider v-model="voteValue" @change="onChangeVotes">
+                    <template #button>
+                        <div class="custom-button">{{ voteValue + '%' }}</div>
+                    </template>
+                </van-slider>
+                <div class="w-full my-auto flex justify-between items-center mt-6">
+                    <div class="text-white rounded-lg w-1/5 h-7 text-sm flex justify-center items-center border-2"
+                        @click="handleVotePoint(item, index)"
+                        :class="currentVotePoint === index ? 'bg-#EAAE36 border-#FFD667' : 'bg-transparent border-#A5A5A536'"
+                        v-for="(item, index) in pointList" :key="index">
+                        {{ item.title }}
+                    </div>
+                </div>
+            </div>
+            <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-9 mb-7"
+                @click="userVote">投 票
+            </div>
+            <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3">
+                <div class="underline font-light text-sm mr-2.5">投票规则</div>
+                <div class="icon iconfont icon-down2 text-xs" @click="showRole = !showRole"></div>
+            </div>
+            <div class="w-full mt-6" v-show="showRole">
+                <div class="w-11/12 mx-auto mb-6">
+                    <module-title title="投票规则" />
+                </div>
+                <div class="w-11/12 mx-auto  mb-6">
+                    <voting-rules />
+                </div>
+            </div>
+            <!-- <div class="sm:ml-auto sm:mr-auto">
                 <div class="px-2 py-3 sm:py-4">
                     <div class="flex flex-nowrap justify-start items-center overflow-x-auto w-full pb-1">
                         <div v-for="(item, index) in operatingList" :key="index" @click="handleMode(item, index)">
@@ -61,8 +104,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="sm:flex sm:justify-between sm:items-center mr-auto ml-auto sm:px-4">
+            </div> -->
+            <!-- <div class="sm:flex sm:justify-between sm:items-center mr-auto ml-auto sm:px-4">
                 <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-0 sm:ml-0 sm:mr-0 sm:w-5/12">
                     <div class="px-2 py-3">
                         <div class="flex justify-start items-center mb-6">
@@ -114,13 +157,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
             <module-title :title="$t('details.redeemBtn')" />
         </div> -->
-        <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-6 sm:w-9/12"
-            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+        <div class="w-11/12 mx-auto" style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <div class="">
                 <withdrawal-node :dataList="dataList" @userRedeem="userRedeem" />
             </div>
@@ -133,7 +175,7 @@
 <script>
 import VotingRules from '@/components/VotingRules';
 import ModuleTitle from '@/components/ModuleTitle'
-import WalletInfo from '@/components/WalletInfo'
+import DetailsInfo from '@/components/DetailsInfo'
 import NodeDetailsCard from '@/components/NodeDetailsCard';
 import HLoading from '@/components/HLoading'
 import WithdrawalNode from '@/components/WithdrawalNode'
@@ -143,7 +185,7 @@ import { nodeDetails, nodeList } from '@/request/api'
 import { Toast, Slider, Stepper } from 'vant';
 export default {
     components: {
-        WalletInfo,
+        DetailsInfo,
         ModuleTitle,
         Toast,
         NodeDetailsCard,
@@ -180,10 +222,13 @@ export default {
             locked0: '',
             locked1: '',
             dataList: [],
-            pledgeType: 5,
+            pledgeType: 1,
             pledgeNonce: null,
             pledgeCycles: 1,
-            showRedeem: false
+            showRedeem: false,
+            showRole: false,
+            votes: 0,
+            income: 0
         }
     },
     computed: {
@@ -206,6 +251,26 @@ export default {
         timeFormat, addressFilter, amountFormat,
         amountFocus(index) {
             index === 0 ? this.currentVotePoint = null : this.currentRedeemPoint = null
+        },
+        validateAmount(event) {
+            let value = event.target.value;
+
+            // 确保最小值为100
+            if (parseFloat(value) < 100) {
+                this.voteAmount = 100;
+                return;
+            }
+
+            // 允许只有一个小数点
+            let regex = /^\d*\.?\d{0,2}$/;  // 数字和最多两个小数点
+            if (!regex.test(value)) {
+                this.voteAmount = value.slice(0, -1); // 如果不符合规则，去掉最后一个字符
+            }
+
+            // 确保无负数输入
+            if (value < 0) {
+                this.voteAmount = 0;
+            }
         },
         handleRedeemPoint(item, index) {
             this.redeemValue = item.value
@@ -317,16 +382,21 @@ export default {
                 this.nodeInfo.time = this.timeFormat(dpos.uptime)
                 this.$store.commit('getNodeDetails', this.nodeInfo)
                 this.dataList = vote
+                this.dataList.map(item => {
+                    item.showMore = false
+                })
                 this.detailsLoadStatus = 'finished'
-                this.operatingList[0].point = this.getAPY(dpos.apy) * 1
-                this.operatingList[1].point = this.getAPY(dpos.apy) * 0.9
-                this.operatingList[2].point = this.getAPY(dpos.apy) * 0.8
-                this.operatingList[3].point = this.getAPY(dpos.apy) * 0.7
-                this.operatingList[4].point = this.getAPY(dpos.apy) * 0.6
+                this.operatingList[0].point = this.getAPY(dpos.apy) * 1 * 100
+                this.operatingList[1].point = this.getAPY(dpos.apy) * 0.9 * 100
+                this.operatingList[2].point = this.getAPY(dpos.apy) * 0.8 * 100
+                this.operatingList[3].point = this.getAPY(dpos.apy) * 0.7 * 100
+                this.operatingList[4].point = this.getAPY(dpos.apy) * 0.6 * 100
                 this.getAPY(dpos.apy)
                 this.getNodeList(this.walletAddress)
                 this.getWalletBalance(this.walletAddress)
-                console.log('object', this.dataList)
+                console.log('object', this.nodeInfo)
+                this.votes = dpos.votes
+                this.income = dpos.income
                 Toast.clear()
             }).catch(err => {
                 this.detailsLoadStatus = 'error'
@@ -341,12 +411,12 @@ export default {
         },
         //投票
         userVote() {
-            if (!this.pledgeNonce) {
-                if (!this.voteAmount) {
-                    Toast.fail(this.$t('details.voteNonce'));
-                    return;
-                }
-            }
+            // if (!this.pledgeNonce) {
+            //     if (!this.voteAmount) {
+            //         Toast.fail(this.$t('details.voteNonce'));
+            //         return;
+            //     }
+            // }
             if (!this.voteAmount) {
                 Toast.fail(this.$t('toast.amount'));
                 return;
@@ -362,8 +432,8 @@ export default {
                 duration: 0
             });
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
-            console.log(this.dposAddress, this.pledgeType, this.pledgeCycles, this.pledgeNonce, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether'))
-            web3Contract.methods.pledgeVote(this.dposAddress, this.pledgeType, this.pledgeCycles, this.pledgeNonce, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether')).send({
+            console.log(this.dposAddress, this.pledgeType, this.pledgeCycles, 0, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether'))
+            web3Contract.methods.pledgeVote(this.dposAddress, this.pledgeType, 0, 0, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether')).send({
                 from: JSON.parse(localStorage.getItem('walletInfo')).address,
             }).then(res => {
                 console.log('res', res)
@@ -427,11 +497,19 @@ input:focus {
     font-size: 10px;
     line-height: 20px;
     text-align: center;
-    background-color: #6ab5db;
+    background-color: #EAAE36;
     border-radius: 100px;
 }
 
 .point-item {
     @apply rounded-lg w-3/12 text-sm text-center border border-lightborder;
+}
+
+.van-slider__bar {
+    background-color: #EAAE36;
+}
+
+.van-slider {
+    background: #000;
 }
 </style>

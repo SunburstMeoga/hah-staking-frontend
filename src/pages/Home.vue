@@ -1,30 +1,19 @@
 <template>
-    <div>
-        <div v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
-            class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-8 sm:w-9/12"
+    <div class="bg-#1F1F1F">
+        <div class="mb-8 w-full bg-#282828" v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <wallet-info />
+            <wallet-info :totalIncome="totalIncome" :totalVotes="totalVotes" :counts="counts" />
         </div>
-        <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12" v-if="votedDataList.length !== 0">
-            <module-title :title="$t('home.votedCount')" :count="$t('home.votedNode', { count: votedDataList.length })" />
-        </div>
-        <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-6 sm:w-9/12" v-if="votedDataList.length !== 0"
-            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
-            <div v-if="nodeListLoadStatus === 'finished'">
-                <voted-node-card :dataList="votedDataList" />
-            </div>
-        </div>
-        <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
+        <div class="w-11/12 mx-auto flex justify-center items-center pb-4">
             <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
         </div>
-        <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-6 sm:w-9/12"
-            style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+        <div class="w-11/12 mx-auto" style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
             <div v-if="nodeListLoadStatus === 'finished'">
                 <vote-node-card :dataList="nodeDataList" />
             </div>
         </div>
+
     </div>
 </template>
 
@@ -36,7 +25,7 @@ import VotedNodeCard from '@/components/VotedNodeCard'
 
 import HLoading from '@/components/HLoading'
 
-import { nodeList } from '@/request/api'
+import { nodeList, nodeDetails } from '@/request/api'
 import { amountFormat } from '@/utils/format'
 import { Toast } from 'vant'
 export default {
@@ -49,7 +38,10 @@ export default {
             delegateCount: 0,
             rewardMode: '-',
             ordinary: '-',
-            nodeListLoadStatus: 'loading'
+            nodeListLoadStatus: 'loading',
+            totalIncome: 0,
+            totalVotes: 0,
+            counts: {}
         }
     },
     created() {
@@ -57,12 +49,15 @@ export default {
         console.log('登录状态', localStorage.getItem('connectStatus'))
         this.getNodeList()
     },
+    computed: {
+
+    },
     methods: {
         amountFormat,
         //获取节点列表数据
         getNodeList() {
             this.nodeListLoadStatus = 'loading'
-            nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(res => {
+            nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
                 console.log('节点列表----', res)
                 res.data.map((item, index) => {
                     item.rank = index + 1
@@ -72,6 +67,20 @@ export default {
                     return
                 }
                 this.nodeDataList = res.data
+                await Promise.all(this.nodeDataList.map(async (item) => {
+                    item.showMore = false
+                    console.log(item)
+                    let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
+                    item.votesList = details.vote
+                    item.dpos = details.dpos
+                    console.log(details)
+                    console.log(item)
+                }))
+                this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
+                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.income, 10), 0);
+                console.log('votes', this.totalVotes)
+                console.log('incone', this.totalIncome)
+
                 this.delegateCount = res.total
                 let earningsInfo = {
                     ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
@@ -91,6 +100,18 @@ export default {
                 localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
                 this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
                 console.log('vuex的值', this.$store.state.earningsInfo)
+                console.log('节点列表', this.nodeDataList)
+                let counts = { 0: 0, 1: 0, 2: 0 };
+                this.nodeDataList.forEach(item => { //统计 进行中，已赎回，停止复投中的数据
+                    item.votesList.forEach(vote => {
+                        if (counts.hasOwnProperty(vote.status)) {
+                            counts[vote.status]++;
+                        }
+                    });
+                });
+                this.counts = counts
+                console.log(counts)
+
                 this.nodeListLoadStatus = 'finished'
             }).catch(err => {
                 this.nodeListLoadStatus = 'error'

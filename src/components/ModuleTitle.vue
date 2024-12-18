@@ -1,13 +1,11 @@
 <template>
-    <div>
-        <div class="flex justify-start items-baseline">
-            <div class="font-black">
-                {{ title }}
-            </div>
-            <div class="pl-2 text-sm text-lightmoreword">
-                {{ count }}
-            </div>
+    <div class="flex justify-start items-baseline w-full">
+        <div class="text-2xl text-#EAAE36 font-light">
+            {{ title }}
         </div>
+        <!-- <div class="pl-2 text-sm text-lightmoreword">
+            {{ count }}
+        </div> -->
     </div>
 </template>
 

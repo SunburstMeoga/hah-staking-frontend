@@ -86,7 +86,7 @@ export default {
         localStorage.setItem('walletInfo', JSON.stringify(walletInfo))
         localStorage.setItem('connectStatus', 'connect')
         this.$store.commit('getWalletInfo', JSON.parse(localStorage.getItem('walletInfo')))
-        console.log('store', this.$store.state.walletInfo)
+        // console.log('store', this.$store.state.walletInfo)
       }).catch(err => {
         console.log('getbalance err', err)
       })
@@ -182,7 +182,7 @@ export default {
           method: 'eth_requestAccounts',
         })
         this.getWalletBalance(accounts[0])
-        this.getNodeList(accounts[0])
+        // this.getNodeList(accounts[0])
         console.log('initWallet')
       } catch (error) {
         console.error(error)
