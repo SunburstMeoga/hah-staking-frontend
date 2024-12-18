@@ -67,15 +67,22 @@ export default {
                     return
                 }
                 this.nodeDataList = res.data
-                await Promise.all(this.nodeDataList.map(async (item) => {
+                await Promise.all(this.nodeDataList.map(async (item, index) => {
                     item.showMore = false
                     console.log(item)
+
                     let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
                     item.votesList = details.vote
                     item.dpos = details.dpos
                     console.log(details)
                     console.log(item)
                 }))
+                this.nodeDataList[0].name = 'HashGuardian'
+                this.nodeDataList[1].name = 'BlockSentinel'
+                this.nodeDataList[2].name = 'ChainPioneer'
+                this.nodeDataList[3].name = 'NodeTitan'
+                this.nodeDataList[4].name = 'CryptoHaven'
+                this.nodeDataList[5].name = 'AnchorCore'
                 this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
                 this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.income, 10), 0);
                 console.log('votes', this.totalVotes)

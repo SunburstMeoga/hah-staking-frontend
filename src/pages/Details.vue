@@ -76,12 +76,12 @@
                 @click="userVote">投 票
             </div>
             <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3" @click="showRole = !showRole">
-                <div class="underline font-light text-sm mr-2.5">投票规则</div>
+                <div class="underline font-light text-sm mr-2.5">规则说明</div>
                 <div class="icon iconfont icon-down2 text-xs"></div>
             </div>
             <div class="w-full mt-6" v-show="showRole">
                 <div class="w-11/12 mx-auto mb-6">
-                    <module-title title="投票规则" />
+                    <module-title title="规则说明" />
                 </div>
                 <div class="w-11/12 mx-auto  mb-6">
                     <voting-rules />

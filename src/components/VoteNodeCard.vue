@@ -23,8 +23,8 @@
                     </div>
                 </div>
                 <div class="flex flex-col justify-start items-center w-9/12 mb-5" v-show="item.showMore">
-                    <div
-                        class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
+                    <div class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black"
+                        @click.stop="copyContent(item.address)">
                         <div class="">节点地址</div>
                         <div class="">{{ addressFilter(item.address) }}</div>
                     </div>
