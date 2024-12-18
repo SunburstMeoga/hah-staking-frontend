@@ -530,7 +530,7 @@ input:focus {
 }
 
 .van-slider__bar {
-    background-color: #EAAE36;
+    background-color: #EAAE36 !important;
 }
 
 .van-slider {
