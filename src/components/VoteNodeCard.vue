@@ -6,7 +6,8 @@
                 class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col justify-start items-center pt-4 mb-4">
 
                 <div class="flex justify-between items-center mb-6 w-9/12">
-                    <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div>
+                    <!-- <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div> -->
+                    <div class="text-2xl font-light text-white">{{ item.name }}</div>
                     <div class="flex justify-end items-center -mr-6">
                         <div class="icon iconfont icon-Right text-lg text-#EAAE36" @click.stop="handleShowMore(index)">
                         </div>

@@ -1,7 +1,9 @@
 <template>
     <div class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col  justify-start items-center pt-4 mb-4">
         <div class="flex justify-between items-center mb-6 w-9/12">
-            <div class="text-2xl font-light text-#A5A5A5"> {{ $store.state.nodeDetails.name }}</div>
+            <!-- <div class="text-2xl font-light text-#A5A5A5"> {{ $store.state.nodeDetails.name }}</div> -->
+            <div class="text-2xl font-light text-white"> {{ $store.state.nodeDetails.name }}</div>
+
             <div class="flex justify-end items-center -mr-6">
                 <div class="icon iconfont icon-Right text-lg text-#EAAE36 duration-200 transition transform ease-linear "
                     :class="`${showMore ? 'rotate-90' : 'rotate-0'}`" @click="handleShowMore"></div>
@@ -23,7 +25,7 @@
                 'max-h-96 mb-5': showMore,
                 'max-h-0': !showMore
             }">
-            <div
+            <div @click="copyContent($store.state.nodeDetails.address)"
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                 <div class="">节点地址</div>
                 <div class="">{{ addressFilter($store.state.nodeDetails.address) }}</div>

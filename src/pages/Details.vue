@@ -48,12 +48,16 @@
                 <div class=" text-white">
                     {{ $t('details.amount') }}
                 </div>
-                <div class="h-10 w-56 rounded-lg overflow-hidden flex justify-center items-center bg-black">
+                <div
+                    class="h-10 w-56 rounded-lg overflow-hidden flex justify-center items-center bg-black border border-#FFD667">
                     <input type="number" v-model="voteAmount" @focus="amountFocus(0)" @input="validateAmount"
                         :placeholder="$t('placeholder.inputAmount')"
-                        class="text-left bg-transparent w-full indent-4 text-white" :min="100" step="0.01" />
+                        class="text-left bg-transparent w-full indent-4 text-white ml-4" :min="100" step="0.01" />
                 </div>
-                <div class="text-#A5A5A5 text-xs font-light">
+                <!-- <div class="text-#A5A5A5 text-xs font-light">
+                    HAH
+                </div> -->
+                <div class="text-white">
                     HAH
                 </div>
             </div>
@@ -365,6 +369,24 @@ export default {
                 console.log('getbalance err', err)
             })
         },
+        getNameByValue(value) {
+            switch (value) {
+                case "1":
+                    return "HashGuardian";
+                case "2":
+                    return "BlockSentinel";
+                case "3":
+                    return "ChainPioneer";
+                case "4":
+                    return "NodeTitan";
+                case "5":
+                    return "CryptoHaven";
+                case "6":
+                    return "AnchorCore";
+                default:
+                    return "Unknown"; // 如果传入的值不在 1-6 之间
+            }
+        },
         getNodeDetails() {
             this.detailsLoadStatus = 'loading'
             console.log(this.dposAddress, window.ethereum.selectedAddress)
@@ -374,7 +396,9 @@ export default {
                 if (vote.length === 0) {
                     this.showRedeem = true
                 }
-                this.nodeInfo.name = dpos.name
+                // this.nodeInfo.name = dpos.name
+                console.log(this.nodeRank, '-======')
+                this.nodeInfo.name = this.getNameByValue(this.nodeRank)
                 this.nodeInfo.address = dpos.address
                 this.nodeInfo.apy = dpos.apy
                 this.nodeInfo.state = dpos.state
