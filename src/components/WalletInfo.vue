@@ -72,9 +72,17 @@
                     <div class="flex flex-col justify-start items-center w-1/3">
                         <div class="flex justify-start items-center mb-3">
                             <div class="w-2 h-2 rounded-full bg-#00FFEA"></div>
-                            <div class="text-xs ml-2 text-#FFFFFF73">进行中</div>
+                            <div class="text-xs ml-2 text-#FFFFFF73">复投进行中</div>
                         </div>
                         <div class="text-#EAAE36 text-2xl">{{ counts['0'] }}</div>
+                    </div>
+
+                    <div class="flex flex-col justify-start items-center w-1/3">
+                        <div class="flex justify-start items-center mb-3">
+                            <div class="w-2 h-2 rounded-full bg-#FFD667"></div>
+                            <div class="text-xs ml-2 text-#FFFFFF73">停止复投中</div>
+                        </div>
+                        <div class="text-#EAAE36 text-2xl">{{ counts['1'] }}</div>
                     </div>
                     <div class="flex flex-col justify-start items-center w-1/3">
                         <div class="flex justify-start items-center mb-3">
@@ -82,13 +90,6 @@
                             <div class="text-xs ml-2 text-#FFFFFF73">已赎回</div>
                         </div>
                         <div class="text-#EAAE36 text-2xl">{{ counts['2'] }}</div>
-                    </div>
-                    <div class="flex flex-col justify-start items-center w-1/3">
-                        <div class="flex justify-start items-center mb-3">
-                            <div class="w-2 h-2 rounded-full bg-#FFD667"></div>
-                            <div class="text-xs ml-2 text-#FFFFFF73">停止复投中</div>
-                        </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['1'] }}</div>
                     </div>
                 </div>
             </div>
