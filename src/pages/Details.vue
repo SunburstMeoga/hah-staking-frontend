@@ -48,7 +48,7 @@
                 <div class=" text-white">
                     {{ $t('details.amount') }}
                 </div>
-                <div class="h-8 w-56 rounded-lg overflow-hidden flex justify-center items-center bg-black">
+                <div class="h-10 w-56 rounded-lg overflow-hidden flex justify-center items-center bg-black">
                     <input type="number" v-model="voteAmount" @focus="amountFocus(0)" @input="validateAmount"
                         :placeholder="$t('placeholder.inputAmount')"
                         class="text-left bg-transparent w-full indent-4 text-white" :min="100" step="0.01" />
@@ -75,9 +75,9 @@
             <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-9 mb-7"
                 @click="userVote">投 票
             </div>
-            <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3">
+            <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3" @click="showRole = !showRole">
                 <div class="underline font-light text-sm mr-2.5">投票规则</div>
-                <div class="icon iconfont icon-down2 text-xs" @click="showRole = !showRole"></div>
+                <div class="icon iconfont icon-down2 text-xs"></div>
             </div>
             <div class="w-full mt-6" v-show="showRole">
                 <div class="w-11/12 mx-auto mb-6">
