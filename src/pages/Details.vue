@@ -534,6 +534,6 @@ input:focus {
 }
 
 .van-slider {
-    background: #000;
+    background: #000 !important;
 }
 </style>
