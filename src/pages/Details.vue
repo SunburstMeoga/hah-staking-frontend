@@ -80,12 +80,12 @@
                 @click="userVote">投 票
             </div>
             <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3" @click="showRole = !showRole">
-                <div class="underline font-light text-sm mr-2.5">规则说明</div>
+                <div class="underline font-light text-sm mr-2.5">規則說明</div>
                 <div class="icon iconfont icon-down2 text-xs"></div>
             </div>
             <div class="w-full mt-6" v-show="showRole">
                 <div class="w-11/12 mx-auto mb-6">
-                    <module-title title="规则说明" />
+                    <module-title title="規則說明" />
                 </div>
                 <div class="w-11/12 mx-auto  mb-6">
                     <voting-rules />
@@ -265,10 +265,10 @@ export default {
                 return;
             }
 
-            // 允许只有一个小数点
-            let regex = /^\d*\.?\d{0,2}$/;  // 数字和最多两个小数点
+            // 允许只有一個小数点
+            let regex = /^\d*\.?\d{0,2}$/;  // 数字和最多两個小数点
             if (!regex.test(value)) {
-                this.voteAmount = value.slice(0, -1); // 如果不符合规则，去掉最后一个字符
+                this.voteAmount = value.slice(0, -1); // 如果不符合规则，去掉最后一個字符
             }
 
             // 确保无负数输入

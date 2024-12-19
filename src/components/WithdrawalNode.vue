@@ -24,7 +24,7 @@
                 </div>
                 <div class="flex justify-between items-center w-9/12 mb-6">
                     <div class="w-1/2 flex flex-col justify-start items-start">
-                        <div class="text-white mb-2">已投票数</div>
+                        <div class="text-white mb-2">已投票數</div>
                         <div class="text-#EAAE36 text-2xl font-light">{{ Number(item.amount).toFixed(4) }}</div>
                     </div>
                     <div class="w-1/2 flex flex-col justify-start items-start ml-8">
@@ -40,7 +40,7 @@
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                        <div class="">已投票数量</div>
+                        <div class="">已投票數量</div>
                         <div class="">23</div>
                     </div>
                     <div
@@ -278,7 +278,7 @@ export default {
                 case 1:
                     return "已停止复投";
                 case 2:
-                    return "已赎回";
+                    return "已贖回";
                 default:
                     return "未知状态"; // 如果 status 不是 0, 1, 或 2，则返回 "未知状态"
             }

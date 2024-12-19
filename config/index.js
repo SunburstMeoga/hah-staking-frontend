@@ -17,7 +17,7 @@ module.exports = {
         changeOrigin: true, //是否跨域
 
         pathRewrite: {
-          "^/api": "" //重写为空,这个时候api就相当于上面target接口基准地址
+          "^/api": "" //重写为空,这個时候api就相当于上面target接口基准地址
         }
       }
 

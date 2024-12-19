@@ -24,7 +24,7 @@
     </div> -->
     <div class="py-4  bg-#313131">
         <div class="flex justify-between items-center w-11/12 mr-auto ml-auto text-lighttable sm:w-10/12">
-            <div class="w-28">
+            <div class="w-28" @click="toHome">
                 <img class="w-full" src="../assets/logo.png" alt="">
             </div>
             <div class="flex justify-end items-center">
@@ -34,6 +34,9 @@
                     {{ $store.state.walletInfo.address ? $t('topBar.disconnect') :
                         $t('topBar.connect') }}
                 </div> -->
+                <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleCrossChain">
+                    <div class="text-xl icon iconfont icon-kualianqiao text-white" />
+                </div>
                 <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleConnect">
                     <div class="text-xl icon iconfont icon-duankailianjie text-white" />
                 </div>
@@ -116,7 +119,16 @@ export default {
                 console.log('getbalance err', err)
             })
         },
-
+        toHome() {
+            this.$router.push({
+                path: '/'
+            })
+        },
+        handleCrossChain() { //跨鏈橋
+            this.$router.push({
+                path: '/cross-chain-bridge'
+            })
+        },
         handleConnect() {
             console.log(localStorage.getItem('connectStatus'))
             if (localStorage.getItem('connectStatus') === 'connect') {

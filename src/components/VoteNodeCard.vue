@@ -15,7 +15,7 @@
                 </div>
                 <div class="flex justify-between items-center w-9/12 mb-6">
                     <div class="w-1/2 flex flex-col justify-start items-start">
-                        <div class="text-white mb-2">已投票数</div>
+                        <div class="text-white mb-2">已投票數</div>
                         <div class="text-#EAAE36 text-2xl font-light">{{ Math.floor(item.votes) }}</div>
                     </div>
                     <div class="w-1/2 flex flex-col justify-start items-start ml-8">
@@ -26,12 +26,12 @@
                 <div class="flex flex-col justify-start items-center w-9/12 mb-5" v-show="item.showMore">
                     <div class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black"
                         @click.stop="copyContent(item.address)">
-                        <div class="">节点地址</div>
+                        <div class="">節點地址</div>
                         <div class="">{{ addressFilter(item.address) }}</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                        <div class="">已投票数</div>
+                        <div class="">已投票數</div>
                         <div class="">{{ Number(item.votes).toFixed(0) }}</div>
                     </div>
                     <div
@@ -41,7 +41,7 @@
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                        <div class="">节点排名</div>
+                        <div class="">節點排名</div>
                         <div class="">{{ item.rank }}</div>
                     </div>
                     <div
@@ -51,7 +51,7 @@
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                        <div class="">节点票数</div>
+                        <div class="">節點票數</div>
                         <div class="">{{ Number(item.votes).toFixed(0) }}</div>
                     </div>
                 </div>

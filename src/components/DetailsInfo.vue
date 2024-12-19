@@ -48,15 +48,15 @@
         <div class="w-full flex flex-col justify-start items-center ">
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-between items-center text-base my-4">
-                    <div class="text-#00FFEA">钱包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
+                    <div class="text-#00FFEA">錢包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
                     <div class="icon iconfont icon-fuzhi text-white text-lg"></div>
                 </div>
                 <div class="w-full flex justify-between items-center pb-2 mb-2">
                     <div class="flex flex-col justify-start items-start w-1/2">
-                        <div class="text-#FFFFFF73 mb-1 text-xs">该节点投票量</div>
+                        <div class="text-#FFFFFF73 mb-1 text-xs">該節點投票量</div>
                         <div class="flex justify-start items-baseline">
                             <div class="text-#EAAE36 text-4xl font-bold">{{ Math.floor(votes) }}</div>
-                            <div class="text-#846934 ml-1 text-sm" v-if="!Math.floor(votes)">暂无投票</div>
+                            <div class="text-#846934 ml-1 text-sm" v-if="!Math.floor(votes)">暫無投票</div>
                         </div>
                     </div>
                     <div class="border-l border-#00000061 h-10 w-1"></div>

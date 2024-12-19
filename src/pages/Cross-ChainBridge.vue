@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-#1F1F1F">
+    <div class="bg-#1F1F1F pb-9">
         <div class="w-11/12 mx-auto flex justify-center items-center py-8">
-            <module-title title="跨链桥" />
+            <module-title title="跨鏈橋" />
         </div>
         <div class="w-full justify-start items-center flex flex-col transition-all duration-500">
             <div :class="{
@@ -9,39 +9,46 @@
                 'order-3': isSwapped,
             }"
                 class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
-                <div class="flex justify-between items-center w-11/12 mb-8 " @click="showList = !showList">
+                <div class="flex justify-between items-center w-11/12 mb-8 ">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">
-                            <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/logo.jpg" alt="">
+                            <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/HAH.png" alt="">
                         </div>
                         <div class="font-medium text-xl  ml-2">HAH</div>
-                        <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div>
+                        <!-- <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div> -->
                     </div>
-                    <div class="text-#A5A5A5 text-xs font-light">Hash Ahead Mainnet</div>
+                    <div class="text-#A5A5A5 text-xs font-light"> <span class="font-bold text-#00FFEA">
+                            {{ isSwapped ? '到 ' : '從 ' }}</span> Hash
+                        Ahead Mainnet</div>
                 </div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent">
                 </div>
             </div>
-            <div class="mx-auto my-3 flex justify-center items-center order-2">
-                <div class="icon iconfont icon-arrow-up-down-line text-#00FFEA text-2xl duration-200 transition-transform transform"
+            <div @click="showDialog = !showDialog"
+                class="mx-auto my-3 flex justify-center w-10 h-10 rounded-full bg-#282828 items-center order-2 text-2xl transition ease-in duration-100 active:translate-y-3">
+                <!-- <div class="icon iconfont icon-Down- text-#00FFEA text-2xl duration-200 transition-transform transform"
                     :style="{ transform: `rotate(${rotation}deg)` }" @click="rotateIcon">
-                </div>
+                </div> -->
+                <div class="icon iconfont icon-Down- text-#00FFEA " />
             </div>
             <div :class="{
                 'order-1': isSwapped,
                 'order-3': !isSwapped,
             }"
                 class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
-                <div class="flex justify-between items-center w-11/12 mb-8 " @click="showList = !showList">
+                <div class="flex justify-between items-center w-11/12 mb-8 ">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">
-                            <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/logo.jpg" alt="">
+                            <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/HAH.png" alt="">
                         </div>
-                        <div class="font-medium text-xl  ml-2">HAH222</div>
-                        <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div>
+                        <div class="font-medium text-xl  ml-2">HAH</div>
+                        <!-- <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div> -->
                     </div>
-                    <div class="text-#A5A5A5 text-xs font-light">Hash Ahead Mainnet</div>
+                    <div class="text-#A5A5A5 text-xs font-light"><span class="font-bold text-#00FFEA">
+                            {{ isSwapped ? '從 ' : '到 ' }}</span>Hash
+                        Ahead
+                        ByteBloom</div>
                 </div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent">
@@ -49,19 +56,47 @@
             </div>
         </div>
         <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-12 mt-12 mb-7">
-            确认跨链
+            確認跨鏈
         </div>
-        <div class="w-11/12 mx-auto pb-9">
+        <!-- <div class="w-11/12 mx-auto pb-9">
             <div class="w-full flex justify-between items-center text-#A5A5A5 h-9">
                 <div class="">参考汇率</div>
-                <div class="">1.0 ≈ 1.0</div>
+                <div class="">1.0 HAH ≈ 1.0 HAH</div>
             </div>
             <div class="w-full flex justify-between items-center text-#A5A5A5 h-9">
                 <div class="">网络费</div>
                 <div class="">0.0 HAH</div>
             </div>
-        </div>
+        </div> -->
+        <!-- 是否确认转换跨出链dialog -->
+        <van-popup v-model="showDialog">
+            <div class="w-full flex justify-center items-center bg-transparent">
+                <div
+                    class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+                    <div class="w-10/12 flex justify-start items-center">
+                        <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+                    </div>
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+                        <div class="icon iconfont icon-close text-sm"></div>
+                    </div>
+                    <div class="w-10/12 mb-5">
+                        是否切換為
+                        <span class="text-#EAAE36 font-bold">
+                            “{{ !isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
+                        </span> 跨出HAH
+                    </div>
+                    <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
+                        <div
+                            class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black ">
+                            取 消</div>
+                        <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+                            @click="rotateIcon">
+                            確 定</div>
 
+                    </div>
+                </div>
+            </div>
+        </van-popup>
         <!-- 跨链桥token列表 -->
         <van-popup v-model="showList" position="bottom">
             <div class="h-80 w-full overflow-x-scroll bg-#282828 pt-2 pb-10">
@@ -120,9 +155,10 @@ export default {
             counts: {},
 
             showList: false, //列表弹窗
+            showDialog: false,
             rotation: 0, // 初始化旋转角度
 
-            isSwapped: false, // 控制卡片是否交换位置
+            isSwapped: false, // 控制卡片是否交换位置  
         }
     },
     created() {
@@ -136,15 +172,15 @@ export default {
     methods: {
         amountFormat,
         rotateIcon() {
-            this.rotation += 180; // 每次点击增加360度
+            this.rotation += 360; // 每次点击增加360度
             this.isSwapped = !this.isSwapped;
-
+            this.showDialog = !this.showDialog
         },
-        //获取节点列表数据
+        //获取節點列表数据
         getNodeList() {
             this.nodeListLoadStatus = 'loading'
             nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
-                console.log('节点列表----', res)
+                console.log('節點列表----', res)
                 res.data.map((item, index) => {
                     item.rank = index + 1
                 })
@@ -193,9 +229,9 @@ export default {
                 localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
                 this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
                 console.log('vuex的值', this.$store.state.earningsInfo)
-                console.log('节点列表', this.nodeDataList)
+                console.log('節點列表', this.nodeDataList)
                 let counts = { 0: 0, 1: 0, 2: 0 };
-                this.nodeDataList.forEach(item => { //统计 进行中，已赎回，停止复投中的数据
+                this.nodeDataList.forEach(item => { //统计 进行中，已贖回，停止復投中的数据
                     item.votesList.forEach(vote => {
                         if (counts.hasOwnProperty(vote.status)) {
                             counts[vote.status]++;
@@ -220,5 +256,13 @@ export default {
 .card {
     transition: all 0.5s ease;
     /* 平滑过渡 */
+}
+</style>
+<style>
+.van-popup--center,
+.van-popup {
+    width: 100%;
+    background-color: none;
+    background: none;
 }
 </style>

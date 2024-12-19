@@ -11,7 +11,7 @@
         </div>
         <div class="flex justify-between items-center w-9/12 mb-6">
             <div class="w-1/2 flex flex-col justify-start items-start">
-                <div class="text-white mb-2">已投票数</div>
+                <div class="text-white mb-2">已投票數</div>
                 <div class="text-#EAAE36 text-2xl font-light">{{ Math.floor($store.state.nodeDetails.votes) }}</div>
             </div>
             <div class="w-1/2 flex flex-col justify-start items-start ml-8">
@@ -27,12 +27,12 @@
             }">
             <div @click="copyContent($store.state.nodeDetails.address)"
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">节点地址</div>
+                <div class="">節點地址</div>
                 <div class="">{{ addressFilter($store.state.nodeDetails.address) }}</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">已投票数</div>
+                <div class="">已投票數</div>
                 <div class="">{{ Math.floor($store.state.nodeDetails.votes) }}</div>
             </div>
             <div
@@ -42,7 +42,7 @@
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">节点排名</div>
+                <div class="">節點排名</div>
                 <div class="">1</div>
             </div>
             <div
@@ -52,7 +52,7 @@
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">节点票数</div>
+                <div class="">節點票數</div>
                 <div class="">33</div>
             </div>
         </div>

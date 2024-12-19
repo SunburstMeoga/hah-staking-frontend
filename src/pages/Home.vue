@@ -54,11 +54,11 @@ export default {
     },
     methods: {
         amountFormat,
-        //获取节点列表数据
+        //获取節點列表数据
         getNodeList() {
             this.nodeListLoadStatus = 'loading'
             nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
-                console.log('节点列表----', res)
+                console.log('節點列表----', res)
                 res.data.map((item, index) => {
                     item.rank = index + 1
                 })
@@ -107,9 +107,9 @@ export default {
                 localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
                 this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
                 console.log('vuex的值', this.$store.state.earningsInfo)
-                console.log('节点列表', this.nodeDataList)
+                console.log('節點列表', this.nodeDataList)
                 let counts = { 0: 0, 1: 0, 2: 0 };
-                this.nodeDataList.forEach(item => { //统计 进行中，已赎回，停止复投中的数据
+                this.nodeDataList.forEach(item => { //统计 进行中，已贖回，停止復投中的数据
                     item.votesList.forEach(vote => {
                         if (counts.hasOwnProperty(vote.status)) {
                             counts[vote.status]++;
