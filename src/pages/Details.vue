@@ -265,10 +265,10 @@ export default {
                 return;
             }
 
-            // 允许只有一個小数点
+            // 允许只有壹個小数点
             let regex = /^\d*\.?\d{0,2}$/;  // 数字和最多两個小数点
             if (!regex.test(value)) {
-                this.voteAmount = value.slice(0, -1); // 如果不符合规则，去掉最后一個字符
+                this.voteAmount = value.slice(0, -1); // 如果不符合规则，去掉最后壹個字符
             }
 
             // 确保无负数输入

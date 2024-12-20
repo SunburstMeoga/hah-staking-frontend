@@ -176,12 +176,12 @@ export default {
         amountFormat,
         //跨链金额输入框
         validateInput() {
-            // 只允许数字和一个小数点
+            // 只允许数字和壹个小数点
             let value = this.inputValue;
 
-            // 使用正则表达式进行验证，只允许一个小数点
+            // 使用正则表达式进行验证，只允许壹个小数点
             value = value.replace(/[^0-9.]/g, '') // 过滤掉非数字和小数点字符
-                .replace(/(\..*)\./g, '$1'); // 只保留一个小数点
+                .replace(/(\..*)\./g, '$1'); // 只保留壹个小数点
 
             // 设置更新后的值
             this.inputValue = value;

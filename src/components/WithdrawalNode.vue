@@ -61,7 +61,7 @@
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">投票周期</div>
-                        <div class="">一周</div>
+                        <div class="">壹周</div>
                     </div>
                 </div>
                 <!-- <div class="w-full bg-#303030 flex justify-center items-center text-white py-2">领 取</div> -->

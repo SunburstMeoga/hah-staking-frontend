@@ -104,11 +104,11 @@ export default {
                             title: this.$t('footBar.vote'),
                             path: 'https://test-vote.hashahead.org/ '
                         },
-                        {
-                            title: this.$t('footBar.faucet'),
-                            path: 'https://testnet.hashahead.org/faucet-smart'
+                        // {
+                        //     title: this.$t('footBar.faucet'),
+                        //     path: 'https://testnet.hashahead.org/faucet-smart'
 
-                        }
+                        // }
                     ]
                 }
             ]
