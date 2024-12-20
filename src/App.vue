@@ -103,20 +103,20 @@ export default {
     },
 
     async networkHasChanged() {
-      window.ethereum.on('chainChanged', (chainChanged) => {
-        console.log('当前链id', chainChanged)
-        this.$store.commit('getChainId', chainChanged)
+      // window.ethereum.on('chainChanged', (chainChanged) => {
+      //   console.log('当前链id', chainChanged)
+      //   this.$store.commit('getChainId', chainChanged)
 
-        if (chainChanged !== this.Config.chainId) {
-          Dialog.alert({
-            title: this.$t('dialog.checkNetwork'),
-            message: this.$t('dialog.checkMessage'),
-            confirmButtonText: this.$t('dialog.confirmButtonText'),
-          }).then(() => {
-            this.switchNetwork()
-          });
-        }
-      })
+      //   if (chainChanged !== this.Config.chainId) {
+      //     Dialog.alert({
+      //       title: this.$t('dialog.checkNetwork'),
+      //       message: this.$t('dialog.checkMessage'),
+      //       confirmButtonText: this.$t('dialog.confirmButtonText'),
+      //     }).then(() => {
+      //       this.switchNetwork()
+      //     });
+      //   }
+      // })
     },
 
     async getChainId() {

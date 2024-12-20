@@ -199,7 +199,7 @@ export default {
             //     params: [{ chainId: this.isSwapped ? '0x11623' : '0x2bf' }],
             // })
             try {
-                console.log('切换网络')
+                console.log('切换网络', [{ chainId: this.isSwapped ? '0x329' : '0x2bf' }])
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: this.isSwapped ? '0x329' : '0x2bf' }],
