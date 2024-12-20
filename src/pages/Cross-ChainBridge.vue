@@ -206,32 +206,32 @@ export default {
                 })
             } catch (err) {
                 console.error('切换自定义网络错误', err)
-                // if (err.code === 4902) {
-                console.log('自定义网络不存在，去添加自定义网络')
-                console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
-                try {
-                    await ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [
-                            {
-                                chainId: this.isSwapped ? '0x329' : '0x2bf',
-                                chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
-                                rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
-                                iconUrls: ['https://testnet.hashahead.org/logo.png'],
-                                blockExplorerUrls: ['https://scan.hashahead.org/'],
-                                nativeCurrency: {
-                                    name: 'HAH',
-                                    symbol: 'HAH',
-                                    decimals: 18
-                                }
-                            },
-                        ],
-                    });
-                } catch (addError) {
-                    console.log('添加自定义网络错误', addError)
-                }
+                if (err.code === 4902) {
+                    console.log('自定义网络不存在，去添加自定义网络')
+                    console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
+                    try {
+                        await ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: this.isSwapped ? '0x329' : '0x2bf',
+                                    chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
+                                    rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
+                                    iconUrls: ['https://testnet.hashahead.org/logo.png'],
+                                    blockExplorerUrls: ['https://scan.hashahead.org/'],
+                                    nativeCurrency: {
+                                        name: 'HAH',
+                                        symbol: 'HAH',
+                                        decimals: 18
+                                    }
+                                },
+                            ],
+                        });
+                    } catch (addError) {
+                        console.log('添加自定义网络错误', addError)
+                    }
 
-                // }
+                }
             }
             this.rotation += 360; // 每次点击增加360度
             this.isSwapped = !this.isSwapped;
