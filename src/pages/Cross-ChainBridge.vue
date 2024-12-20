@@ -9,7 +9,7 @@
                 'order-3': isSwapped,
             }"
                 class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
-                <div class="flex justify-between items-center w-11/12 mb-8 ">
+                <div class="flex justify-between items-center w-11/12 mb-4">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">
                             <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/HAH.png" alt="">
@@ -21,6 +21,9 @@
                             {{ isSwapped ? '到 ' : '從 ' }}</span> Hash
                         Ahead Mainnet</div>
                 </div>
+                <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
+                    v-if="!isSwapped">
+                    餘額:0.00 HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
@@ -38,7 +41,7 @@
                 'order-3': !isSwapped,
             }"
                 class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
-                <div class="flex justify-between items-center w-11/12 mb-8 ">
+                <div class="flex justify-between items-center w-11/12 mb-4 ">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">
                             <img class="w-7 h-7 rounded-full overflow-hidden" src="../assets/HAH.png" alt="">
@@ -51,6 +54,9 @@
                         Ahead
                         ByteBloom</div>
                 </div>
+                <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
+                    v-if="!isSwapped">
+                    餘額:0.00 HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
