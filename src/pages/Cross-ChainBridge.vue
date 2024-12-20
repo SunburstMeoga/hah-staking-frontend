@@ -22,7 +22,8 @@
                         Ahead Mainnet</div>
                 </div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
-                    <input type="number" class="w-full h-9 border-none bg-transparent">
+                    <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
+                        @input="validateInput">
                 </div>
             </div>
             <div @click="showDialog = !showDialog"
@@ -51,7 +52,8 @@
                         ByteBloom</div>
                 </div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
-                    <input type="number" class="w-full h-9 border-none bg-transparent">
+                    <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
+                        @input="validateInput">
                 </div>
             </div>
         </div>
@@ -159,6 +161,7 @@ export default {
             rotation: 0, // 初始化旋转角度
 
             isSwapped: false, // 控制卡片是否交换位置  
+            inputValue: '',  // 初始化输入值
         }
     },
     created() {
@@ -171,7 +174,59 @@ export default {
     },
     methods: {
         amountFormat,
-        rotateIcon() {
+        //跨链金额输入框
+        validateInput() {
+            // 只允许数字和一个小数点
+            let value = this.inputValue;
+
+            // 使用正则表达式进行验证，只允许一个小数点
+            value = value.replace(/[^0-9.]/g, '') // 过滤掉非数字和小数点字符
+                .replace(/(\..*)\./g, '$1'); // 只保留一个小数点
+
+            // 设置更新后的值
+            this.inputValue = value;
+        },
+        async rotateIcon() {
+            // await window.ethereum.request({
+            //     method: 'wallet_switchEthereumChain',
+            //     // params: [{ chainId: this.Config.chainId }],
+            //     params: [{ chainId: this.isSwapped ? '0x11623' : '0x2bf' }],
+            // })
+            try {
+                console.log('切换网络')
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: this.isSwapped ? '0x329' : '0x2bf' }],
+                })
+            } catch (err) {
+                console.error('切换自定义网络错误', err)
+                // if (err.code === 4902) {
+                console.log('自定义网络不存在，去添加自定义网络')
+                console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
+                try {
+                    await ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [
+                            {
+                                chainId: this.isSwapped ? '0x329' : '0x2bf',
+                                chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
+                                rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
+                                iconUrls: ['https://testnet.hashahead.org/logo.png'],
+                                blockExplorerUrls: ['https://scan.hashahead.org/'],
+                                nativeCurrency: {
+                                    name: 'HAH',
+                                    symbol: 'HAH',
+                                    decimals: 18
+                                }
+                            },
+                        ],
+                    });
+                } catch (addError) {
+                    console.log('添加自定义网络错误', addError)
+                }
+
+                // }
+            }
             this.rotation += 360; // 每次点击增加360度
             this.isSwapped = !this.isSwapped;
             this.showDialog = !this.showDialog

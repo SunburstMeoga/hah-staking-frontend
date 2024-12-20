@@ -121,59 +121,59 @@ export default {
 
     async getChainId() {
       const { ethereum } = window;
-      try {
-        const chainId = await ethereum.request({
-          method: "eth_chainId"
-        });
-        console.log('当前链id', chainId)
-        this.$store.commit('getChainId', chainId)
-        if (chainId !== this.Config.chainId) {
-          Dialog.alert({
-            title: this.$t('dialog.checkNetwork'),
-            message: this.$t('dialog.checkMessage'),
-            confirmButtonText: this.$t('dialog.confirmButtonText'),
-          }).then(() => {
-            this.switchNetwork()
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
+      // try {
+      //   const chainId = await ethereum.request({
+      //     method: "eth_chainId"
+      //   });
+      //   console.log('当前链id', chainId)
+      //   this.$store.commit('getChainId', chainId)
+      //   if (chainId !== this.Config.chainId) {
+      //     Dialog.alert({
+      //       title: this.$t('dialog.checkNetwork'),
+      //       message: this.$t('dialog.checkMessage'),
+      //       confirmButtonText: this.$t('dialog.confirmButtonText'),
+      //     }).then(() => {
+      //       this.switchNetwork()
+      //     });
+      //   }
+      // } catch (err) {
+      //   console.error(err);
+      // }
     },
 
     async switchNetwork() {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: this.Config.chainId }],
-        })
-      } catch (err) {
-        console.error(err)
-        if (err.code === 4902) {
-          try {
-            await ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [
-                {
-                  chainId: this.Config.chainId,
-                  chainName: this.Config.chainName,
-                  rpcUrls: [this.Config.rpcUrls,],
-                  iconUrls: ['https://testnet.hashahead.org/logo.png'],
-                  blockExplorerUrls: [this.Config.blockExplorerUrls,],
-                  nativeCurrency: {
-                    name: 'HAH',
-                    symbol: 'HAH',
-                    decimals: 18
-                  }
-                },
-              ],
-            });
-          } catch (addError) {
-            console.log(addError)
-          }
+      // try {
+      //   await window.ethereum.request({
+      //     method: 'wallet_switchEthereumChain',
+      //     params: [{ chainId: this.Config.chainId }],
+      //   })
+      // } catch (err) {
+      //   console.error(err)
+      //   if (err.code === 4902) {
+      //     try {
+      //       await ethereum.request({
+      //         method: 'wallet_addEthereumChain',
+      //         params: [
+      //           {
+      //             chainId: this.Config.chainId,
+      //             chainName: this.Config.chainName,
+      //             rpcUrls: [this.Config.rpcUrls,],
+      //             iconUrls: ['https://testnet.hashahead.org/logo.png'],
+      //             blockExplorerUrls: [this.Config.blockExplorerUrls,],
+      //             nativeCurrency: {
+      //               name: 'HAH',
+      //               symbol: 'HAH',
+      //               decimals: 18
+      //             }
+      //           },
+      //         ],
+      //       });
+      //     } catch (addError) {
+      //       console.log(addError)
+      //     }
 
-        }
-      }
+      //   }
+      // }
     },
 
     async initWallet() {

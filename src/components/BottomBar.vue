@@ -16,13 +16,13 @@
                     <div class="w-32 mb-4">
                         <img class="w-full h-full object-cover" src="../assets/logo.png" alt="">
                     </div>
-                    <div class="font-bold">
+                    <!-- <div class="font-bold">
                         {{ $t('footBar.title') }}
-                    </div>
+                    </div> -->
                 </div>
-                <div class="text-white font-light">
+                <!-- <div class="text-white font-light">
                     {{ $t('Index.h2') }}
-                </div>
+                </div> -->
             </div>
             <div class="flex justify-between flex-wrap sm:flex-nowrap sm:justify-end sm:w-3/4">
                 <div class="w-6/12 text-sm sm:w-1/4 mb-6 text-#EAAE36" v-for="(item, index) in tankList" :key="index">
