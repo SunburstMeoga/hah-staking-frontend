@@ -1,6 +1,6 @@
 <template>
     <div class="bg-#1F1F1F">
-        <div class="mb-8 w-full bg-#282828" v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
+        <div class="mb-8 w-full bg-#282828" v-if="$store.state.walletInfo.address"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <wallet-info :totalIncome="totalIncome" :totalVotes="totalVotes" :counts="counts" />
         </div>

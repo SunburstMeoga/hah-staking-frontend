@@ -1,7 +1,6 @@
 <template>
     <div class="bg-#1F1F1F pt-5">
-        <div class="mb-3 w-11/12 mx-auto bg-#282828 rounded-2xl overflow-hidden"
-            v-if="$store.state.walletInfo.address && $store.state.chainId === '0x11623'"
+        <div class="mb-3 w-11/12 mx-auto bg-#282828 rounded-2xl overflow-hidden" v-if="$store.state.walletInfo.address"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <details-info :votes="votes" :income="income" />
         </div>
@@ -38,7 +37,7 @@
                     v-for="(item, index) in operatingList" :key="index" @click="handleMode(item, index)">
                     <div class="text-xs font-light mb-2"
                         :class="`${currentMode === index ? 'text-#EAAE36' : 'text-#A5A5A5'}`">{{
-                item.title }}</div>
+            item.title }}</div>
                     <div class="text-2xl" :class="`${currentMode === index ? 'text-#EAAE36' : 'text-#A5A5A5'}`">
                         {{ item.point.toFixed(0) }}%
                     </div>
