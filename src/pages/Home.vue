@@ -4,10 +4,10 @@
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <wallet-info :totalIncome="totalIncome" :totalVotes="totalVotes" :counts="counts" />
         </div>
-        <div class="w-11/12 mx-auto flex justify-center items-center pb-4">
+        <div class="w-11/12 mx-auto flex justify-center items-center pb-4 ">
             <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
         </div>
-        <div class="w-11/12 mx-auto" style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+        <div class="w-11/12 mx-auto c ">
             <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
             <div v-if="nodeListLoadStatus === 'finished'">
                 <vote-node-card :dataList="nodeDataList" />

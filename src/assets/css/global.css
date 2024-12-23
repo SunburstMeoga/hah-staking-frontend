@@ -1,0 +1,5 @@
+.card-shadow {
+    box-shadow:-1px 7px 15px #00000040;
+-moz-box-shadow: -1px 7px 15px #00000040;
+-webkit-box-shadow: -1px 7px 15px #00000040
+}

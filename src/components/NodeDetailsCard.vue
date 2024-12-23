@@ -1,5 +1,6 @@
 <template>
-    <div class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col  justify-start items-center pt-4 mb-4">
+    <div
+        class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col  justify-start items-center pt-4 mb-4 card-shadow ">
         <div class="flex justify-between items-center mb-6 w-9/12">
             <!-- <div class="text-2xl font-light text-#A5A5A5"> {{ $store.state.nodeDetails.name }}</div> -->
             <div class="text-2xl font-light text-white"> {{ $store.state.nodeDetails.name }}</div>

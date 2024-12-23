@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-10">
+    <div class="">
         <div v-for="(item, index) in dataList" :key="index">
             <!-- <div class="absolute left-0 top-0 w-6 h-6" v-if="item.details.vote[0].status === 1">
                 <img src="../assets/stop.png" alt="">

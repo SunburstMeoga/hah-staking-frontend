@@ -3,12 +3,12 @@
         <div class="w-11/12 mx-auto flex justify-center items-center py-8">
             <module-title title="跨鏈橋" />
         </div>
-        <div class="w-full justify-start items-center flex flex-col transition-all duration-500">
+        <div class="w-full justify-start items-center flex flex-col transition-all duration-500 ">
             <div :class="{
                 'order-1': !isSwapped,
                 'order-3': isSwapped,
             }"
-                class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
+                class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card card-shadow">
                 <div class="flex justify-between items-center w-11/12 mb-4">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">
@@ -40,7 +40,7 @@
                 'order-1': isSwapped,
                 'order-3': !isSwapped,
             }"
-                class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card">
+                class="w-11/12 bg-#282828 rounded-xl flex flex-col justify-center items-center h-32 mx-auto text-white card card-shadow">
                 <div class="flex justify-between items-center w-11/12 mb-4 ">
                     <div class="flex justify-start items-center">
                         <div class="w-7 h-7 rounded-full overflow-hidden">

@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="w-full flex flex-col justify-start items-center">
+        <div class="w-full flex flex-col justify-start items-center card-shadow ">
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-start items-center mb-4">
                     <div class="w-1/3 h-1 bg-#EAAE36 rounded-full"></div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-#1F1F1F w-full">
+    <div class="bg-#1F1F1F w-full pt-6">
         <div class="w-9/12 mx-auto mb-14">
             <div class="w-full">
                 <div class="flex justify-between items-center w-full">

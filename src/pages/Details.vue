@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-#1F1F1F pt-5">
+    <div class="bg-#1F1F1F pt-5 ">
         <div class="mb-3 w-11/12 mx-auto bg-#282828 rounded-2xl overflow-hidden" v-if="$store.state.walletInfo.address"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <details-info :votes="votes" :income="income" />
@@ -25,7 +25,7 @@
             <module-title :title="$t('details.voteBtn')" />
         </div> -->
 
-        <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 mb-3"
+        <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 card-shadow"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <div class="w-11/12 mx-auto pt-6 mb-6">
                 <module-title :title="$t('details.voteBtn')" />
@@ -165,7 +165,7 @@
         <!-- <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
             <module-title :title="$t('details.redeemBtn')" />
         </div> -->
-        <div class="w-11/12 mx-auto" style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
+        <div class="w-11/12 mx-auto bg-#1F1F1F">
             <div class="">
                 <withdrawal-node :dataList="dataList" @userRedeem="userRedeem" />
             </div>

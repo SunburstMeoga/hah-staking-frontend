@@ -1,15 +1,16 @@
 <template>
-    <div class="pb-10">
+    <div class="pb-12 bg-#1F1F1F">
         <div v-for="(item, index) in dataList" :key="index" class="relative">
 
             <div @click="handleAddress(item)"
-                class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col justify-start items-center pt-4 mb-4">
+                class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col justify-start items-center pt-4 mb-4 card-shadow ">
 
                 <div class="flex justify-between items-center mb-6 w-9/12">
                     <!-- <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div> -->
                     <div class="text-2xl font-light text-white">{{ item.name }}</div>
                     <div class="flex justify-end items-center -mr-6">
-                        <div class="icon iconfont icon-Right text-lg text-#EAAE36" @click.stop="handleShowMore(index)">
+                        <div class="icon iconfont icon-Right text-lg text-#EAAE36 duration-200 transition transform ease-linear "
+                            :class="`${item.showMore ? 'rotate-90' : 'rotate-0'}`" @click.stop="handleShowMore(index)">
                         </div>
                     </div>
                 </div>
@@ -23,7 +24,11 @@
                         <div class="text-#EAAE36 text-2xl font-light">{{ Math.floor(item.apy * 100) }}%</div>
                     </div>
                 </div>
-                <div class="flex flex-col justify-start items-center w-9/12 mb-5" v-show="item.showMore">
+                <div class="duration-200 transition-all transform ease-linear overflow-hidden flex flex-col justify-start items-center w-9/12"
+                    :class="{
+            'max-h-96 mb-5': item.showMore,
+            'max-h-0': !item.showMore
+        }">
                     <div class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black"
                         @click.stop="copyContent(item.address)">
                         <div class="">節點地址</div>

@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div> -->
-        <div class="w-full flex flex-col justify-start items-center ">
+        <div class="w-full flex flex-col justify-start items-center card-shadow">
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-between items-center text-base my-4">
                     <div class="text-#00FFEA">錢包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
