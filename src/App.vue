@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="bg-lightsecond">
-    <top-bar />
+    <top-bar :isHome="isHome" />
     <div class="sm:pb-20">
       <router-view />
     </div>
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       showPopup: false,
+      isHome: true
     }
   },
   created() {
@@ -28,6 +29,13 @@ export default {
     // const web3 = this.Web3(window.ethereum)
 
     console.log('isConnected', this.Web3.currentProvider._state.isConnected)
+    this.updateIsHome()
+  },
+  watch: {
+    // 监听路由变化
+    '$route.path'(newPath) {
+      this.isHome = newPath === '/' // 如果路由是首页则设置为 true
+    },
   },
   mounted() {
     this.Web3.currentProvider.on('connect', (status) => {
@@ -52,6 +60,10 @@ export default {
   },
   methods: {
     amountFormat,
+    updateIsHome() {
+      // 初始化时判断当前路由是否为首页
+      this.isHome = this.$route.path === '/'
+    },
     getNodeList(address) {
       nodeList({ pageSize: 1, address: address }).then(res => {
         Toast.loading({

@@ -22,11 +22,12 @@
             {{ $t('details.pageTitle') }}
         </div>
     </div> -->
-    <div class="py-4  bg-#313131">
-        <div class="flex justify-between items-center w-11/12 mr-auto ml-auto text-lighttable sm:w-10/12">
-            <div class="w-28" @click="toHome">
+    <div class="h-16 bg-#313131 sticky top-0 z-50">
+        <div class=" h-16 flex justify-between items-center w-11/12 mr-auto ml-auto text-lighttable sm:w-10/12">
+            <div class="w-28" @click="openPage" v-if="isHome">
                 <img class="w-full" src="../assets/logo.png" alt="">
             </div>
+            <div v-else class="text-white text-lg icon iconfont icon-back" @click="toHome"></div>
             <div class="flex justify-end items-center">
 
                 <!-- <div class="border rounded-sm border-lightborder h-8 px-3 flex justify-center items-center"
@@ -123,6 +124,10 @@ export default {
             this.$router.push({
                 path: '/'
             })
+
+        },
+        openPage() {
+            window.open('https://blockway.io/', "_blank")
         },
         handleCrossChain() { //跨鏈橋
             this.$router.push({
