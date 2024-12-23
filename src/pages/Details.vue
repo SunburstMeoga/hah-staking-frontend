@@ -170,7 +170,35 @@
                 <withdrawal-node :dataList="dataList" @userRedeem="userRedeem" />
             </div>
         </div>
+        <!-- 余额不足，弹出跨链桥dialog -->
+        <van-popup v-model="showDialog">
+            <div class="w-full flex justify-center items-center bg-transparent">
+                <div
+                    class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+                    <div class="w-10/12 flex justify-start items-center">
+                        <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+                    </div>
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+                        <div class="icon iconfont icon-close text-sm"></div>
+                    </div>
+                    <div class="w-10/12 mb-5">
+                        余额不足，请前往跨链桥
+                        <!-- <span class="text-#EAAE36 font-bold">
+                            “{{ !isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
+                        </span> 跨出HAH -->
+                    </div>
+                    <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
+                        <div
+                            class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black ">
+                            取 消</div>
+                        <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+                            @click="toCross">
+                            確 定</div>
 
+                    </div>
+                </div>
+            </div>
+        </van-popup>
 
     </div>
 </template>
@@ -185,7 +213,7 @@ import WithdrawalNode from '@/components/WithdrawalNode'
 
 import { timeFormat, addressFilter, amountFormat } from '../utils/format';
 import { nodeDetails, nodeList } from '@/request/api'
-import { Toast, Slider, Stepper } from 'vant';
+import { Toast, Slider, Stepper, Popup } from 'vant';
 export default {
     components: {
         DetailsInfo,
@@ -195,8 +223,8 @@ export default {
         VotingRules,
         HLoading, WithdrawalNode,
         [Slider.name]: Slider,
-        [Stepper.name]: Stepper
-
+        [Stepper.name]: Stepper,
+        [Popup.name]: Popup,
     },
     data() {
         return {
@@ -231,7 +259,8 @@ export default {
             showRedeem: false,
             showRole: false,
             votes: 0,
-            income: 0
+            income: 0,
+            showDialog: false
         }
     },
     computed: {
@@ -255,14 +284,20 @@ export default {
         amountFocus(index) {
             index === 0 ? this.currentVotePoint = null : this.currentRedeemPoint = null
         },
+        //余额不足，前往跨链桥
+        toCross() {
+            this.$router.push({
+                path: '/cross-chain-bridge'
+            })
+        },
         validateAmount(event) {
             let value = event.target.value;
 
             // 确保最小值为100
-            if (parseFloat(value) < 100) {
-                this.voteAmount = 100;
-                return;
-            }
+            // if (parseFloat(value) < 100) {
+            //     this.voteAmount = 100;
+            //     return;
+            // }
 
             // 允许只有壹個小数点
             let regex = /^\d*\.?\d{0,2}$/;  // 数字和最多两個小数点
@@ -434,20 +469,17 @@ export default {
         },
         //投票
         userVote() {
-            // if (!this.pledgeNonce) {
-            //     if (!this.voteAmount) {
-            //         Toast.fail(this.$t('details.voteNonce'));
-            //         return;
-            //     }
-            // }
+            if (this.voteAmount < 100) {
+                Toast.fail('最小投票金额为100HAH');
+                return;
+            }
             if (!this.voteAmount) {
                 Toast.fail(this.$t('toast.amount'));
                 return;
             }
             console.log(this.getUserCalculateBalance(), this.getInputValue(this.voteAmount))
             if (this.getUserCalculateBalance() < this.voteAmount) {
-                console.log('余额不足')
-                Toast.fail(this.$t('toast.notBalance'));
+                this.showDialog = !this.showDialog
                 return
             }
             Toast.loading({
@@ -534,5 +566,13 @@ input:focus {
 
 .van-slider {
     background: #000 !important;
+}
+</style>
+<style>
+.van-popup--center,
+.van-popup {
+    width: 100%;
+    background-color: none;
+    background: none;
 }
 </style>
