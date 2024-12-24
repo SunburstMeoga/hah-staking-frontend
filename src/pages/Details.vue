@@ -9,22 +9,7 @@
                 class="w-full duration-150 transition transform ease-linear active:scale-95">
                 <node-details-card ref="nodeDetails" :getDetailsInfo="nodeInfo" />
             </div>
-
-            <!-- <div class="sm:w-6/12">
-                <div class="w-full ml-auto mr-auto mb-2 sm:mb-4">
-                    <module-title :title="$t('rules.title')" />
-                </div>
-                <div class="w-full ml-auto mr-auto rounded-lg mb-3 sm:mb-6"
-                    style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-                    <voting-rules />
-                </div>
-            </div> -->
         </div>
-
-        <!-- <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
-            <module-title :title="$t('details.voteBtn')" />
-        </div> -->
-
         <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 card-shadow"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <div class="w-11/12 mx-auto pt-6 mb-6">
@@ -53,9 +38,6 @@
                         :placeholder="$t('placeholder.inputAmount')"
                         class="text-left bg-transparent w-full indent-4 text-white ml-4" :min="100" step="0.01" />
                 </div>
-                <!-- <div class="text-#A5A5A5 text-xs font-light">
-                    HAH
-                </div> -->
                 <div class="text-white">
                     HAH
                 </div>
@@ -90,83 +72,9 @@
                     <voting-rules />
                 </div>
             </div>
-            <!-- <div class="sm:ml-auto sm:mr-auto">
-                <div class="px-2 py-3 sm:py-4">
-                    <div class="flex flex-nowrap justify-start items-center overflow-x-auto w-full pb-1">
-                        <div v-for="(item, index) in operatingList" :key="index" @click="handleMode(item, index)">
-                            <div :class="currentMode === index ? 'text-white bg-clickable' : 'text-clickable'"
-                                class="cursor-pointer rounded-md border w-32 mr-4 mb-2 border-clickable text-sm py-1 flex flex-col justify-center items-center">
-                                <div>
-                                    {{ item.title }}
-                                </div>
-                                <div class="text-xs">
-                                    {{ $t('details.yield') }}:{{ item.point.toFixed(6) }}%
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="sm:flex sm:justify-between sm:items-center mr-auto ml-auto sm:px-4">
-                <div class="w-11/12 ml-auto mr-auto rounded-lg mb-3 sm:mb-0 sm:ml-0 sm:mr-0 sm:w-5/12">
-                    <div class="px-2 py-3">
-                        <div class="flex justify-start items-center mb-6">
-                            <div class="font-bold mr-2 text-lighttable text-sm">
-                                {{ $t('details.voteNonce') }}
-                            </div>
-                            <div
-                                class="flex-1 h-8 rounded-lg overflow-hidden flex justify-center items-center border border-lightborder">
-                                <input type="number" class="text-center" v-model="pledgeNonce" @focus="amountFocus(0)"
-                                    :placeholder="$t('details.voteNonce')">
-                            </div>
-                        </div>
-                        <div class="flex justify-start items-center mb-6">
-                            <div class="font-bold mr-2 text-lighttable text-sm">
-                                {{ $t('details.voteCycle') }}
-                            </div>
-                            <van-stepper v-model="pledgeCycles" min="1" max="2147483647" integer />
-                        </div>
-                        <div class="flex justify-start items-center mb-6">
-                            <div class="font-bold mr-2 text-lighttable text-sm">
-                                {{ $t('details.amount') }}
-                            </div>
-                            <div
-                                class="flex-1 h-8 rounded-lg overflow-hidden flex justify-center items-center border border-lightborder">
-                                <input type="number" class="text-center" v-model="voteAmount" @focus="amountFocus(0)"
-                                    :placeholder="$t('placeholder.inputAmount')">
-                            </div>
-                            <div class="font-bold ml-2 text-lighttable text-sm">
-                                HAH
-                            </div>
-                        </div>
-                        <div class="mb-4 w-11/12 mr-auto ml-auto sm:w-full">
-                            <van-slider v-model="voteValue" @change="onChangeVotes">
-                                <template #button>
-                                    <div class="custom-button">{{ voteValue + '%' }}</div>
-                                </template>
-                            </van-slider>
-                            <div class="w-full mr-auto ml-auto flex justify-between items-center mt-4">
-                                <div class="point-item" @click="handleVotePoint(item, index)"
-                                    :class="currentVotePoint === index ? 'bg-clickable text-gray-50 border-none' : ''"
-                                    v-for="(item, index) in pointList" :key="index">
-                                    {{ item.title }}
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="operating-btn" @click="userVote">{{ $t('details.voteBtn') }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
-        <!-- <div class="w-11/12 ml-auto mr-auto mb-2 sm:mb-4 sm:w-9/12">
-            <module-title :title="$t('details.redeemBtn')" />
-        </div> -->
         <div class="w-11/12 mx-auto bg-#1F1F1F">
-            <div class="">
+            <div class="pb-10">
                 <withdrawal-node :dataList="dataList" @userRedeem="userRedeem" />
             </div>
         </div>
@@ -199,7 +107,6 @@
                 </div>
             </div>
         </van-popup>
-
     </div>
 </template>
 
@@ -212,7 +119,7 @@ import HLoading from '@/components/HLoading'
 import WithdrawalNode from '@/components/WithdrawalNode'
 
 import { timeFormat, addressFilter, amountFormat } from '../utils/format';
-import { nodeDetails, nodeList } from '@/request/api'
+import { nodeDetails, nodeList, delegateDetails } from '@/request/api'
 import { Toast, Slider, Stepper, Popup } from 'vant';
 export default {
     components: {
@@ -258,14 +165,25 @@ export default {
             pledgeCycles: 1,
             showRedeem: false,
             showRole: false,
-            votes: 0,
-            income: 0,
+
             showDialog: false
         }
     },
     computed: {
         operatingList() {
             return [{ title: this.$t('details.oneYear'), point: 100, type: 1 }, { title: this.$t('details.half'), point: 90, type: 2 }, { title: this.$t('details.trimester'), point: 80, type: 3 }, { title: this.$t('details.oneMonth'), point: 70, type: 4 }, { title: this.$t('details.oneWeek'), point: 60, type: 5 }]
+        },
+        //当前用户在该节点的投票量
+        votes() {
+            return this.dataList.reduce((sum, item) => {
+                return sum + parseFloat(item.voteamount || 0);
+            }, 0).toFixed(2); // 保留两位小数
+        },
+        //当前用户在该节点的收益
+        income() {
+            return this.dataList.reduce((sum, item) => {
+                return sum + parseFloat(item.revoterewardamount || 0);
+            }, 0).toFixed(2); // 保留两位小数
         }
     },
     created() {
@@ -374,6 +292,7 @@ export default {
             this.currentRedeemPoint = null
             this.redeemValue = 0
             this.voteValue = 0
+            console.log(this.currentMode)
         },
         getUserCalculateBalance() {
             if (localStorage.getItem('walletInfo')) {
@@ -421,9 +340,13 @@ export default {
                     return "Unknown"; // 如果传入的值不在 1-6 之间
             }
         },
-        getNodeDetails() {
+        async getNodeDetails() {
             this.detailsLoadStatus = 'loading'
             console.log(this.dposAddress, window.ethereum.selectedAddress)
+            let delegateDetailsInfo = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
+            console.log('节点详情', delegateDetailsInfo)
+            this.dataList = delegateDetailsInfo.data.result
+            return
             nodeDetails({ dposAddress: this.dposAddress, address: window.ethereum.selectedAddress }).then(res => {
                 const { vote, dpos } = res
                 console.log(vote, dpos)
