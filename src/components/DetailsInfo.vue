@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="w-full flex flex-col justify-start items-center card-shadow">
+    <div class="">
+        <div class="w-full flex flex-col justify-start items-center ">
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-between items-center text-base my-4">
                     <div class="text-#00FFEA">錢包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
@@ -36,12 +36,12 @@ import { Toast } from 'vant'
 export default {
     props: {
         votes: {
-            type: Number,
-            default: 0
+            type: String,
+            default: '0'
         },
         income: {
-            type: Number,
-            default: 0
+            type: String,
+            default: '0'
         }
     },
     data() {
