@@ -2,7 +2,7 @@
     <div class="bg-#1F1F1F">
         <div class="mb-8 w-full bg-#282828" v-if="$store.state.walletInfo.address"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <wallet-info :totalIncome="totalIncome" :totalVotes="totalVotes" :counts="counts" />
+            <wallet-info :totalIncome="totalIncome || 0" :totalVotes="totalVotes || 0" :counts="counts" />
         </div>
         <div class="w-11/12 mx-auto flex justify-center items-center pb-4 ">
             <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
@@ -39,8 +39,7 @@ export default {
             rewardMode: '-',
             ordinary: '-',
             nodeListLoadStatus: 'loading',
-            totalIncome: 0,
-            totalVotes: 0,
+
             counts: {}
         }
     },
@@ -51,7 +50,33 @@ export default {
         this.getDelegateList()
     },
     computed: {
-
+        totalVotes() {
+            return this.nodeDataList.reduce((total, item) => {
+                // 如果 details 不为空，累加 voteAmount
+                if (item.details && item.details.length > 0) {
+                    const detailsSum = item.details.reduce((sum, detail) => {
+                        return sum + parseFloat(detail.revoterewardamount || 0);
+                    }, 0);
+                    return total + detailsSum;
+                }
+                // 如果 details 为空，直接返回当前总和
+                return total;
+            }, 0).toFixed(2);
+        },
+        //节点票数
+        totalIncome() {
+            return this.nodeDataList.reduce((total, item) => {
+                // 如果 details 不为空，累加 voteAmount
+                if (item.details && item.details.length > 0) {
+                    const detailsSum = item.details.reduce((sum, detail) => {
+                        return sum + parseFloat(detail.stopedrewardamount || 0);
+                    }, 0);
+                    return total + detailsSum;
+                }
+                // 如果 details 为空，直接返回当前总和
+                return total;
+            }, 0).toFixed(2);
+        },
     },
     methods: {
         amountFormat,
@@ -78,7 +103,6 @@ export default {
                         if (_item.delegateaddress === item.address) {
                             item.details = details.data.result
                         }
-
                     })
                     console.log(details)
                     let counts = { 0: 0, 1: 0, 2: 0 };
@@ -89,8 +113,8 @@ export default {
                     });
                     this.counts = counts
                 }))
-                this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
-                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
+                // this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
+                // this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
                 console.log('节点列表', this.nodeDataList)
                 this.nodeListLoadStatus = 'finished'
             } catch (err) {

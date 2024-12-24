@@ -17,7 +17,7 @@
                     </div>
                     <div class="border-l border-#00000061 h-10 w-1"></div>
                     <div class="flex flex-col justify-start items-start w-1/2 pl-6">
-                        <div class="text-#FFFFFF73 mb-1 text-sm">全網投票量</div>
+                        <div class="text-#FFFFFF73 mb-1 text-sm">個人總投票數量</div>
                         <div class="flex justify-start items-baseline">
                             <div class="text-#EAAE36 text-3xl font-bold">{{ Math.floor(totalVotes) }}</div>
                             <div class="text-#846934 ml-1 text-sm" v-show="Math.floor(totalVotes) === 0">暫無投票</div>
@@ -65,12 +65,12 @@ export default {
     },
     props: {
         totalIncome: {
-            type: Number,
-            default: 0
+            type: String,
+            default: '0'
         },
         totalVotes: {
-            type: Number,
-            default: 0
+            type: String,
+            default: '0'
         },
         counts: {
             type: Object,
