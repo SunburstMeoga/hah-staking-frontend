@@ -8,7 +8,7 @@
             <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
         </div>
         <div class="w-11/12 mx-auto c ">
-            <h-loading :loadStatus="nodeListLoadStatus" @reload="getNodeList" />
+            <h-loading :loadStatus="nodeListLoadStatus" @reload="getDelegateList" />
             <div v-if="nodeListLoadStatus === 'finished'">
                 <vote-node-card :dataList="nodeDataList" />
             </div>
@@ -91,6 +91,7 @@ export default {
                 }))
                 this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
                 this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
+                console.log('节点列表', this.nodeDataList)
                 this.nodeListLoadStatus = 'finished'
             } catch (err) {
                 this.nodeListLoadStatus = 'error'
