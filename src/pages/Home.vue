@@ -55,7 +55,7 @@ export default {
                 // 如果 details 不为空，累加 voteAmount
                 if (item.details && item.details.length > 0) {
                     const detailsSum = item.details.reduce((sum, detail) => {
-                        return sum + parseFloat(detail.revoterewardamount || 0);
+                        return sum + parseFloat(detail.voteamount || 0);
                     }, 0);
                     return total + detailsSum;
                 }
@@ -121,12 +121,15 @@ export default {
                     if (item.details && item.details.length > 0) {
                         item.votedList = item.details.filter(_item => _item.delegateaddress === item.address)
                         item.nodeReward = item.votedList.reduce((sum, detail) => {
+                            console.log(detail.revoterewardamount)
                             return sum + parseFloat(detail.revoterewardamount || 0);
                         }, 0)
                         item.delegateVotes = item.votedList.reduce((sum, detail) => {
+                            console.log(detail.stopedrewardamount)
                             return sum + parseFloat(detail.stopedrewardamount || 0);
                         }, 0)
                         item.votedCount = item.votedList.reduce((sum, detail) => {
+                            console.log(detail.voteamount)
                             return sum + parseFloat(detail.voteamount || 0);
                         }, 0)
                     }
