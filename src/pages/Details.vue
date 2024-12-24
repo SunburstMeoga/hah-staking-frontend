@@ -119,7 +119,7 @@ import HLoading from '@/components/HLoading'
 import WithdrawalNode from '@/components/WithdrawalNode'
 
 import { timeFormat, addressFilter, amountFormat } from '../utils/format';
-import { nodeDetails, nodeList, delegateDetails } from '@/request/api'
+import { nodeDetails, nodeList, delegateDetails, delegateList } from '@/request/api'
 import { Toast, Slider, Stepper, Popup } from 'vant';
 export default {
     components: {
@@ -346,6 +346,16 @@ export default {
             let delegateDetailsInfo = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
             console.log('节点详情', delegateDetailsInfo)
             this.dataList = delegateDetailsInfo.data.result
+            let res = await delegateList({ "jsonrpc": "2.0", "method": "listdelegate", "params": {}, "id": 83 })
+            let { result } = res.data
+            this.dataList.map(item => {
+                result.map(_item => {
+                    if (_item.address === item.delegateaddress) {
+                        item.name = _item.name
+                    }
+                })
+            })
+            console.log(this.dataList)
             return
             nodeDetails({ dposAddress: this.dposAddress, address: window.ethereum.selectedAddress }).then(res => {
                 const { vote, dpos } = res

@@ -1,50 +1,5 @@
 <template>
     <div>
-        <!-- <div class="px-2 py-1">
-            <div class="sm:flex sm:items-start justify-between items-center">
-                <div class="border-b pb-2 mb-2 border-ligthborder sm:border-none sm:mb-0 sm:flex-1 sm:mr-20">
-                    <div class="flex sm:flex-wrap justify-between items-center font-bold py-1 text-lighttable text-sm"
-                        v-for="(item, index) in walletInfoList" :key="index">
-                        <div class="text-lighttable">
-                            {{ item.title }}
-                        </div>
-                        <div class="text-clickable flex items-center sm:justify-start" :class="index !== 0 ? 'ml-2' : ''">
-                            <div v-show="index === 0 && item.content" class="mr-2">
-                                <div class="icon iconfont icon-copy font-normal text-lg" @click="copyContent(item.copy)" />
-                            </div>
-                            <div v-if="index !== 0">
-                                {{ item.content }}
-                            </div>
-                            <div v-else class="">
-                                <div class="hidden sm:block">
-                                    {{ item.content }}
-                                </div>
-                                <div class="sm:hidden">
-                                    {{ addressFilter(item.content) }}
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="sm:w-7/12">
-                    <div class="flex justify-around items-center text-grayicon">
-                        <div
-                            class="flex flex-col justify-center items-center sm:border sm:border-ligthborder sm:rounded-lg sm:h-32 sm:w-3/12 transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:scale-110 cursor-pointer">
-                            <div class="font-bold sm:mb-2">
-                                {{ $t('wallet.totalRevenue') }}
-                            </div>
-                            <div class="text-lighttable">
-                                {{ earningsInfo.totalEarnings || $t('wallet.notEarning') }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden sm:block w-11/12 mr-auto ml-auto text-red-600 text-xs mb-2 mt-4">
-                        {{ $t('tips.amount') }}
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="w-full flex flex-col justify-start items-center card-shadow ">
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-start items-center mb-4">
@@ -52,7 +7,8 @@
                 </div>
                 <div class="w-full flex justify-between items-center text-base mb-2">
                     <div class="text-#00FFEA">錢包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
-                    <div class="icon iconfont icon-fuzhi text-white text-lg"></div>
+                    <div class="icon iconfont icon-fuzhi text-white text-lg"
+                        @click="copyContent($store.state.walletInfo.address)"></div>
                 </div>
                 <div class="w-full border-b border-dashed border-black flex justify-between items-center pb-2 mb-4">
                     <div class="flex flex-col justify-start items-start pl-2 w-1/2">
@@ -74,7 +30,7 @@
                             <div class="w-2 h-2 rounded-full bg-#00FFEA"></div>
                             <div class="text-xs ml-2 text-#FFFFFF73">復投進行中</div>
                         </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['0'] }}</div>
+                        <div class="text-#EAAE36 text-2xl">{{ counts['1'] }}</div>
                     </div>
 
                     <div class="flex flex-col justify-start items-center w-1/3">
@@ -82,14 +38,14 @@
                             <div class="w-2 h-2 rounded-full bg-#FFD667"></div>
                             <div class="text-xs ml-2 text-#FFFFFF73">停止復投中</div>
                         </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['1'] }}</div>
+                        <div class="text-#EAAE36 text-2xl">{{ counts['2'] }}</div>
                     </div>
                     <div class="flex flex-col justify-start items-center w-1/3">
                         <div class="flex justify-start items-center mb-3">
                             <div class="w-2 h-2 rounded-full bg-#A5A5A5"></div>
                             <div class="text-xs ml-2 text-#FFFFFF73">已贖回</div>
                         </div>
-                        <div class="text-#EAAE36 text-2xl">{{ counts['2'] }}</div>
+                        <div class="text-#EAAE36 text-2xl">{{ counts['0'] }}</div>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
                 class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col justify-start items-center pt-4 mb-4">
                 <div class="flex justify-between items-center mb-6 w-9/12">
                     <!-- <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div> -->
-                    <div class="text-2xl font-light text-white">{{ item.name }}</div>
+                    <div class="text-2xl font-light text-white">{{ item.name || ' ' }}</div>
 
                     <div class="flex justify-end items-center -mr-6" v-if="item.status === 1">
                         <div class="rounded-lg py-1 px-2 text-xs text-black bg-#EAAE36 mr-4" @click="userRedeem(item)">
@@ -30,7 +30,9 @@
                     </div>
                     <div class="w-1/2 flex flex-col justify-start items-start ml-8">
                         <div class="text-white mb-2 ">收益</div>
-                        <div class="text-#EAAE36 text-2xl font-light">{{ Number(item.revoterewardamount).toFixed(4) }}
+                        <div class="text-#EAAE36 text-2xl font-light">{{ (Number(item.stopedrewardamount) +
+            Number(item.revoterewardamount)).toFixed(4)
+                            }}
                         </div>
                     </div>
                 </div>
@@ -58,7 +60,7 @@
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">复投数量</div>
-                        <div class="">23234</div>
+                        <div class="">{{ Number(item.revoterewardamount).toFixed(4) }}</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">

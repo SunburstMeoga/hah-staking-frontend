@@ -68,7 +68,8 @@ export default {
                     this.nodeListLoadStatus = 'empty'
                     return
                 }
-                await Promise.all(result.map(async (item, index) => {
+                this.nodeDataList = result
+                await Promise.all(this.nodeDataList.map(async (item, index) => {
                     item.showMore = false
                     item.rank = index + 1
                     //当前用户在该节点的投票信息
@@ -77,10 +78,19 @@ export default {
                         if (_item.delegateaddress === item.address) {
                             item.details = details.data.result
                         }
+
                     })
+                    console.log(details)
+                    let counts = { 0: 0, 1: 0, 2: 0 };
+                    details.data.result.forEach(vote => { //统计 进行中，已贖回，停止復投中的数据
+                        if (counts.hasOwnProperty(vote.status)) {
+                            counts[vote.status]++;
+                        }
+                    });
+                    this.counts = counts
                 }))
-                this.nodeDataList = result
-                console.log(this.nodeDataList)
+                this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
+                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
                 this.nodeListLoadStatus = 'finished'
             } catch (err) {
                 this.nodeListLoadStatus = 'error'
@@ -119,7 +129,7 @@ export default {
                 this.nodeDataList[4].name = 'CryptoHaven'
                 this.nodeDataList[5].name = 'AnchorCore'
                 this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
-                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.income, 10), 0);
+                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
                 console.log('votes', this.totalVotes)
                 console.log('incone', this.totalIncome)
 

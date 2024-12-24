@@ -4,7 +4,8 @@
             <div class="w-11/12 flex flex-col justify-start items-start">
                 <div class="w-full flex justify-between items-center text-base my-4">
                     <div class="text-#00FFEA">錢包地址：{{ addressFilter($store.state.walletInfo.address) || '-' }}</div>
-                    <div class="icon iconfont icon-fuzhi text-white text-lg"></div>
+                    <div class="icon iconfont icon-fuzhi text-white text-lg"
+                        @click="copyContent($store.state.walletInfo.address)"></div>
                 </div>
                 <div class="w-full flex justify-between items-center pb-2 mb-2">
                     <div class="flex flex-col justify-start items-start w-1/2">
