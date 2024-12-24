@@ -17,7 +17,8 @@
                 <div class="flex justify-between items-center w-9/12 mb-6">
                     <div class="w-1/2 flex flex-col justify-start items-start">
                         <div class="text-white mb-2">已投票數</div>
-                        <div class="text-#EAAE36 text-2xl font-light">{{ item.details ? votedCount : '0.0' }}</div>
+                        <div class="text-#EAAE36 text-2xl font-light">{{ item.details ?
+            Number(Number(item.votedCount).toFixed(2)).toFixed(2) : '0.00' }}</div>
                     </div>
                     <div class="w-1/2 flex flex-col justify-start items-start ml-8">
                         <div class="text-white mb-2 ">APY</div>
@@ -37,12 +38,12 @@
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">已投票數</div>
-                        <div class="">{{ item.details ? votedCount : '0.0' }}</div>
+                        <div class="">{{ item.details ? Number(item.votedCount).toFixed(2) : '0.00' }}</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">收益</div>
-                        <div class="">{{ item.details ? nodeReward : '0.0' }} HAH</div>
+                        <div class="">{{ item.details ? Number(item.nodeReward).toFixed(2) : '0.00' }} HAH</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
@@ -57,7 +58,7 @@
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">節點票數</div>
-                        <div class="">{{ item.details ? delegateVotes : '0.0' }}</div>
+                        <div class="">{{ item.details ? Number(item.delegateVotes).toFixed(2) : '0.00' }}</div>
                     </div>
                 </div>
                 <div class="w-full bg-#303030 flex justify-center items-center text-#EAAE36 py-2">投 票</div>
@@ -112,7 +113,6 @@ export default {
         },
         //用户对该节点已投票数
         votedCount() {
-
             return this.dataList.reduce((total, item) => {
                 // 如果 details 不为空，累加 voteAmount
                 if (item.details && item.details.length > 0) {

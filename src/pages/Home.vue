@@ -100,7 +100,7 @@ export default {
                     //当前用户在该节点的投票信息
                     let details = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
                     details.data.result.map((_item, _index) => {
-                        if (_item.delegateaddress === item.address) {
+                        if (_item.delegateaddress == item.address) {
                             item.details = details.data.result
                         }
                     })
@@ -111,11 +111,31 @@ export default {
                             counts[vote.status]++;
                         }
                     });
+                    console.log(details)
                     this.counts = counts
                 }))
                 // this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
                 // this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
                 console.log('节点列表', this.nodeDataList)
+                this.nodeDataList.map((item, index) => {
+                    if (item.details && item.details.length > 0) {
+                        item.votedList = item.details.filter(_item => _item.delegateaddress === item.address)
+                        item.nodeReward = item.votedList.reduce((sum, detail) => {
+                            return sum + parseFloat(detail.revoterewardamount || 0);
+                        }, 0)
+                        item.delegateVotes = item.votedList.reduce((sum, detail) => {
+                            return sum + parseFloat(detail.stopedrewardamount || 0);
+                        }, 0)
+                        item.votedCount = item.votedList.reduce((sum, detail) => {
+                            return sum + parseFloat(detail.voteamount || 0);
+                        }, 0)
+                    }
+
+                    // nodeReward delegateVotes votedCount
+                    // revoterewardamount  stopedrewardamount  voteamount
+                })
+                console.log('节点列表', this.nodeDataList)
+
                 this.nodeListLoadStatus = 'finished'
             } catch (err) {
                 this.nodeListLoadStatus = 'error'
@@ -126,76 +146,76 @@ export default {
 
         //获取節點列表数据
         getNodeList() {
-            this.nodeListLoadStatus = 'loading'
-            nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
-                console.log('節點列表----', res)
-                res.data.map((item, index) => {
-                    item.rank = index + 1
-                })
-                if (res.data.length === 0) {
-                    this.nodeListLoadStatus = 'empty'
-                    return
-                }
-                this.nodeDataList = res.data
-                await Promise.all(this.nodeDataList.map(async (item, index) => {
-                    item.showMore = false
-                    console.log(item)
-                    //当期那用户在该节点的投票信息
-                    let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
-                    item.votesList = details.vote
-                    item.dpos = details.dpos
-                    console.log(details)
-                    console.log(item)
-                }))
-                this.nodeDataList[0].name = 'HashGuardian'
-                this.nodeDataList[1].name = 'BlockSentinel'
-                this.nodeDataList[2].name = 'ChainPioneer'
-                this.nodeDataList[3].name = 'NodeTitan'
-                this.nodeDataList[4].name = 'CryptoHaven'
-                this.nodeDataList[5].name = 'AnchorCore'
-                this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
-                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
-                console.log('votes', this.totalVotes)
-                console.log('incone', this.totalIncome)
+            // this.nodeListLoadStatus = 'loading'
+            // nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
+            //     console.log('節點列表----', res)
+            //     res.data.map((item, index) => {
+            //         item.rank = index + 1
+            //     })
+            //     if (res.data.length === 0) {
+            //         this.nodeListLoadStatus = 'empty'
+            //         return
+            //     }
+            //     this.nodeDataList = res.data
+            //     await Promise.all(this.nodeDataList.map(async (item, index) => {
+            //         item.showMore = false
+            //         console.log(item)
+            //         //当期那用户在该节点的投票信息
+            //         let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
+            //         item.votesList = details.vote
+            //         item.dpos = details.dpos
+            //         console.log(details)
+            //         console.log(item)
+            //     }))
+            //     this.nodeDataList[0].name = 'HashGuardian'
+            //     this.nodeDataList[1].name = 'BlockSentinel'
+            //     this.nodeDataList[2].name = 'ChainPioneer'
+            //     this.nodeDataList[3].name = 'NodeTitan'
+            //     this.nodeDataList[4].name = 'CryptoHaven'
+            //     this.nodeDataList[5].name = 'AnchorCore'
+            //     this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
+            //     this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
+            //     console.log('votes', this.totalVotes)
+            //     console.log('incone', this.totalIncome)
 
-                this.delegateCount = res.total
-                let earningsInfo = {
-                    ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
-                    indexReturns: res.income0 ? this.amountFormat(res.income0) : null,
-                    totalEarnings: res.income0 || res.income1 ? (res.income0 + res.income1).toFixed(4) : null,
-                    ordinaryVote: res.vote1 ? this.amountFormat(res.vote1) : null,
-                    returnsVote: res.vote0 ? this.amountFormat(res.vote0) : null,
-                    totalVotes: res.vote0 || res.vote1 ? this.amountFormat(res.vote0 + res.vote1) : null,
-                    amount: res.amount ? this.amountFormat(res.amount) : null,
-                    income: res.income ? this.amountFormat(res.income) : null,
-                }
-                res.data.map((item, index) => {
-                    if (item.amount !== '0') {
-                        this.votedDataList.push(item)
-                    }
-                })
-                localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
-                this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
-                console.log('vuex的值', this.$store.state.earningsInfo)
-                console.log('節點列表', this.nodeDataList)
-                let counts = { 0: 0, 1: 0, 2: 0 };
-                this.nodeDataList.forEach(item => { //统计 进行中，已贖回，停止復投中的数据
-                    item.votesList.forEach(vote => {
-                        if (counts.hasOwnProperty(vote.status)) {
-                            counts[vote.status]++;
-                        }
-                    });
-                });
-                this.counts = counts
-                console.log(counts)
+            //     this.delegateCount = res.total
+            //     let earningsInfo = {
+            //         ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
+            //         indexReturns: res.income0 ? this.amountFormat(res.income0) : null,
+            //         totalEarnings: res.income0 || res.income1 ? (res.income0 + res.income1).toFixed(4) : null,
+            //         ordinaryVote: res.vote1 ? this.amountFormat(res.vote1) : null,
+            //         returnsVote: res.vote0 ? this.amountFormat(res.vote0) : null,
+            //         totalVotes: res.vote0 || res.vote1 ? this.amountFormat(res.vote0 + res.vote1) : null,
+            //         amount: res.amount ? this.amountFormat(res.amount) : null,
+            //         income: res.income ? this.amountFormat(res.income) : null,
+            //     }
+            //     res.data.map((item, index) => {
+            //         if (item.amount !== '0') {
+            //             this.votedDataList.push(item)
+            //         }
+            //     })
+            //     localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
+            //     this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
+            //     console.log('vuex的值', this.$store.state.earningsInfo)
+            //     console.log('節點列表', this.nodeDataList)
+            //     let counts = { 0: 0, 1: 0, 2: 0 };
+            //     this.nodeDataList.forEach(item => { //统计 进行中，已贖回，停止復投中的数据
+            //         item.votesList.forEach(vote => {
+            //             if (counts.hasOwnProperty(vote.status)) {
+            //                 counts[vote.status]++;
+            //             }
+            //         });
+            //     });
+            //     this.counts = counts
+            //     console.log(counts)
 
-                this.nodeListLoadStatus = 'finished'
-            }).catch(err => {
-                this.nodeListLoadStatus = 'error'
+            //     this.nodeListLoadStatus = 'finished'
+            // }).catch(err => {
+            //     this.nodeListLoadStatus = 'error'
 
-                console.log(err)
-                Toast.clear()
-            })
+            //     console.log(err)
+            //     Toast.clear()
+            // })
         },
     }
 }

@@ -16,8 +16,9 @@
                     <!-- <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div> -->
                     <div class="text-2xl font-light text-white">{{ item.name }}</div>
 
-                    <div class="flex justify-end items-center -mr-6" v-if="item.status === 1">
-                        <div class="rounded-lg py-1 px-2 text-xs text-black bg-#EAAE36 mr-4" @click="userRedeem(item)">
+                    <div class="flex justify-end items-center -mr-6">
+                        <div class="rounded-lg py-1 px-2 text-xs text-black bg-#EAAE36 mr-4" v-if="item.status === 1"
+                            @click="userRedeem(item)">
                             停止复投</div>
                         <div class="icon iconfont icon-Right text-lg text-#EAAE36  duration-200 transition transform ease-linear "
                             :class="`${item.showMore ? 'rotate-90' : 'rotate-0'}`" @click="handleShowMore(index)"></div>
