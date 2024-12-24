@@ -25,7 +25,7 @@ import VotedNodeCard from '@/components/VotedNodeCard'
 
 import HLoading from '@/components/HLoading'
 
-import { nodeList, nodeDetails } from '@/request/api'
+import { nodeList, nodeDetails, delegateList, delegateDetails } from '@/request/api'
 import { amountFormat } from '@/utils/format'
 import { Toast } from 'vant'
 export default {
@@ -45,15 +45,50 @@ export default {
         }
     },
     created() {
-        console.log('init ........')
-        console.log('登录状态', localStorage.getItem('connectStatus'))
-        this.getNodeList()
+        // console.log('init ........')
+        // console.log('登录状态', localStorage.getItem('connectStatus'))
+        // this.getNodeList()
+        this.getDelegateList()
     },
     computed: {
 
     },
     methods: {
         amountFormat,
+
+        //投票节点列表数据
+        async getDelegateList() {
+            this.nodeListLoadStatus = 'loading'
+            try {
+                let res = await delegateList({ "jsonrpc": "2.0", "method": "listdelegate", "params": {}, "id": 83 })
+                let { result } = res.data
+
+                console.log('投票节点列表', result)
+                if (result.length === 0) {
+                    this.nodeListLoadStatus = 'empty'
+                    return
+                }
+                await Promise.all(result.map(async (item, index) => {
+                    item.showMore = false
+                    item.rank = index + 1
+                    //当前用户在该节点的投票信息
+                    let details = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
+                    details.data.result.map((_item, _index) => {
+                        if (_item.delegateaddress === item.address) {
+                            item.details = details.data.result
+                        }
+                    })
+                }))
+                this.nodeDataList = result
+                console.log(this.nodeDataList)
+                this.nodeListLoadStatus = 'finished'
+            } catch (err) {
+                this.nodeListLoadStatus = 'error'
+                console.log(err)
+                Toast.clear()
+            }
+        },
+
         //获取節點列表数据
         getNodeList() {
             this.nodeListLoadStatus = 'loading'
@@ -70,7 +105,7 @@ export default {
                 await Promise.all(this.nodeDataList.map(async (item, index) => {
                     item.showMore = false
                     console.log(item)
-
+                    //当期那用户在该节点的投票信息
                     let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
                     item.votesList = details.vote
                     item.dpos = details.dpos

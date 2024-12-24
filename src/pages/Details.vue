@@ -487,7 +487,7 @@ export default {
                 duration: 0
             });
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
-            console.log(this.dposAddress, this.pledgeType, this.pledgeCycles, 0, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether'))
+            console.log(this.dposAddress, this.pledgeType, 0, 0, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether'))
             web3Contract.methods.pledgeVote(this.dposAddress, this.pledgeType, 0, 0, this.Web3.utils.toWei(this.voteAmount.toString(), 'ether')).send({
                 from: JSON.parse(localStorage.getItem('walletInfo')).address,
             }).then(res => {
