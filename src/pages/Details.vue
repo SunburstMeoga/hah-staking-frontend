@@ -10,7 +10,7 @@
                 <node-details-card ref="nodeDetails" :getDetailsInfo="nodeInfo" />
             </div>
         </div>
-        <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 card-shadow"
+        <div class="w-11/12 mx-auto rounded-2xl overflow-hidden bg-#282828 card-shadow mb-4"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
             <div class="w-11/12 mx-auto pt-6 mb-6">
                 <module-title :title="$t('details.voteBtn')" />
