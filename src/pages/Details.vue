@@ -469,7 +469,7 @@ export default {
                 duration: 0
             });
             let web3Contract = new this.Web3.eth.Contract(this.Config.erc20_abi, this.Config.con_addr)
-            console.log('参数', item.vote_addr, item.pledge_type, item.cycles, item.nonce)
+            console.log('参数', item.delegateaddress, item.pledgetype, item.cycles, item.nonce)
             web3Contract.methods.pledgeReqRedeem(this.dposAddress, item.pledge_type, item.cycles, item.nonce).send({
                 from: JSON.parse(localStorage.getItem('walletInfo')).address,
             }).then(res => {
