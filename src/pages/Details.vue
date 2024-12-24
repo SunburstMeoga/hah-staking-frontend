@@ -342,19 +342,45 @@ export default {
         },
         async getNodeDetails() {
             this.detailsLoadStatus = 'loading'
-            console.log(this.dposAddress, window.ethereum.selectedAddress)
-            let delegateDetailsInfo = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
-            console.log('节点详情', delegateDetailsInfo)
-            this.dataList = delegateDetailsInfo.data.result
-            let res = await delegateList({ "jsonrpc": "2.0", "method": "listdelegate", "params": {}, "id": 83 })
-            let { result } = res.data
-            this.dataList.map(item => {
-                result.map(_item => {
-                    if (_item.address === item.delegateaddress) {
-                        item.name = _item.name
+            try {
+                console.log(this.dposAddress, window.ethereum.selectedAddress)
+                let delegateDetailsInfo = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
+                console.log('节点详情', delegateDetailsInfo)
+                this.dataList = delegateDetailsInfo.data.result
+                let res = await delegateList({ "jsonrpc": "2.0", "method": "listdelegate", "params": {}, "id": 83 })
+                let { result } = res.data
+                this.dataList.map(item => {
+                    result.map(_item => {
+                        console.log(_item.address, item.delegateaddress)
+                        if (_item.address == item.delegateaddress) {
+                            item.name = _item.name
+                            console.log(item.name, _item.name)
+                        }
+                    })
+                })
+                console.log(this.nodeInfo)
+                result.map(item => {
+                    console.log(item)
+                    if (item.address === this.dposAddress) {
+                        this.nodeInfo.name = this.getNameByValue(this.nodeRank)
+                        this.nodeInfo.address = item.address
+                        this.nodeInfo.apy = item.apy
+                        this.nodeInfo.state = item.state
+                        this.nodeInfo.votes = item.votes
+                        this.nodeInfo.time = this.timeFormat(item.uptime)
+                        this.nodeInfo.income = item.reward
+                        this.nodeInfo.rank = this.nodeRank
                     }
                 })
-            })
+                this.$store.commit('getNodeDetails', this.nodeInfo)
+                console.log(this.nodeInfo)
+                this.detailsLoadStatus = 'finished'
+            } catch (err) {
+                this.detailsLoadStatus = 'error'
+                console.log(err)
+                Toast.clear()
+            }
+
             console.log(this.dataList)
             return
             nodeDetails({ dposAddress: this.dposAddress, address: window.ethereum.selectedAddress }).then(res => {

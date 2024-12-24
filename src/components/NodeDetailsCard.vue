@@ -39,22 +39,23 @@
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                 <div class="">收益</div>
-                <div class="">0 HAH</div>
+                <div class="">{{ Math.floor($store.state.nodeDetails.income) }} HAH</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                 <div class="">節點排名</div>
-                <div class="">1</div>
+                <div class="">{{ $store.state.nodeDetails.rank }}</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                 <div class="">百分比</div>
-                <div class="">16.22323%</div>
+                <div class="">{{ Number($store.state.nodeDetails.apy * 100).toFixed(4)
+                    }}%</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                 <div class="">節點票數</div>
-                <div class="">33</div>
+                <div class="">{{ Math.floor($store.state.nodeDetails.votes) }}</div>
             </div>
         </div>
     </div>

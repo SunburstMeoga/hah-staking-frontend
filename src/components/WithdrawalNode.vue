@@ -14,7 +14,7 @@
                 class="w-full bg-#282828 rounded-xl overflow-hidden flex flex-col justify-start items-center pt-4 mb-4">
                 <div class="flex justify-between items-center mb-6 w-9/12">
                     <!-- <div class="text-2xl font-light text-#A5A5A5">{{ item.name }}</div> -->
-                    <div class="text-2xl font-light text-white">{{ item.name || ' ' }}</div>
+                    <div class="text-2xl font-light text-white">{{ item.name }}</div>
 
                     <div class="flex justify-end items-center -mr-6" v-if="item.status === 1">
                         <div class="rounded-lg py-1 px-2 text-xs text-black bg-#EAAE36 mr-4" @click="userRedeem(item)">
