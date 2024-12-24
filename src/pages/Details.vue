@@ -425,6 +425,7 @@ export default {
                 from: JSON.parse(localStorage.getItem('walletInfo')).address,
             }).then(res => {
                 console.log('res', res)
+                this.dataList = []
                 this.getNodeDetails()
                 // this.getNodeVotes()
                 Toast.fail(this.$t('toast.voteSuccess'));
