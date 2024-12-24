@@ -13,13 +13,13 @@
                 <div class="w-full border-b border-dashed border-black flex justify-between items-center pb-2 mb-4">
                     <div class="flex flex-col justify-start items-start pl-2 w-1/2">
                         <div class="text-#FFFFFF73 mb-1 text-sm">總收益</div>
-                        <div class="text-#EAAE36 text-3xl font-bold">{{ Math.floor(totalIncome) }}</div>
+                        <div class="text-#EAAE36 text-3xl font-bold">{{ Number(totalIncome).toFixed(2) }}</div>
                     </div>
                     <div class="border-l border-#00000061 h-10 w-1"></div>
                     <div class="flex flex-col justify-start items-start w-1/2 pl-6">
                         <div class="text-#FFFFFF73 mb-1 text-sm">個人總投票數量</div>
                         <div class="flex justify-start items-baseline">
-                            <div class="text-#EAAE36 text-3xl font-bold">{{ Math.floor(totalVotes) }}</div>
+                            <div class="text-#EAAE36 text-3xl font-bold">{{ Number(totalVotes).toFixed(2) }}</div>
                             <div class="text-#846934 ml-1 text-sm" v-show="Math.floor(totalVotes) === 0">暫無投票</div>
                         </div>
                     </div>

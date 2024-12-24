@@ -166,7 +166,8 @@ export default {
             showRedeem: false,
             showRole: false,
 
-            showDialog: false
+            showDialog: false,
+            nodeName: ''
         }
     },
     computed: {
@@ -189,6 +190,7 @@ export default {
     created() {
         this.dposAddress = this.$route.params.address
         this.nodeRank = this.$route.query.rank
+        this.nodeName = this.$route.query.name
         console.log(this.dposAddress, this.nodeRank)
         if (localStorage.getItem('walletInfo')) {
             this.walletAddress = JSON.parse(localStorage.getItem('walletInfo')).address
@@ -349,20 +351,17 @@ export default {
                 this.dataList = delegateDetailsInfo.data.result
                 let res = await delegateList({ "jsonrpc": "2.0", "method": "listdelegate", "params": {}, "id": 83 })
                 let { result } = res.data
+
+                const filteredList = this.dataList.filter(item => item.delegateaddress == this.dposAddress)
+                this.dataList = filteredList
                 this.dataList.map(item => {
-                    result.map(_item => {
-                        console.log(_item.address, item.delegateaddress)
-                        if (_item.address == item.delegateaddress) {
-                            item.name = _item.name
-                            console.log(item.name, _item.name)
-                        }
-                    })
+                    item.name = this.nodeName
                 })
-                console.log(this.nodeInfo)
                 result.map(item => {
-                    console.log(item)
+
                     if (item.address === this.dposAddress) {
-                        this.nodeInfo.name = this.getNameByValue(this.nodeRank)
+                        console.log(item)
+                        this.nodeInfo.name = this.nodeName
                         this.nodeInfo.address = item.address
                         this.nodeInfo.apy = item.apy
                         this.nodeInfo.state = item.state
@@ -370,10 +369,17 @@ export default {
                         this.nodeInfo.time = this.timeFormat(item.uptime)
                         this.nodeInfo.income = item.reward
                         this.nodeInfo.rank = this.nodeRank
+                        this.operatingList[0].point = this.getAPY(item.apy) * 1 * 100
+                        this.operatingList[1].point = this.getAPY(item.apy) * 0.9 * 100
+                        this.operatingList[2].point = this.getAPY(item.apy) * 0.8 * 100
+                        this.operatingList[3].point = this.getAPY(item.apy) * 0.7 * 100
+                        this.operatingList[4].point = this.getAPY(item.apy) * 0.6 * 100
+                        this.getAPY(item.apy)
                     }
                 })
                 this.$store.commit('getNodeDetails', this.nodeInfo)
-                console.log(this.nodeInfo)
+
+                console.log(this.dataList)
                 this.detailsLoadStatus = 'finished'
             } catch (err) {
                 this.detailsLoadStatus = 'error'
@@ -393,7 +399,7 @@ export default {
                 console.log(this.nodeRank, '-======')
                 this.nodeInfo.name = this.getNameByValue(this.nodeRank)
                 this.nodeInfo.address = dpos.address
-                this.nodeInfo.apy = dpos.apy
+                this.nodeInfo.apy = item.apy
                 this.nodeInfo.state = dpos.state
                 this.nodeInfo.votes = dpos.votes
                 this.nodeInfo.time = this.timeFormat(dpos.uptime)
@@ -403,12 +409,12 @@ export default {
                     item.showMore = false
                 })
                 this.detailsLoadStatus = 'finished'
-                this.operatingList[0].point = this.getAPY(dpos.apy) * 1 * 100
-                this.operatingList[1].point = this.getAPY(dpos.apy) * 0.9 * 100
-                this.operatingList[2].point = this.getAPY(dpos.apy) * 0.8 * 100
-                this.operatingList[3].point = this.getAPY(dpos.apy) * 0.7 * 100
-                this.operatingList[4].point = this.getAPY(dpos.apy) * 0.6 * 100
-                this.getAPY(dpos.apy)
+                this.operatingList[0].point = this.getAPY(item.apy) * 1 * 100
+                this.operatingList[1].point = this.getAPY(item.apy) * 0.9 * 100
+                this.operatingList[2].point = this.getAPY(item.apy) * 0.8 * 100
+                this.operatingList[3].point = this.getAPY(item.apy) * 0.7 * 100
+                this.operatingList[4].point = this.getAPY(item.apy) * 0.6 * 100
+                this.getAPY(item.apy)
                 this.getNodeList(this.walletAddress)
                 this.getWalletBalance(this.walletAddress)
                 console.log('object', this.nodeInfo)

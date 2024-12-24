@@ -136,10 +136,10 @@ export default {
         },
         handleAddress(item) {
             console.log(item)
-            this.toDetails(item.address, item.rank)
+            this.toDetails(item.address, item.rank, item.name)
         },
-        toDetails(address, rank) {
-            console.log(address, rank)
+        toDetails(address, rank, name) {
+            console.log(address, rank, name)
             if (!localStorage.getItem('connectStatus') || localStorage.getItem('connectStatus') === 'disconnect') {
                 Toast(this.$t('toast.linkWallet'))
                 return
@@ -147,7 +147,8 @@ export default {
             this.$router.push({
                 path: '/node/' + address,
                 query: {
-                    rank: rank
+                    rank: rank,
+                    name: name
                 }
             })
         },

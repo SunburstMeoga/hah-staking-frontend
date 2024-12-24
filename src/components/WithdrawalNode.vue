@@ -26,12 +26,12 @@
                 <div class="flex justify-between items-center w-9/12 mb-6">
                     <div class="w-1/2 flex flex-col justify-start items-start">
                         <div class="text-white mb-2">已投票數</div>
-                        <div class="text-#EAAE36 text-2xl font-light">{{ Number(item.voteamount).toFixed(4) }}</div>
+                        <div class="text-#EAAE36 text-2xl font-light">{{ Number(item.voteamount).toFixed(2) }}</div>
                     </div>
                     <div class="w-1/2 flex flex-col justify-start items-start ml-8">
                         <div class="text-white mb-2 ">收益</div>
                         <div class="text-#EAAE36 text-2xl font-light">{{ (Number(item.stopedrewardamount) +
-            Number(item.revoterewardamount)).toFixed(4)
+            Number(item.revoterewardamount)).toFixed(2)
                             }}
                         </div>
                     </div>
@@ -49,18 +49,18 @@
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">已投票數量</div>
-                        <div class="">{{ Number(item.voteamount).toFixed(4) }} HAH</div>
+                        <div class="">{{ Number(item.voteamount).toFixed(2) }} HAH</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">已产生收益</div>
-                        <div class="">{{ (Number(item.stopedrewardamount) + Number(item.revoterewardamount)).toFixed(4)
+                        <div class="">{{ (Number(item.stopedrewardamount) + Number(item.revoterewardamount)).toFixed(2)
                             }} HAH</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
                         <div class="">复投数量</div>
-                        <div class="">{{ Number(item.revoterewardamount).toFixed(4) }}</div>
+                        <div class="">{{ Number(item.revoterewardamount).toFixed(2) }}</div>
                     </div>
                     <div
                         class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">

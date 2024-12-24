@@ -11,7 +11,7 @@
                     <div class="flex flex-col justify-start items-start w-1/2">
                         <div class="text-#FFFFFF73 mb-1 text-xs">該節點投票量</div>
                         <div class="flex justify-start items-baseline">
-                            <div class="text-#EAAE36 text-4xl font-bold">{{ Math.floor(votes) }}</div>
+                            <div class="text-#EAAE36 text-4xl font-bold">{{ Number(votes).toFixed(2) }}</div>
                             <div class="text-#846934 ml-1 text-sm" v-if="!Math.floor(votes)">暫無投票</div>
                         </div>
                     </div>
@@ -19,7 +19,7 @@
                     <div class="flex flex-col justify-start items-start w-1/2 pl-6">
                         <div class="text-#FFFFFF73 mb-1 text-xs">收益</div>
                         <div class="flex justify-start items-baseline">
-                            <div class="text-#EAAE36 text-4xl font-bold">{{ Math.floor(income) }}</div>
+                            <div class="text-#EAAE36 text-4xl font-bold">{{ Number(income).toFixed(2) }}</div>
                             <div class="text-#846934 ml-1 text-sm">HAH</div>
                         </div>
                     </div>

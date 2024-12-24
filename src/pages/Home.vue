@@ -2,7 +2,7 @@
     <div class="bg-#1F1F1F">
         <div class="mb-8 w-full bg-#282828" v-if="$store.state.walletInfo.address"
             style="box-shadow:0 0.5rem 1.2rem rgba(82, 85, 92, .15);">
-            <wallet-info :totalIncome="totalIncome || 0" :totalVotes="totalVotes || 0" :counts="counts" />
+            <wallet-info :totalIncome="totalIncome" :totalVotes="totalVotes" :counts="counts" />
         </div>
         <div class="w-11/12 mx-auto flex justify-center items-center pb-4 ">
             <module-title :title="$t('home.nodeList')" :count="$t('home.totalNode', { count: delegateCount })" />
