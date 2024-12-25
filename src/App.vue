@@ -108,7 +108,8 @@ export default {
       window.ethereum.on('accountsChanged', (accounts) => {
         if (accounts.length !== 0) {
           this.getWalletBalance(accounts[0])
-          this.getNodeList(accounts[0])
+          // this.getNodeList(accounts[0])
+          location.href = location.href;
           console.log('isConnected', this.Web3.currentProvider._state.isConnected)
         }
       })

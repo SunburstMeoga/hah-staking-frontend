@@ -53,6 +53,7 @@ export default {
         this.getDelegateList()
     },
     computed: {
+        //总投票量
         totalVotes() {
             return this.nodeDataList.reduce((total, item) => {
                 // 如果 details 不为空，累加 voteAmount
@@ -66,13 +67,13 @@ export default {
                 return total;
             }, 0).toFixed(2);
         },
-        //节点票数
+        //总收益
         totalIncome() {
             return this.nodeDataList.reduce((total, item) => {
                 // 如果 details 不为空，累加 voteAmount
                 if (item.details && item.details.length > 0) {
                     const detailsSum = item.details.reduce((sum, detail) => {
-                        return sum + parseFloat(detail.stopedrewardamount || 0);
+                        return sum + parseFloat(detail.totalrewardamount || 0);
                     }, 0);
                     return total + detailsSum;
                 }
