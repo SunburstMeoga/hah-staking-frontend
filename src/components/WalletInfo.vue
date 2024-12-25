@@ -97,13 +97,21 @@ export default {
     methods: {
         addressFilter, amountFormat,
         copyContent(content) {
-            if (!content) return
+            if (!content) return;
+
+            // 检查 Clipboard API 是否支持
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                Toast(this.$t('toast.copyNotSupported')); // 显示不支持提示
+                return;
+            }
+
+            // 调用 Clipboard API
             navigator.clipboard.writeText(content).then(() => {
-                Toast(this.$t('toast.copySuccess'))
-            }, () => {
-                // this.$message.error(this.$t('message.fail'));
+                Toast(this.$t('toast.copySuccess'));
+            }).catch(() => {
+                Toast(this.$t('toast.copyFail')); // 处理复制失败
             });
-        },
+        }
     }
 }
 </script>

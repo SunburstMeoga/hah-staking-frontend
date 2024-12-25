@@ -49,7 +49,8 @@
                     {{ item }}
                 </div>
             </div>
-            <div class="border-b text-sm border-lightborder text-lighttable" v-for="(item, index) in dataList" :key="index">
+            <div class="border-b text-sm border-lightborder text-lighttable" v-for="(item, index) in dataList"
+                :key="index">
                 <div class="transition duration-200 ease-in-out transform hover:bg-lightborder">
                     <div class="flex justify-start py-3 px-4">
                         <div class="w-80 flex items-center">
@@ -62,7 +63,8 @@
                         <div class="w-96 flex justify-start items-center text-clickable">
                             <div class="cursor-pointer icon iconfont icon-copy text-clickable pr-2"
                                 @click="copyContent(item.address)" />
-                            <div @click="hanldAddress(item)" class="cursor-pointer ">{{ addressFilter(item.address) }}</div>
+                            <div @click="hanldAddress(item)" class="cursor-pointer ">{{ addressFilter(item.address) }}
+                            </div>
 
                         </div>
                         <div class="w-80">
@@ -120,12 +122,21 @@ export default {
             })
         },
         copyContent(content) {
+            if (!content) return;
+
+            // 检查 Clipboard API 是否支持
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                Toast(this.$t('toast.copyNotSupported')); // 显示不支持提示
+                return;
+            }
+
+            // 调用 Clipboard API
             navigator.clipboard.writeText(content).then(() => {
-                Toast(this.$t('toast.copySuccess'))
-            }, () => {
-                // this.$message.error(this.$t('message.fail'));
+                Toast(this.$t('toast.copySuccess'));
+            }).catch(() => {
+                Toast(this.$t('toast.copyFail')); // 处理复制失败
             });
-        },
+        }
     }
 }
 </script>
