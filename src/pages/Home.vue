@@ -43,7 +43,10 @@ export default {
             counts: {}
         }
     },
-    created() {
+    activated() {
+        this.fetchNodeDataList(); // 每次激活时重新加载数据
+    },
+    mounted() {
         // console.log('init ........')
         // console.log('登录状态', localStorage.getItem('connectStatus'))
         // this.getNodeList()
@@ -93,7 +96,15 @@ export default {
                     this.nodeListLoadStatus = 'empty'
                     return
                 }
-                this.nodeDataList = result
+                // 确保数组赋值是响应式的
+                this.nodeDataList = result.map((item, index) => {
+                    return {
+                        ...item,
+                        showMore: false,
+                        rank: index + 1,
+                        details: [],
+                    };
+                });
                 await Promise.all(this.nodeDataList.map(async (item, index) => {
                     item.showMore = false
                     item.rank = index + 1
