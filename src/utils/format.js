@@ -1,16 +1,33 @@
-export function timeFormat(obj) {
-    if (obj == null) {
-        return null
+export function timeFormat(timestamp) {
+    if (!timestamp) {
+        return null;
     }
-    let date = new Date(obj * 1000);
-    let y = 1900 + date.getYear();
-    let m = "0" + (date.getMonth() + 1);
-    let d = "0" + date.getDate();
-    let h = "0" + date.getHours();
-    let mm = "0" + date.getMinutes();
-    let s = date.getSeconds();
-    return y + "-" + m.substring(m.length - 2, m.length) + "-" + d.substring(d.length - 2, d.length) + " " + h.substring(h.length - 2, h.length) + ":" + mm.substring(mm.length - 2, mm.length) + ":" + s;
+
+    // 转换时间戳为毫秒并生成日期对象
+    const date = new Date(timestamp * 1000);
+
+    // 获取年份
+    const y = date.getFullYear();
+
+    // 获取月份并补齐两位
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+
+    // 获取日期并补齐两位
+    const d = String(date.getDate()).padStart(2, '0');
+
+    // 获取小时并补齐两位
+    const h = String(date.getHours()).padStart(2, '0');
+
+    // 获取分钟并补齐两位
+    const mm = String(date.getMinutes()).padStart(2, '0');
+
+    // 获取秒数并补齐两位
+    const s = String(date.getSeconds()).padStart(2, '0');
+
+    // 拼接成格式化的时间字符串
+    return `${y}-${m}-${d} ${h}:${mm}:${s}`;
 }
+
 
 export function addressFormat(str) {
     let arr = []
