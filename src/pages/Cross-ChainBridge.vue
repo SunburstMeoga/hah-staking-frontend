@@ -121,7 +121,7 @@
                         <span class="text-xl">跨鏈成功</span> !<br /> <br />
                         從 <span class="text-#EAAE36 font-bold">
                             “{{ isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
-                        </span> 跨出，收到約<span class="text-#00FFEA"> {{ inputValue }} HAH</span>
+                        </span> 跨出，收到<span class="text-#00FFEA"> {{ inputValue }} HAH</span>
                     </div>
                     <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
 
