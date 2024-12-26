@@ -106,9 +106,9 @@ export default {
         getStatusText(status) {
             switch (status) {
                 case 0:
-                    return "未投票或已贖回";
+                    return "已贖回";
                 case 1:
-                    return "正在投票";
+                    return "復投進行中";
                 case 2:
                     return "停止復投中";
                 default:
