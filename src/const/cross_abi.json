@@ -1,0 +1,39 @@
+[
+    {
+        "inputs": [],
+        "name": "getCrosschainTransferAmount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint32",
+                "name": "nPeerChainId",
+                "type": "uint32"
+            },
+            {
+                "internalType": "uint256",
+                "name": "nTransferAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "transferCoin",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

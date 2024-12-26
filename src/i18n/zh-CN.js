@@ -101,8 +101,8 @@ const zh = {
         notBalance: '餘額不足',
         voteSuccess: '投票成功',
         voteFail: '投票失敗',
-        redeemSuccess: '撤投成功',
-        redeemFail: '撤投失敗',
+        redeemSuccess: '該投票已停止復投',
+        redeemFail: '停止復投失敗',
         amountExceededing: '撤投金額不能大於你已投票的金額'
     },
     dialog: {

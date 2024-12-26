@@ -1,7 +1,8 @@
 import abi from './abi.json'
-
+import cross_abi from './cross_abi.json'
 const config = {
     erc20_abi: abi,
+    cross_abi: cross_abi,
     con_addr: '0x00000000000000000000000000000000000000A1',
     unit: 'Gwei',
     amount: '10',

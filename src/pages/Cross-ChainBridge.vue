@@ -22,8 +22,8 @@
                         Ahead Mainnet</div>
                 </div>
                 <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
-                    v-if="!isSwapped">
-                    餘額:0.00 HAH</div>
+                    v-if="!isSwapped && isMainNetOut">
+                    餘額:{{ $store.state.walletInfo.balance }} HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
@@ -55,15 +55,16 @@
                         ByteBloom</div>
                 </div>
                 <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
-                    v-if="!isSwapped">
-                    餘額:0.00 HAH</div>
+                    v-if="isSwapped && !isMainNetOut">
+                    餘額:{{ $store.state.walletInfo.balance }} HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
                 </div>
             </div>
         </div>
-        <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-12 mt-12 mb-7">
+        <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-12 mt-12 mb-7"
+            @click="handleConfirmCross">
             確認跨鏈
         </div>
         <!-- <div class="w-11/12 mx-auto pb-9">
@@ -101,6 +102,32 @@
                             @click="rotateIcon">
                             確 定</div>
 
+                    </div>
+                </div>
+            </div>
+        </van-popup>
+        <!-- 跨鏈成功dialog -->
+        <van-popup v-model="showSuccessDialog">
+            <div class="w-full flex justify-center items-center bg-transparent">
+                <div
+                    class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+                    <div class="w-10/12 flex justify-start items-center">
+                        <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+                    </div>
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+                        <div class="icon iconfont icon-close text-sm"></div>
+                    </div>
+                    <div class="w-10/12 mb-5">
+                        <span class="text-xl">跨鏈成功</span> !<br /> <br />
+                        從 <span class="text-#EAAE36 font-bold">
+                            “{{ isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
+                        </span> 跨出，收到約<span class="text-#00FFEA"> {{ inputValue }} HAH</span>
+                    </div>
+                    <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
+
+                        <div class="flex w-full h-10 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+                            @click="showSuccessDialog = false">
+                            確 定</div>
                     </div>
                 </div>
             </div>
@@ -161,49 +188,97 @@ export default {
             totalIncome: 0,
             totalVotes: 0,
             counts: {},
-
             showList: false, //列表弹窗
             showDialog: false,
             rotation: 0, // 初始化旋转角度
-
             isSwapped: false, // 控制卡片是否交换位置  
             inputValue: '',  // 初始化输入值
+
+            mainnetChainId: '0x11623',
+            appChainId: '0x11624',
+            showSuccessDialog: false,
+            isMainNetOut: true,//當前跨出鏈是否為主網
+            outChainBalance: '0.00'
         }
     },
     created() {
         console.log('init ........')
         console.log('登录状态', localStorage.getItem('connectStatus'))
-        this.getNodeList()
     },
     computed: {
 
     },
     methods: {
         amountFormat,
+        //獲取當前跨出鏈餘額
+        getOutChainBalance(address) {
+            Toast.loading({
+                forbidClick: true,
+                duration: 0
+            });
+            this.Web3.eth.getBalance(address).then((res) => {
+                let walletInfo = {
+                    address: address,
+                    balance: this.Web3.utils.fromWei(res, 'ether')
+                }
+
+                localStorage.setItem('walletInfo', JSON.stringify(walletInfo))
+                localStorage.setItem('connectStatus', 'connect')
+                this.$store.commit('getWalletInfo', JSON.parse(localStorage.getItem('walletInfo')))
+                console.log('store', this.$store.state.walletInfo.balance)
+                Toast.clear()
+            }).catch(err => {
+                console.log('getbalance err', err)
+            })
+        },
+        //点击确认跨链按钮
+        handleConfirmCross() {
+            if (!this.inputValue) {
+                Toast.fail('請輸入跨鏈金額');
+                return
+            }
+            Toast.loading({
+                forbidClick: true,
+                duration: 0
+            });
+            let web3Contract = new this.Web3.eth.Contract(this.Config.cross_abi, this.Config.con_addr)
+            console.log('参数', !this.isSwapped ? this.appChainId : this.mainnetChainId, this.Web3.utils.toWei(this.inputValue.toString(), 'ether'))
+            web3Contract.methods.transferCoin(!this.isSwapped ? this.appChainId : this.mainnetChainId, this.Web3.utils.toWei(this.inputValue.toString(), 'ether')).send({
+                from: JSON.parse(localStorage.getItem('walletInfo')).address,
+            }).then(res => {
+                this.showSuccessDialog = true
+                this.getOutChainBalance(window.ethereum.selectedAddress)
+                console.log('res', res)
+                Toast.clear()
+            }).catch(err => {
+                Toast.fail('失敗，請重試');
+                console.log('err', err)
+            })
+            console.log(web3Contract)
+        },
         //跨链金额输入框
         validateInput() {
-            // 只允许数字和壹个小数点
             let value = this.inputValue;
-
             // 使用正则表达式进行验证，只允许壹个小数点
             value = value.replace(/[^0-9.]/g, '') // 过滤掉非数字和小数点字符
                 .replace(/(\..*)\./g, '$1'); // 只保留壹个小数点
-
             // 设置更新后的值
             this.inputValue = value;
         },
         async rotateIcon() {
-            // await window.ethereum.request({
-            //     method: 'wallet_switchEthereumChain',
-            //     // params: [{ chainId: this.Config.chainId }],
-            //     params: [{ chainId: this.isSwapped ? '0x11623' : '0x2bf' }],
-            // })
             try {
-                console.log('切换网络', [{ chainId: this.isSwapped ? '0x329' : '0x2bf' }])
+                console.log('切换网络', [{ chainId: this.isSwapped ? this.mainnetChainId : this.appChainId }])
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: this.isSwapped ? '0x329' : '0x2bf' }],
+                    params: [{ chainId: this.isSwapped ? this.mainnetChainId : this.appChainId }],
                 })
+
+                this.rotation += 360; // 每次点击增加360度
+                this.isSwapped = !this.isSwapped;
+                this.showDialog = !this.showDialog
+                this.isMainNetOut = !this.isSwapped
+                this.getOutChainBalance(window.ethereum.selectedAddress)
+
             } catch (err) {
                 console.error('切换自定义网络错误', err)
                 if (err.code === 4902) {
@@ -214,7 +289,7 @@ export default {
                             method: 'wallet_addEthereumChain',
                             params: [
                                 {
-                                    chainId: this.isSwapped ? '0x329' : '0x2bf',
+                                    chainId: this.isSwapped ? this.mainnetChainId : this.appChainId,
                                     chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
                                     rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
                                     iconUrls: ['https://testnet.hashahead.org/logo.png'],
@@ -227,89 +302,21 @@ export default {
                                 },
                             ],
                         });
+
+                        this.rotation += 360; // 每次点击增加360度
+                        this.isSwapped = !this.isSwapped;
+                        this.showDialog = !this.showDialog
+                        this.isMainNetOut = !this.isSwapped
+                        this.getOutChainBalance(window.ethereum.selectedAddress)
                     } catch (addError) {
                         console.log('添加自定义网络错误', addError)
+                        Toast.fail('添加自定义网络错误');
                     }
 
                 }
             }
-            this.rotation += 360; // 每次点击增加360度
-            this.isSwapped = !this.isSwapped;
-            this.showDialog = !this.showDialog
-        },
-        //获取節點列表数据
-        getNodeList() {
-            this.nodeListLoadStatus = 'loading'
-            nodeList({ pageSize: 50, address: window.ethereum.selectedAddress }).then(async (res) => {
-                console.log('節點列表----', res)
-                res.data.map((item, index) => {
-                    item.rank = index + 1
-                })
-                if (res.data.length === 0) {
-                    this.nodeListLoadStatus = 'empty'
-                    return
-                }
-                this.nodeDataList = res.data
-                await Promise.all(this.nodeDataList.map(async (item, index) => {
-                    item.showMore = false
-                    console.log(item)
 
-                    let details = await nodeDetails({ dposAddress: item.address, address: window.ethereum.selectedAddress })
-                    item.votesList = details.vote
-                    item.dpos = details.dpos
-                    console.log(details)
-                    console.log(item)
-                }))
-                this.nodeDataList[0].name = 'HashGuardian'
-                this.nodeDataList[1].name = 'BlockSentinel'
-                this.nodeDataList[2].name = 'ChainPioneer'
-                this.nodeDataList[3].name = 'NodeTitan'
-                this.nodeDataList[4].name = 'CryptoHaven'
-                this.nodeDataList[5].name = 'AnchorCore'
-                this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
-                this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.income, 10), 0);
-                console.log('votes', this.totalVotes)
-                console.log('incone', this.totalIncome)
-
-                this.delegateCount = res.total
-                let earningsInfo = {
-                    ordinaryEarnings: res.income1 ? this.amountFormat(res.income1) : null,
-                    indexReturns: res.income0 ? this.amountFormat(res.income0) : null,
-                    totalEarnings: res.income0 || res.income1 ? (res.income0 + res.income1).toFixed(4) : null,
-                    ordinaryVote: res.vote1 ? this.amountFormat(res.vote1) : null,
-                    returnsVote: res.vote0 ? this.amountFormat(res.vote0) : null,
-                    totalVotes: res.vote0 || res.vote1 ? this.amountFormat(res.vote0 + res.vote1) : null,
-                    amount: res.amount ? this.amountFormat(res.amount) : null,
-                    income: res.income ? this.amountFormat(res.income) : null,
-                }
-                res.data.map((item, index) => {
-                    if (item.amount !== '0') {
-                        this.votedDataList.push(item)
-                    }
-                })
-                localStorage.setItem('earningsInfo', JSON.stringify(earningsInfo))
-                this.$store.commit('getEarningsInfo', JSON.parse(localStorage.getItem('earningsInfo')))
-                console.log('vuex的值', this.$store.state.earningsInfo)
-                console.log('節點列表', this.nodeDataList)
-                let counts = { 0: 0, 1: 0, 2: 0 };
-                this.nodeDataList.forEach(item => { //统计 进行中，已贖回，停止復投中的数据
-                    item.votesList.forEach(vote => {
-                        if (counts.hasOwnProperty(vote.status)) {
-                            counts[vote.status]++;
-                        }
-                    });
-                });
-                this.counts = counts
-                console.log(counts)
-
-                this.nodeListLoadStatus = 'finished'
-            }).catch(err => {
-                this.nodeListLoadStatus = 'error'
-
-                console.log(err)
-                Toast.clear()
-            })
-        },
+        }
     }
 }
 </script>
