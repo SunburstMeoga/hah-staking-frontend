@@ -110,7 +110,7 @@ export default {
                 case 1:
                     return "正在投票";
                 case 2:
-                    return "已停止復投獎勵，等待贖回";
+                    return "停止復投中";
                 default:
                     return "未知状态"; // 如果 status 不是 0, 1, 或 2，则返回 "未知状态"
             }
