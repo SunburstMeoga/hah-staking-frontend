@@ -283,7 +283,7 @@ export default {
                 console.error('切换自定义网络错误', err)
                 if (err.code === 4902) {
                     console.log('自定义网络不存在，去添加自定义网络')
-                    console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
+                    console.log([this.isSwapped ? 'https://rpc-testnet.hashahead.org/mrpc' : 'https://rpc-testnet.hashahead.org'])
                     try {
                         await ethereum.request({
                             method: 'wallet_addEthereumChain',
@@ -291,7 +291,7 @@ export default {
                                 {
                                     chainId: this.isSwapped ? this.mainnetChainId : this.appChainId,
                                     chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
-                                    rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
+                                    rpcUrls: [this.isSwapped ? 'https://rpc-testnet.hashahead.org/mrpc' : 'https://rpc-testnet.hashahead.org'],
                                     iconUrls: ['https://testnet.hashahead.org/logo.png'],
                                     blockExplorerUrls: ['https://scan.hashahead.org/'],
                                     nativeCurrency: {
