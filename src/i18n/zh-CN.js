@@ -23,7 +23,7 @@ const zh = {
         ordinary: '普通：',
         amountInvested: '已投金額：',
         amount: '金額',
-        voteBtn: '投票',
+        voteBtn: '投 票',
         redeemBtn: '撤投',
         canUse: '可用：',
         locked: '鎖定餘額：',
@@ -129,6 +129,27 @@ const zh = {
     },
     tips: {
         amount: '*所有金額僅供參考，僅保留4位小數，實際金額以瀏覽器為準'
+    },
+    newWord: {
+        total: '個人總投票數量',
+        reInvesting: '復投進行中',
+        stopInves: '停止復投中',
+        redeemed: '已贖回',
+        votesCount: '節點票數',
+        targetNodeVote: '該節點投票量',
+        ruleTitle: '規則說明',
+        toCross: '餘額不足，請前往跨鏈橋',
+        cancelBtn: '取 消',
+        confirmBtn: '確 定',
+        confirmChangeChainOne: '是否切換為',
+        confirmChangeChainTwo: '跨出HAH',
+        success: '成功！',
+        from: '從 ',
+        to: '到 ',
+        cross: '跨出',
+        receive: '收到',
+        crossBridge: '跨鏈橋',
+        confirmCross: '確認跨鏈'
     }
 }
 

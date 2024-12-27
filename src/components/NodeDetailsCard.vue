@@ -12,7 +12,7 @@
         </div>
         <div class="flex justify-between items-center w-9/12 mb-6">
             <div class="w-1/2 flex flex-col justify-start items-start">
-                <div class="text-white mb-2">已投票數</div>
+                <div class="text-white mb-2">{{ $t('wallet.votedAmount') }}</div>
                 <div class="text-#EAAE36 text-2xl font-light">{{ Number($store.state.nodeDetails.votes).toFixed(2) }}
                 </div>
             </div>
@@ -29,33 +29,33 @@
             }">
             <div @click="copyContent($store.state.nodeDetails.address)"
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">節點地址</div>
+                <div class="">{{ $t('table.address') }}</div>
                 <div class="">{{ addressFilter($store.state.nodeDetails.address) }}</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">已投票數</div>
+                <div class="">{{ $t('wallet.votedAmount') }}</div>
                 <div class="">{{ Number($store.state.nodeDetails.votes).toFixed(2) }}</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">收益</div>
+                <div class="">{{ $t('wallet.earnings') }}</div>
                 <div class="">{{ Number($store.state.nodeDetails.income).toFixed(2) }} HAH</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">節點排名</div>
+                <div class="">{{ $t('table.nodeRank') }}</div>
                 <div class="">{{ $store.state.nodeDetails.rank }}</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">百分比</div>
+                <div class="">{{ $t('table.point') }}</div>
                 <div class="">{{ Number($store.state.nodeDetails.apy * 100).toFixed(2)
                     }}%</div>
             </div>
             <div
                 class="w-full flex justify-between items-center text-#A5A5A5 text-sm h-11 border-b border-dashed border-black">
-                <div class="">節點票數</div>
+                <div class="">{{ $t('newWord.votesCount') }}</div>
                 <div class="">{{ Number($store.state.nodeDetails.votes).toFixed(2) }}</div>
             </div>
         </div>

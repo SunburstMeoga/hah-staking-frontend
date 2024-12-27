@@ -58,15 +58,15 @@
                 </div>
             </div>
             <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-9 mb-7"
-                @click="userVote">投 票
+                @click="userVote">{{ $t('details.voteBtn') }}
             </div>
             <div class="w-11/12 flex justify-center items-center mx-auto text-white mb-3" @click="showRole = !showRole">
-                <div class="underline font-light text-sm mr-2.5">規則說明</div>
+                <div class="underline font-light text-sm mr-2.5">{{ $t('newWord.ruleTitle') }}</div>
                 <div class="icon iconfont icon-down2 text-xs"></div>
             </div>
             <div class="w-full mt-6" v-show="showRole">
                 <div class="w-11/12 mx-auto mb-6">
-                    <module-title title="規則說明" />
+                    <module-title :title="$t('newWord.ruleTitle')" />
                 </div>
                 <div class="w-11/12 mx-auto  mb-6">
                     <voting-rules />
@@ -90,7 +90,7 @@
                         <div class="icon iconfont icon-close text-sm"></div>
                     </div>
                     <div class="w-10/12 mb-5">
-                        余额不足，请前往跨链桥
+                        {{ $t('newWord.toCross') }}
                         <!-- <span class="text-#EAAE36 font-bold">
                             “{{ !isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
                         </span> 跨出HAH -->
@@ -98,10 +98,10 @@
                     <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
                         <div
                             class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black ">
-                            取 消</div>
+                            {{ $t('newWord.cancelBtn') }}</div>
                         <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
                             @click="toCross">
-                            確 定</div>
+                            {{ $t('newWord.confirmBtn') }}</div>
 
                     </div>
                 </div>

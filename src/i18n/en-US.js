@@ -131,6 +131,27 @@ const en = {
     },
     tips: {
         amount: '*All amounts are for reference only, only 4 decimal places are reserved, the actual amount is subject to the browser'
+    },
+    newWord: {
+        total: 'Total Votes Cast',
+        reInvesting: 'Re-investing in Progress',
+        stopInves: 'Stopping Re-investment',
+        redeemed: 'Redeemed',
+        votesCount: 'Node Votes Count',
+        targetNodeVote: 'Votes for This Node',
+        ruleTitle: 'Rule Description',
+        toCross: 'Insufficient Balance, Please Go to Cross-chain Bridge',
+        cancelBtn: 'Cancel',
+        confirmBtn: 'Confirm',
+        confirmChangeChainOne: 'Switch to',
+        confirmChangeChainTwo: 'Exit HAH',
+        success: 'Success!',
+        from: 'From ',
+        to: 'To ',
+        cross: 'Cross-chain',
+        receive: 'Received',
+        crossBridge: 'Cross-chain Bridge',
+        confirmCross: 'Confirm Cross-chain'
     }
 }
 

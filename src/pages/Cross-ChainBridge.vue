@@ -1,7 +1,7 @@
 <template>
     <div class="bg-#1F1F1F pb-9">
         <div class="w-11/12 mx-auto flex justify-center items-center py-8">
-            <module-title title="跨鏈橋" />
+            <module-title :title="$t('newWord.crossBridge')" />
         </div>
         <div class="w-full justify-start items-center flex flex-col transition-all duration-500 ">
             <div :class="{
@@ -18,12 +18,12 @@
                         <!-- <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div> -->
                     </div>
                     <div class="text-#A5A5A5 text-xs font-light"> <span class="font-bold text-#00FFEA">
-                            {{ isSwapped ? '到 ' : '從 ' }}</span> Hash
+                            {{ isSwapped ? $t('newWord.to') : $t('newWord.from') }}</span> Hash
                         Ahead Mainnet</div>
                 </div>
                 <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
                     v-if="!isSwapped && isMainNetOut">
-                    餘額:{{ $store.state.walletInfo.balance }} HAH</div>
+                    {{ $t('wallet.balance') }}:{{ $store.state.walletInfo.balance }} HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
@@ -50,13 +50,13 @@
                         <!-- <div class="icon iconfont icon-down1 text-sm text-white  ml-2"></div> -->
                     </div>
                     <div class="text-#A5A5A5 text-xs font-light"><span class="font-bold text-#00FFEA">
-                            {{ isSwapped ? '從 ' : '到 ' }}</span>Hash
+                            {{ isSwapped ? $t('newWord.from') : $t('newWord.to') }}</span>Hash
                         Ahead
                         ByteBloom</div>
                 </div>
                 <div class="w-11/12 flex justify-end items-center text-#A5A5A5 text-xs font-light mb-1"
                     v-if="isSwapped && !isMainNetOut">
-                    餘額:{{ $store.state.walletInfo.balance }} HAH</div>
+                    {{ $t('wallet.balance') }}:{{ $store.state.walletInfo.balance }} HAH</div>
                 <div class="w-11/12 h-9 rounded-lg border border-#EAAE36">
                     <input type="number" class="w-full h-9 border-none bg-transparent pl-2" v-model="inputValue"
                         @input="validateInput">
@@ -65,7 +65,7 @@
         </div>
         <div class="w-11/12 rounded-lg flex justify-center items-center text-white bg-#EAAE36 mx-auto h-12 mt-12 mb-7"
             @click="handleConfirmCross">
-            確認跨鏈
+            {{ $t('newWord.confirmCross') }}
         </div>
         <!-- <div class="w-11/12 mx-auto pb-9">
             <div class="w-full flex justify-between items-center text-#A5A5A5 h-9">
@@ -89,18 +89,18 @@
                         <div class="icon iconfont icon-close text-sm"></div>
                     </div>
                     <div class="w-10/12 mb-5">
-                        是否切換為
+                        {{ $t('newWord.confirmChangeChainOne') }}
                         <span class="text-#EAAE36 font-bold">
                             “{{ !isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
-                        </span> 跨出HAH
+                        </span> {{ $t('newWord.confirmChangeChainTwo') }}
                     </div>
                     <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
                         <div class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black "
                             @click="showDialog = !showDialog">
-                            取 消</div>
+                            {{ $t('newWord.cancelBtn') }}</div>
                         <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
                             @click="rotateIcon">
-                            確 定</div>
+                            {{ $t('newWord.confirmBtn') }}</div>
 
                     </div>
                 </div>
@@ -118,18 +118,18 @@
                         <div class="icon iconfont icon-close text-sm"></div>
                     </div>
                     <div class="w-10/12 mb-5">
-                        <span class="text-xl">成功！</span> !<br /> <br />
-                        從 <span class="text-#EAAE36 font-bold">
+                        <span class="text-xl">{{ $t('newWord.success') }}</span> !<br /> <br />
+                        {{ $t('newWord.from') }} <span class="text-#EAAE36 font-bold">
                             “{{ isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
-                        </span> 跨出，<span class="text-#EAAE36 font-bold">
+                        </span> {{ $t('newWord.cross') }}，<span class="text-#EAAE36 font-bold">
                             “{{ !isSwapped ? 'Hash Ahead ByteBloom' : 'Hash Ahead Mainnet' }}”
-                        </span>收到<span class="text-#00FFEA"> {{ inputValue }} HAH</span>
+                        </span>{{ $t('newWord.receive') }}<span class="text-#00FFEA"> {{ inputValue }} HAH</span>
                     </div>
                     <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
 
                         <div class="flex w-full h-10 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
                             @click="showSuccessDialog = false">
-                            確 定</div>
+                            {{ $t('newWord.confirmBtn') }}</div>
                     </div>
                 </div>
             </div>
