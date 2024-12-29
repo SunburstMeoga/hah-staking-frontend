@@ -46,17 +46,39 @@
                 </div>
             </div>
         </div>
+        <van-popup v-model="showDialog">
+            <div class="w-full flex justify-center items-center bg-transparent">
+                <div
+                    class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+                    <div class="w-10/12 flex justify-start items-center">
+                        <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+                    </div>
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+                        <div class="icon iconfont icon-close text-sm"></div>
+                    </div>
+                    <div class="w-10/12 mb-5">
+                        {{ $t('newWord.web3Tips') }}
+                    </div>
+                    <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
+
+                        <div class="flex w-full h-10 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+                            @click="showDialog = false">
+                            {{ $t('newWord.confirmBtn') }}</div>
+                    </div>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast, Popup } from 'vant';
 import { nodeList } from '@/request/api'
 import { amountFormat } from '@/utils/format'
 
 export default {
 
-    components: { Toast },
+    components: { Toast, [Popup.name]: Popup },
     props: {
         isHome: {
             default: false,
@@ -67,7 +89,9 @@ export default {
         return {
             accounts: [],
             isMetaMaskConnected: false,
-            isConnect: false
+            isConnect: false,
+            showDialog: false
+
         }
     },
     methods: {
@@ -105,6 +129,12 @@ export default {
             localStorage.setItem('language', this.$i18n.locale)
         },
         getWalletBalance(address) {
+            console.log(window.ethereum)
+            if (!window.ethereum) {
+                this.showDialog = true
+                console.log(this.showDialog)
+                return
+            }
             this.Web3.eth.getBalance(address).then((res) => {
                 let walletInfo = {
                     address: address,
@@ -130,11 +160,21 @@ export default {
             window.open('https://blockway.io/', "_blank")
         },
         handleCrossChain() { //跨鏈橋
+            if (!window.ethereum) {
+                this.showDialog = true
+                return
+            }
             this.$router.push({
                 path: '/cross-chain-bridge'
             })
         },
         handleConnect() {
+            console.log(window.ethereum)
+            if (!window.ethereum) {
+                this.showDialog = true
+                console.log(this.showDialog)
+                return
+            }
             console.log(localStorage.getItem('connectStatus'))
             if (localStorage.getItem('connectStatus') === 'connect') {
                 this.loginOut()
@@ -145,6 +185,10 @@ export default {
         },
 
         loginOut() {
+            if (!window.ethereum) {
+                this.showDialog = true
+                return
+            }
             console.log('Login out')
             localStorage.removeItem('walletInfo')
             // localStorage.removeItem('earningsInfo')
@@ -155,6 +199,10 @@ export default {
 
         async login() {
             console.log('Login')
+            if (!window.ethereum) {
+                this.showDialog = true
+                return
+            }
             try {
                 const accounts = await ethereum.request({
                     method: 'eth_requestAccounts',
@@ -174,5 +222,13 @@ img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+</style>
+<style>
+.van-popup--center,
+.van-popup {
+    width: 100%;
+    background-color: none;
+    background: none;
 }
 </style>
