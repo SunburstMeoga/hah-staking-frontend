@@ -149,7 +149,8 @@ const zh = {
         cross: '跨出',
         receive: '收到',
         crossBridge: '跨鏈橋',
-        confirmCross: '確認跨鏈'
+        confirmCross: '確認跨鏈',
+        web3Tips: '目前瀏覽器不支援區塊鏈互動。請使用錢包瀏覽器（如 MetaMask）以解鎖完整功能。'
     }
 }
 

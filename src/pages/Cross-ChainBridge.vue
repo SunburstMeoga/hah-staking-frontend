@@ -114,7 +114,7 @@
                     <div class="w-10/12 flex justify-start items-center">
                         <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
                     </div>
-                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showSuccessDialog = false">
                         <div class="icon iconfont icon-close text-sm"></div>
                     </div>
                     <div class="w-10/12 mb-5">

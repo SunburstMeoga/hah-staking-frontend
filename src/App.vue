@@ -5,6 +5,29 @@
       <router-view />
     </div>
     <bottom-bar />
+    <van-popup v-model="showDialog">
+      <div class="w-full flex justify-center items-center bg-transparent">
+        <div
+          class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+          <div class="w-10/12 flex justify-start items-center">
+            <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+          </div>
+          <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showDialog = !showDialog">
+            <div class="icon iconfont icon-close text-sm"></div>
+          </div>
+          <div class="w-10/12 mb-5">
+            {{ $t('newWord.web3Tips') }}
+          </div>
+          <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
+
+            <div
+              class="flex w-full h-10 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+              @click="showDialog = false">
+              {{ $t('newWord.confirmBtn') }}</div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -14,20 +37,24 @@ import BottomBar from '@/components/BottomBar.vue'
 import { amountFormat } from '@/utils/format'
 import { nodeList } from '@/request/api'
 
-import { Dialog, Toast } from 'vant'
+import { Dialog, Toast, Popup } from 'vant'
 export default {
   name: 'App',
-  components: { [Dialog.name]: Dialog, Toast, TopBar, BottomBar },
+  components: { [Dialog.name]: Dialog, [Popup.name]: Popup, Toast, TopBar, BottomBar },
   data() {
     return {
       showPopup: false,
-      isHome: true
+      isHome: true,
+      showDialog: false
     }
   },
   created() {
+    if (!window.ethereum) {
+      this.showDialog = true
+    }
     this.getChainId()
     // const web3 = this.Web3(window.ethereum)
-
+    console.log(window.ethereum)
     console.log('isConnected', this.Web3.currentProvider._state.isConnected)
     this.updateIsHome()
   },
@@ -60,6 +87,9 @@ export default {
   },
   methods: {
     amountFormat,
+    hasProvide() { //判断当前是否为钱包浏览器环境
+      return window.ethereum ? true : false
+    },
     updateIsHome() {
       // 初始化时判断当前路由是否为首页
       this.isHome = this.$route.path === '/'
@@ -209,5 +239,13 @@ export default {
 * {
   padding: 0;
   margin: 0;
+}
+</style>
+<style>
+.van-popup--center,
+.van-popup {
+  width: 100%;
+  background-color: none;
+  background: none;
 }
 </style>

@@ -151,7 +151,8 @@ const en = {
         cross: 'Cross-chain',
         receive: 'Received',
         crossBridge: 'Cross-chain Bridge',
-        confirmCross: 'Confirm Cross-chain'
+        confirmCross: 'Confirm Cross-chain',
+        web3Tips: 'Currently, this browser does not support blockchain interaction. Please use a wallet browser such as MetaMask to unlock full functionality.'
     }
 }
 
