@@ -35,15 +35,15 @@
                     {{ $store.state.walletInfo.address ? $t('topBar.disconnect') :
                         $t('topBar.connect') }}
                 </div> -->
-                <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleCrossChain">
+                <!-- <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleCrossChain">
                     <div class="text-xl icon iconfont icon-kualianqiao text-white" />
-                </div>
+                </div> -->
                 <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="handleConnect">
                     <div class="text-xl icon iconfont icon-duankailianjie text-white" />
                 </div>
-                <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="switchLanguage">
+                <!-- <div class="h-8 w-8 py-1 px-2 ml-2 flex justify-center items-center" @click="switchLanguage">
                     <div class="text-xl icon iconfont icon-duoyuyan text-white" />
-                </div>
+                </div> -->
             </div>
         </div>
         <van-popup v-model="showDialog">
