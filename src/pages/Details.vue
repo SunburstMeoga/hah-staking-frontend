@@ -96,8 +96,8 @@
                         </span> 跨出HAH -->
                     </div>
                     <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-4">
-                        <div
-                            class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black ">
+                        <div class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black "
+                            @click="showDialog = false">
                             {{ $t('newWord.cancelBtn') }}</div>
                         <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
                             @click="toCross">
