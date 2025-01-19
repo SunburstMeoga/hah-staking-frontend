@@ -8,21 +8,21 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: Home
-    // },
-    // {
-    //   path: '/node/:address',
-    //   name: 'node',
-    //   component: Details
-    // },
-    // {
-    //   path: '/cross-chain-bridge',
-    //   name: 'bridge',
-    //   component: CrossChainBridge
-    // }
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/node/:address',
+      name: 'node',
+      component: Details
+    },
+    {
+      path: '/cross-chain-bridge',
+      name: 'bridge',
+      component: CrossChainBridge
+    },
     {
       path: '/',
       name: 'bridge',
