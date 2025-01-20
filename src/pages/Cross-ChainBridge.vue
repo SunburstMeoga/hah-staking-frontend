@@ -196,10 +196,10 @@ export default {
             isSwapped: false, // 控制卡片是否交换位置  
             inputValue: '',  // 初始化输入值
 
-            mainnetChainId: '0x11623',
-            appChainId: '0x11624',
-            // mainnetChainId: '0x329',
-            // appChainId: '0x2BF',
+            // mainnetChainId: '0x11623',
+            // appChainId: '0x11624',
+            mainnetChainId: '0x329',
+            appChainId: '0x2BF',
             showSuccessDialog: false,
             isMainNetOut: true,//當前跨出鏈是否為主網
             outChainBalance: '0.00'

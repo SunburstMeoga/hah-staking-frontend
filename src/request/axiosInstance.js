@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://rpc-testnet.hashahead.org/mrpc', // 设置你的API基本路径
+    baseURL: 'https://rpc.hashahead.org/mrpc', // 设置你的API基本路径
     timeout: 7000, // 设置请求超时时间
     headers: {
         'Content-Type': 'application/json', // 设置请求头
