@@ -38,11 +38,11 @@ const zh = {
         voteAddress: '投票地址',
         pledgeReqRedeem: '取消投票',
         yield: '收益率',
-        oneYear: '壹年',
+        oneYear: '一年',
         half: '半年',
         trimester: '三個月',
-        oneMonth: '壹個月',
-        oneWeek: '壹周',
+        oneMonth: '一個月',
+        oneWeek: '一周',
         operating: '操作'
     },
     wallet: {
@@ -84,7 +84,7 @@ const zh = {
         rulesThree: '點擊要撤投的節點，進入節點詳情,選擇普通或者復利，填寫撤投金額(不高於當前投票餘額), 點擊撤投按鈕，即可完成撤投。',
         rulesFour: '正式鏈需投票3天後才可撤投.測試鏈需投票6分鐘後才可撤投。',
         rulesFive: '測試鏈2分鐘，正式鏈1天。',
-        rulesSix: '生產區塊或投票獲得的獎勵會被鎖定，每天發放壹次獎勵，每天的獎勵都會分成180天釋放，即每天的獎勵都會分成180份，每天釋放壹份。'
+        rulesSix: '生產區塊或投票獲得的獎勵會被鎖定，每天發放一次獎勵，每天的獎勵都會分成180天釋放，即每天的獎勵都會分成180份，每天釋放一份。'
     },
     topBar: {
         connect: '連接錢包',
