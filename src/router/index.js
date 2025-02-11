@@ -24,7 +24,7 @@ export default new Router({
       component: CrossChainBridge
     },
     {
-      path: '/',
+      path: '/bridge',
       name: 'bridge',
       component: CrossChainBridge
     }
