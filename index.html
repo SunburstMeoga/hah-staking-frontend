@@ -3,13 +3,152 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1F1F1F">
   <title>HAH-VOTE</title>
   <link rel="icon" type="image/x-icon" href="static/logo.png">
+
+  <!-- TP钱包兼容性脚本 -->
+  <script>
+    // 检测TP钱包环境
+    function detectTPWallet() {
+      return window.tpWallet || window.tokenpocket ||
+             (window.ethereum && window.ethereum.isTokenPocket) ||
+             navigator.userAgent.includes('TokenPocket');
+    }
+
+    // 检测移动端环境
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // TP钱包环境初始化
+    if (detectTPWallet() && isMobile()) {
+      console.log('TP Wallet detected, applying compatibility fixes');
+
+      // 防止页面缩放
+      document.addEventListener('touchstart', function(event) {
+        if (event.touches.length > 1) {
+          event.preventDefault();
+        }
+      });
+
+      // 防止双击缩放
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+
+      // 确保ethereum对象可用
+      window.addEventListener('load', function() {
+        let attempts = 0;
+        const maxAttempts = 50;
+
+        function checkEthereum() {
+          attempts++;
+
+          if (window.ethereum || window.tpWallet) {
+            console.log('Ethereum provider found in TP Wallet');
+            // 触发自定义事件通知Vue应用
+            window.dispatchEvent(new CustomEvent('ethereumReady'));
+            return;
+          }
+
+          if (attempts < maxAttempts) {
+            setTimeout(checkEthereum, 100);
+          } else {
+            console.warn('Ethereum provider not found after maximum attempts');
+            // 即使没有找到，也要启动应用
+            window.dispatchEvent(new CustomEvent('ethereumReady'));
+          }
+        }
+
+        checkEthereum();
+      });
+    } else {
+      // 非TP钱包环境，正常启动
+      window.addEventListener('load', function() {
+        window.dispatchEvent(new CustomEvent('ethereumReady'));
+      });
+    }
+
+    // 全局错误处理
+    window.addEventListener('error', function(event) {
+      console.error('Global error:', event.error);
+      // 防止错误导致白屏
+      return true;
+    });
+
+    // Promise错误处理
+    window.addEventListener('unhandledrejection', function(event) {
+      console.error('Unhandled promise rejection:', event.reason);
+      // 防止Promise错误导致白屏
+      event.preventDefault();
+    });
+  </script>
 </head>
 
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <!-- 加载指示器 -->
+    <div id="loading-indicator" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1F1F1F;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: #EAAE36;
+      font-family: Arial, sans-serif;
+    ">
+      <div style="text-align: center;">
+        <div style="
+          width: 40px;
+          height: 40px;
+          border: 3px solid #333;
+          border-top: 3px solid #EAAE36;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 20px;
+        "></div>
+        <div>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 防止页面滚动时出现橡皮筋效果 */
+    body {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+
   <!-- built files will be auto injected -->
 </body>
 

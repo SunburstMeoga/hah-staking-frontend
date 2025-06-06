@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-lightsecond">
+  <div id="app" class="bg-lightsecond vue-app-started">
     <top-bar :isHome="isHome" />
     <div class="sm:pb-20">
       <router-view />
@@ -81,21 +81,34 @@ export default {
     }
   },
   created() {
-    if (!window.ethereum) {
-      this.showDialog = true
+    console.log('App created, checking wallet environment...');
+
+    // 检测钱包环境
+    const isTPWallet = this.detectTPWallet();
+    const hasEthereum = !!(window.ethereum || window.tpWallet);
+
+    console.log('TP Wallet detected:', isTPWallet);
+    console.log('Ethereum provider available:', hasEthereum);
+
+    if (!hasEthereum) {
+      this.showDialog = true;
+    } else {
+      // 延迟执行链ID检查，给钱包更多时间初始化
+      setTimeout(() => {
+        this.getChainId();
+      }, isTPWallet ? 1000 : 100);
     }
-    this.getChainId()
-    // const web3 = this.Web3(window.ethereum)
-    console.log(window.ethereum)
+
     // 安全地检查Web3连接状态
     try {
       if (this.Web3.currentProvider && this.Web3.currentProvider._state) {
-        console.log('isConnected', this.Web3.currentProvider._state.isConnected)
+        console.log('isConnected', this.Web3.currentProvider._state.isConnected);
       }
     } catch (error) {
-      console.warn('Error checking Web3 connection state:', error)
+      console.warn('Error checking Web3 connection state:', error);
     }
-    this.updateIsHome()
+
+    this.updateIsHome();
   },
   watch: {
     // 监听路由变化
@@ -141,40 +154,56 @@ export default {
       return window.ethereum ? true : false
     },
 
-    // 检查并初始化以太坊连接，处理MetaMask移动端延迟加载
+    // 检查并初始化以太坊连接，处理各种钱包环境
     checkAndInitializeEthereum() {
-      let attempts = 0
-      const maxAttempts = 10
-      const checkInterval = 500
+      let attempts = 0;
+      const maxAttempts = this.detectTPWallet() ? 20 : 10; // TP钱包需要更多时间
+      const checkInterval = this.detectTPWallet() ? 300 : 500;
 
       const checkEthereum = () => {
-        attempts++
+        attempts++;
 
-        if (window.ethereum) {
-          console.log('Ethereum provider detected, reinitializing Web3')
-          this.reinitWeb3()
-          this.showDialog = false
-          return
+        const provider = window.ethereum || window.tpWallet;
+
+        if (provider) {
+          console.log('Ethereum provider detected:', provider.constructor.name || 'Unknown');
+          this.reinitWeb3();
+          this.showDialog = false;
+
+          // TP钱包需要额外的初始化时间
+          if (this.detectTPWallet()) {
+            setTimeout(() => {
+              this.getChainId();
+            }, 500);
+          }
+          return;
         }
 
         if (attempts < maxAttempts) {
-          setTimeout(checkEthereum, checkInterval)
+          setTimeout(checkEthereum, checkInterval);
         } else {
-          console.warn('Ethereum provider not detected after maximum attempts')
-          // 在移动端MetaMask中，有时需要更长时间
+          console.warn('Ethereum provider not detected after maximum attempts');
+
+          // 移动端需要更长时间
           if (this.isMobile()) {
             setTimeout(() => {
-              if (window.ethereum) {
-                console.log('Ethereum provider detected on mobile after extended wait')
-                this.reinitWeb3()
-                this.showDialog = false
+              const provider = window.ethereum || window.tpWallet;
+              if (provider) {
+                console.log('Ethereum provider detected on mobile after extended wait');
+                this.reinitWeb3();
+                this.showDialog = false;
+              } else {
+                console.log('No provider found, showing connection dialog');
+                this.showDialog = true;
               }
-            }, 2000)
+            }, 2000);
+          } else {
+            this.showDialog = true;
           }
         }
-      }
+      };
 
-      checkEthereum()
+      checkEthereum();
     },
 
     // 检测是否为移动设备
@@ -271,27 +300,41 @@ export default {
 
     async getChainId() {
       try {
-        if (!window.ethereum) {
-          console.warn('Ethereum provider not available')
-          return
+        const provider = window.ethereum || window.tpWallet;
+
+        if (!provider) {
+          console.warn('Ethereum provider not available');
+          return;
         }
 
-        const chainId = await window.ethereum.request({
-          method: "eth_chainId"
-        });
+        // TP钱包可能需要特殊处理
+        let chainId;
+        if (this.detectTPWallet() && window.tpWallet && window.tpWallet.request) {
+          chainId = await window.tpWallet.request({
+            method: "eth_chainId"
+          });
+        } else {
+          chainId = await provider.request({
+            method: "eth_chainId"
+          });
+        }
 
-        console.log('当前链id', chainId)
-        this.$store.commit('getChainId', chainId)
+        console.log('当前链id', chainId);
+        this.$store.commit('getChainId', chainId);
 
         // 检查是否为目标链
         if (chainId !== this.Config.chainId) {
-          console.log(`Wrong network detected. Current: ${chainId}, Expected: ${this.Config.chainId}`)
-          this.showNetworkSwitchDialog()
+          console.log(`Wrong network detected. Current: ${chainId}, Expected: ${this.Config.chainId}`);
+          this.showNetworkSwitchDialog();
         } else {
-          console.log('Correct network detected')
+          console.log('Correct network detected');
         }
       } catch (error) {
-        console.error('Error getting chain ID:', error)
+        console.error('Error getting chain ID:', error);
+        // TP钱包可能在某些情况下无法获取链ID，不要因此阻塞应用
+        if (this.detectTPWallet()) {
+          console.log('TP Wallet chain ID detection failed, continuing...');
+        }
       }
     },
 

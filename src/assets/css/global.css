@@ -3,3 +3,58 @@
 -moz-box-shadow: -1px 7px 15px #00000040;
 -webkit-box-shadow: -1px 7px 15px #00000040
 }
+
+/* TP钱包移动端兼容性样式 */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input, textarea {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* 防止iOS Safari的橡皮筋效果 */
+body {
+    position: relative;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 确保在TP钱包中正确显示 */
+#app {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+/* 修复可能的层级问题 */
+.van-popup, .van-overlay {
+    z-index: 9999 !important;
+}
+
+/* 确保按钮在移动端可点击 */
+button, .btn, [role="button"] {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+}
+
+/* 防止文本选择导致的问题 */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

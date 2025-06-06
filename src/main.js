@@ -15,19 +15,39 @@ import '@vant/touch-emulator';
 import Web3 from 'web3'
 import { config } from './const/config'
 
-// 安全地初始化Web3，处理MetaMask移动端环境
+// 检测TP钱包环境
+function detectTPWallet() {
+  return window.tpWallet || window.tokenpocket ||
+         (window.ethereum && window.ethereum.isTokenPocket) ||
+         navigator.userAgent.includes('TokenPocket');
+}
+
+// 安全地初始化Web3，处理各种钱包环境
 function initWeb3() {
   try {
-    if (typeof window !== 'undefined' && window.ethereum) {
-      return new Web3(window.ethereum)
-    } else {
-      // 如果ethereum不可用，创建一个空的Web3实例，避免应用崩溃
-      console.warn('Ethereum provider not found, creating fallback Web3 instance')
-      return new Web3()
+    if (typeof window !== 'undefined') {
+      // TP钱包环境
+      if (detectTPWallet()) {
+        console.log('Initializing Web3 for TP Wallet');
+        if (window.ethereum) {
+          return new Web3(window.ethereum);
+        } else if (window.tpWallet) {
+          return new Web3(window.tpWallet);
+        }
+      }
+      // 其他钱包环境
+      else if (window.ethereum) {
+        console.log('Initializing Web3 for standard wallet');
+        return new Web3(window.ethereum);
+      }
     }
+
+    // 如果没有找到provider，创建一个空的Web3实例，避免应用崩溃
+    console.warn('No Ethereum provider found, creating fallback Web3 instance');
+    return new Web3();
   } catch (error) {
-    console.error('Error initializing Web3:', error)
-    return new Web3()
+    console.error('Error initializing Web3:', error);
+    return new Web3();
   }
 }
 
@@ -37,23 +57,54 @@ Vue.prototype.Config = config
 // 添加Web3重新初始化方法
 Vue.prototype.reinitWeb3 = function() {
   try {
-    if (window.ethereum && !this.Web3.currentProvider) {
-      this.Web3 = new Web3(window.ethereum)
-      console.log('Web3 reinitialized with ethereum provider')
+    const provider = window.ethereum || window.tpWallet;
+    if (provider && (!this.Web3.currentProvider || this.Web3.currentProvider !== provider)) {
+      this.Web3 = new Web3(provider);
+      console.log('Web3 reinitialized with provider:', provider.constructor.name || 'Unknown');
     }
   } catch (error) {
-    console.error('Error reinitializing Web3:', error)
+    console.error('Error reinitializing Web3:', error);
   }
 }
 
+// 添加TP钱包检测方法
+Vue.prototype.detectTPWallet = detectTPWallet;
+
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  i18n,
-  components: { App },
-  template: '<App/>'
-})
+// 等待ethereum准备就绪后再启动Vue应用
+function startVueApp() {
+  // 隐藏加载指示器
+  const loadingIndicator = document.getElementById('loading-indicator');
+  if (loadingIndicator) {
+    loadingIndicator.style.display = 'none';
+  }
+
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    i18n,
+    components: { App },
+    template: '<App/>',
+    mounted() {
+      // 应用启动后的额外检查
+      console.log('Vue app mounted');
+      console.log('TP Wallet detected:', detectTPWallet());
+      console.log('Ethereum available:', !!window.ethereum);
+      console.log('Web3 provider:', this.Web3.currentProvider ? 'Available' : 'Not available');
+    }
+  });
+}
+
+// 监听ethereum准备就绪事件
+window.addEventListener('ethereumReady', startVueApp);
+
+// 备用启动机制，防止事件未触发
+setTimeout(() => {
+  if (!document.querySelector('.vue-app-started')) {
+    console.log('Starting Vue app via fallback mechanism');
+    startVueApp();
+  }
+}, 3000);
