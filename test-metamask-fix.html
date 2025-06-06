@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask Fix Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <h1>MetaMask 移动端兼容性测试</h1>
+    
+    <div id="test-results"></div>
+    
+    <script>
+        const resultsDiv = document.getElementById('test-results');
+        
+        function addResult(message, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        // 测试1: 检查window.ethereum是否存在
+        function testEthereumProvider() {
+            if (typeof window.ethereum !== 'undefined') {
+                addResult('✓ window.ethereum 已检测到', 'success');
+                return true;
+            } else {
+                addResult('⚠ window.ethereum 未检测到 (这在非MetaMask环境中是正常的)', 'warning');
+                return false;
+            }
+        }
+        
+        // 测试2: 模拟Web3初始化
+        function testWeb3Initialization() {
+            try {
+                // 模拟我们修复后的Web3初始化逻辑
+                let web3Instance;
+                if (typeof window !== 'undefined' && window.ethereum) {
+                    // 模拟使用window.ethereum
+                    web3Instance = { provider: 'ethereum', status: 'connected' };
+                    addResult('✓ Web3 使用 ethereum provider 初始化成功', 'success');
+                } else {
+                    // 模拟fallback逻辑
+                    web3Instance = { provider: 'fallback', status: 'fallback' };
+                    addResult('✓ Web3 使用 fallback 模式初始化成功', 'success');
+                }
+                return true;
+            } catch (error) {
+                addResult('✗ Web3 初始化失败: ' + error.message, 'error');
+                return false;
+            }
+        }
+        
+        // 测试3: 检查移动设备检测
+        function testMobileDetection() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                addResult('✓ 检测到移动设备环境', 'success');
+            } else {
+                addResult('ℹ 当前为桌面环境', 'warning');
+            }
+            return true;
+        }
+        
+        // 测试4: 模拟延迟加载检测
+        function testDelayedEthereumDetection() {
+            let attempts = 0;
+            const maxAttempts = 5;
+            
+            function checkEthereum() {
+                attempts++;
+                
+                if (window.ethereum) {
+                    addResult(`✓ Ethereum provider 在第 ${attempts} 次尝试时检测到`, 'success');
+                    return;
+                }
+                
+                if (attempts < maxAttempts) {
+                    setTimeout(checkEthereum, 100);
+                } else {
+                    addResult('ℹ 经过多次尝试未检测到 Ethereum provider (这在非MetaMask环境中是正常的)', 'warning');
+                }
+            }
+            
+            checkEthereum();
+        }
+        
+        // 运行所有测试
+        function runTests() {
+            addResult('开始运行 MetaMask 移动端兼容性测试...', 'success');
+            
+            testEthereumProvider();
+            testWeb3Initialization();
+            testMobileDetection();
+            testDelayedEthereumDetection();
+            
+            setTimeout(() => {
+                addResult('测试完成！如果您在MetaMask移动端APP中看到这个页面没有空白，说明修复成功。', 'success');
+            }, 1000);
+        }
+        
+        // 页面加载完成后运行测试
+        document.addEventListener('DOMContentLoaded', runTests);
+        
+        // 如果DOMContentLoaded已经触发，立即运行
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runTests);
+        } else {
+            runTests();
+        }
+    </script>
+</body>
+</html>

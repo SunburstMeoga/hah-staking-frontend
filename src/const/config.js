@@ -12,6 +12,34 @@ const config = {
     rpcUrls: 'https://rpc.hashahead.org',
     // rpcUrls: 'https://rpc-testnet.hashahead.org/mrpc',
     blockExplorerUrls: 'https://scan.hashahead.org/',
+
+    // 完整的链配置信息，用于添加链到MetaMask
+    chainConfig: {
+        chainId: '0x329', // 809 in decimal
+        chainName: 'Hash Ahead Mainnet',
+        rpcUrls: ['https://rpc.hashahead.org'],
+        nativeCurrency: {
+            name: 'HAH',
+            symbol: 'HAH',
+            decimals: 18
+        },
+        blockExplorerUrls: ['https://scan.hashahead.org/'],
+        iconUrls: ['https://testnet.hashahead.org/logo.png']
+    },
+
+    // 测试链配置（如果需要）
+    testnetChainConfig: {
+        chainId: '0x11623', // 71203 in decimal
+        chainName: 'Hash Ahead Testnet',
+        rpcUrls: ['https://rpc-testnet.hashahead.org/mrpc'],
+        nativeCurrency: {
+            name: 'HAH',
+            symbol: 'HAH',
+            decimals: 18
+        },
+        blockExplorerUrls: ['https://scan-testnet.hashahead.org/'],
+        iconUrls: ['https://testnet.hashahead.org/logo.png']
+    }
 }
 
 export { config }

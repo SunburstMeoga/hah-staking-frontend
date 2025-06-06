@@ -109,6 +109,23 @@ const zh = {
         checkNetwork: '檢查您的網絡',
         checkMessage: '目前此頁面僅在HAH中受支持，如果切換網絡失敗，請手動切換網絡',
         confirmButtonText: '在“錢包”中切換網絡'
+,
+
+        // 新增的链切换相关提示
+        wrongNetwork: '網絡錯誤',
+        wrongNetworkMessage: '您當前連接的網絡不是 Hash Ahead Mainnet，請切換到正確的網絡以繼續使用。',
+        switchNetwork: '切換網絡',
+        addNetwork: '添加網絡',
+        switchNetworkFailed: '切換網絡失敗',
+        addNetworkFailed: '添加網絡失敗',
+        networkNotAdded: '網絡未添加',
+        networkNotAddedMessage: '您的錢包中沒有 Hash Ahead Mainnet 網絡，是否要添加此網絡？',
+        switchingNetwork: '正在切換網絡...',
+        addingNetwork: '正在添加網絡...',
+        networkSwitched: '網絡切換成功',
+        networkAdded: '網絡添加成功',
+        cancel: '取消',
+        retry: '重試'
     },
     footBar: {
         title: '由Hash Ahead提供支持',
