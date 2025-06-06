@@ -162,6 +162,8 @@ const en = {
         confirmBtn: 'Confirm',
         confirmChangeChainOne: 'Switch to',
         confirmChangeChainTwo: 'Exit HAH',
+        switchToTargetChain: 'Switch to {targetChain} to continue?',
+        addTargetChain: '{targetChain} is not added to your wallet. Would you like to add this network?',
         success: 'Success!',
         from: 'From ',
         to: 'To ',

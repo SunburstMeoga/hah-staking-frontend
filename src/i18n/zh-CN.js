@@ -160,6 +160,8 @@ const zh = {
         confirmBtn: '確 定',
         confirmChangeChainOne: '是否切換為',
         confirmChangeChainTwo: '跨出HAH',
+        switchToTargetChain: '是否切換為 {targetChain} 以繼續使用？',
+        addTargetChain: '您的錢包中沒有 {targetChain} 網絡，是否要添加此網絡？',
         success: '成功！',
         from: '從 ',
         to: '到 ',

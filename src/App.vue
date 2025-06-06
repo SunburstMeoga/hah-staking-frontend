@@ -28,24 +28,56 @@
         </div>
       </div>
     </van-popup>
+
+    <!-- 链切换弹窗 -->
+    <chain-popup
+      :show.sync="showChainSwitchPopup"
+      :message="$t('newWord.switchToTargetChain')"
+      :target-chain="Config.chainName"
+      :cancel-text="$t('newWord.cancelBtn')"
+      :confirm-text="$t('dialog.switchNetwork')"
+      :loading="chainSwitchLoading"
+      @confirm="handleSwitchNetwork"
+      @cancel="handleCancelSwitchNetwork"
+      @close="handleCancelSwitchNetwork"
+    />
+
+    <!-- 链添加弹窗 -->
+    <chain-popup
+      :show.sync="showChainAddPopup"
+      :message="$t('newWord.addTargetChain')"
+      :target-chain="Config.chainName"
+      :cancel-text="$t('newWord.cancelBtn')"
+      :confirm-text="$t('dialog.addNetwork')"
+      :loading="chainAddLoading"
+      @confirm="handleAddNetwork"
+      @cancel="handleCancelAddNetwork"
+      @close="handleCancelAddNetwork"
+    />
   </div>
 </template>
 
 <script>
 import TopBar from '@/components/TopBar'
 import BottomBar from '@/components/BottomBar.vue'
+import ChainPopup from '@/components/ChainPopup.vue'
 import { amountFormat } from '@/utils/format'
 import { nodeList } from '@/request/api'
 
 import { Dialog, Toast, Popup } from 'vant'
 export default {
   name: 'App',
-  components: { [Dialog.name]: Dialog, [Popup.name]: Popup, Toast, TopBar, BottomBar },
+  components: { [Dialog.name]: Dialog, [Popup.name]: Popup, Toast, TopBar, BottomBar, ChainPopup },
   data() {
     return {
       showPopup: false,
       isHome: true,
-      showDialog: false
+      showDialog: false,
+      // 链切换弹窗相关
+      showChainSwitchPopup: false,
+      showChainAddPopup: false,
+      chainSwitchLoading: false,
+      chainAddLoading: false
     }
   },
   created() {
@@ -265,36 +297,23 @@ export default {
 
     // 显示网络切换对话框
     showNetworkSwitchDialog() {
-      Dialog.confirm({
-        title: this.$t('dialog.wrongNetwork'),
-        message: this.$t('dialog.wrongNetworkMessage'),
-        confirmButtonText: this.$t('dialog.switchNetwork'),
-        cancelButtonText: this.$t('dialog.cancel'),
-      }).then(() => {
-        this.switchNetwork()
-      }).catch(() => {
-        console.log('User cancelled network switch')
-      });
+      this.showChainSwitchPopup = true
     },
 
-    // 切换网络
-    async switchNetwork() {
+    // 处理切换网络确认
+    async handleSwitchNetwork() {
+      this.chainSwitchLoading = true
       try {
         console.log('Attempting to switch network...')
-        Toast.loading({
-          message: this.$t('dialog.switchingNetwork'),
-          forbidClick: true,
-          duration: 0
-        });
 
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: this.Config.chainId }],
         })
 
-        Toast.clear();
         Toast.success(this.$t('dialog.networkSwitched'));
         console.log('Network switched successfully')
+        this.showChainSwitchPopup = false
 
         // 重新获取链ID确认切换成功
         setTimeout(() => {
@@ -302,62 +321,64 @@ export default {
         }, 1000);
 
       } catch (err) {
-        Toast.clear();
         console.error('Switch network error:', err)
 
         // 错误代码4902表示链未添加到钱包
         if (err.code === 4902) {
+          this.showChainSwitchPopup = false
           this.showAddNetworkDialog()
         } else {
           Toast.fail(this.$t('dialog.switchNetworkFailed'));
           console.error('Failed to switch network:', err.message)
         }
+      } finally {
+        this.chainSwitchLoading = false
       }
+    },
+
+    // 处理取消切换网络
+    handleCancelSwitchNetwork() {
+      this.showChainSwitchPopup = false
+      console.log('User cancelled network switch')
     },
 
     // 显示添加网络对话框
     showAddNetworkDialog() {
-      Dialog.confirm({
-        title: this.$t('dialog.networkNotAdded'),
-        message: this.$t('dialog.networkNotAddedMessage'),
-        confirmButtonText: this.$t('dialog.addNetwork'),
-        cancelButtonText: this.$t('dialog.cancel'),
-      }).then(() => {
-        this.addNetwork()
-      }).catch(() => {
-        console.log('User cancelled network addition')
-      });
+      this.showChainAddPopup = true
     },
 
-    // 添加网络
-    async addNetwork() {
+    // 处理添加网络确认
+    async handleAddNetwork() {
+      this.chainAddLoading = true
       try {
         console.log('Attempting to add network...')
-        Toast.loading({
-          message: this.$t('dialog.addingNetwork'),
-          forbidClick: true,
-          duration: 0
-        });
 
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [this.Config.chainConfig],
         });
 
-        Toast.clear();
         Toast.success(this.$t('dialog.networkAdded'));
         console.log('Network added successfully')
+        this.showChainAddPopup = false
 
         // 添加成功后尝试切换
         setTimeout(() => {
-          this.switchNetwork()
+          this.showNetworkSwitchDialog()
         }, 1000);
 
       } catch (addError) {
-        Toast.clear();
         Toast.fail(this.$t('dialog.addNetworkFailed'));
         console.error('Failed to add network:', addError)
+      } finally {
+        this.chainAddLoading = false
       }
+    },
+
+    // 处理取消添加网络
+    handleCancelAddNetwork() {
+      this.showChainAddPopup = false
+      console.log('User cancelled network addition')
     },
 
     async initWallet() {
