@@ -74,28 +74,51 @@ Vue.config.productionTip = false
 
 // 等待ethereum准备就绪后再启动Vue应用
 function startVueApp() {
-  // 隐藏加载指示器
-  const loadingIndicator = document.getElementById('loading-indicator');
-  if (loadingIndicator) {
-    loadingIndicator.style.display = 'none';
-  }
-
-  /* eslint-disable no-new */
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    i18n,
-    components: { App },
-    template: '<App/>',
-    mounted() {
-      // 应用启动后的额外检查
-      console.log('Vue app mounted');
-      console.log('TP Wallet detected:', detectTPWallet());
-      console.log('Ethereum available:', !!window.ethereum);
-      console.log('Web3 provider:', this.Web3.currentProvider ? 'Available' : 'Not available');
+  try {
+    // 隐藏加载指示器
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+      loadingIndicator.style.display = 'none';
     }
-  });
+
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      store,
+      i18n,
+      components: { App },
+      template: '<App/>',
+      mounted() {
+        // 应用启动后的额外检查
+        console.log('Vue app mounted');
+        console.log('TP Wallet detected:', detectTPWallet());
+        console.log('Ethereum available:', !!window.ethereum);
+        console.log('Web3 provider:', this.Web3.currentProvider ? 'Available' : 'Not available');
+      },
+      errorCaptured(err, instance, info) {
+        console.error('Vue error captured:', err, info);
+        console.log('Error in component:', instance.$options.name || 'Unknown');
+        // 返回false阻止错误继续传播
+        return false;
+      }
+    });
+  } catch (error) {
+    console.error('Error starting Vue app:', error);
+    // 即使启动失败，也要隐藏加载指示器
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+      loadingIndicator.style.display = 'none';
+    }
+    // 显示错误信息
+    document.body.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: white; background: #1a1a1a; min-height: 100vh;">
+        <h2>应用启动失败</h2>
+        <p>请刷新页面重试</p>
+        <p style="font-size: 12px; color: #666;">${error.message}</p>
+      </div>
+    `;
+  }
 }
 
 // 监听ethereum准备就绪事件

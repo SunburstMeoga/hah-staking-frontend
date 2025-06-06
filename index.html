@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#1F1F1F">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <title>HAH-VOTE</title>
   <link rel="icon" type="image/x-icon" href="static/logo.png">
 
@@ -81,7 +82,20 @@
 
     // 全局错误处理
     window.addEventListener('error', function(event) {
-      console.error('Global error:', event.error);
+      console.error('Global error:', event.error || event.message);
+
+      // 如果是脚本加载错误，尝试重新加载
+      if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
+        console.log('Resource loading failed:', event.target.src || event.target.href);
+
+        // 如果是HTTP资源导致的错误，尝试用HTTPS重新加载
+        if (event.target.src && event.target.src.startsWith('http://')) {
+          const httpsUrl = event.target.src.replace('http://', 'https://');
+          console.log('Attempting to reload with HTTPS:', httpsUrl);
+          event.target.src = httpsUrl;
+        }
+      }
+
       // 防止错误导致白屏
       return true;
     });
@@ -92,6 +106,12 @@
       // 防止Promise错误导致白屏
       event.preventDefault();
     });
+
+    // webpack chunk loading error handling
+    window.__webpack_require__ = window.__webpack_require__ || function() {
+      console.warn('Webpack require not available');
+      return {};
+    };
   </script>
 </head>
 
