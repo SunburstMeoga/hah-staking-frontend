@@ -92,10 +92,24 @@
     </div>
 
     <script>
-        // Hash Ahead 链配置
-        const HASH_AHEAD_CONFIG = {
-            chainId: '0x329', // 809 in decimal
+        // Hash Ahead 主链配置（生产环境）
+        const HASH_AHEAD_MAINNET_CONFIG = {
+            chainId: '0x2bf', // 703 in decimal
             chainName: 'Hash Ahead Mainnet',
+            rpcUrls: ['https://rpc.hashahead.org/mrpc'],
+            nativeCurrency: {
+                name: 'HAH',
+                symbol: 'HAH',
+                decimals: 18
+            },
+            blockExplorerUrls: ['https://scan.hashahead.org/'],
+            iconUrls: ['https://testnet.hashahead.org/logo.png']
+        };
+
+        // Hash Ahead 子链配置（生产环境）
+        const HASH_AHEAD_SUBCHAIN_CONFIG = {
+            chainId: '0x2c0', // 704 in decimal
+            chainName: 'Hash Ahead ByteBloom',
             rpcUrls: ['https://rpc.hashahead.org'],
             nativeCurrency: {
                 name: 'HAH',
@@ -145,12 +159,15 @@
 
                 addLog(`检测到当前链ID: ${chainId} (${parseInt(chainId, 16)})`, 'info');
                 
-                if (chainId === HASH_AHEAD_CONFIG.chainId) {
+                if (chainId === HASH_AHEAD_MAINNET_CONFIG.chainId) {
                     updateStatus('✅ 已连接到 Hash Ahead Mainnet', 'success');
-                    addLog('当前已连接到正确的链', 'success');
+                    addLog('当前已连接到正确的主链', 'success');
+                } else if (chainId === HASH_AHEAD_SUBCHAIN_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead ByteBloom', 'success');
+                    addLog('当前已连接到正确的子链', 'success');
                 } else {
-                    updateStatus('⚠️ 当前链不是 Hash Ahead Mainnet', 'warning');
-                    addLog('需要切换到 Hash Ahead Mainnet', 'warning');
+                    updateStatus('⚠️ 当前链不是 Hash Ahead 网络', 'warning');
+                    addLog('需要切换到 Hash Ahead 网络', 'warning');
                 }
 
                 updateChainInfo(chainId, getChainName(chainId));
@@ -173,7 +190,7 @@
 
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: HASH_AHEAD_CONFIG.chainId }],
+                    params: [{ chainId: HASH_AHEAD_MAINNET_CONFIG.chainId }],
                 });
 
                 addLog('✅ 成功切换到 Hash Ahead Mainnet', 'success');
@@ -207,7 +224,7 @@
 
                 await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
-                    params: [HASH_AHEAD_CONFIG],
+                    params: [HASH_AHEAD_MAINNET_CONFIG],
                 });
 
                 addLog('✅ 成功添加 Hash Ahead Mainnet 到钱包', 'success');
@@ -258,7 +275,8 @@
                 '0x61': 'BSC Testnet',
                 '0x89': 'Polygon Mainnet',
                 '0x13881': 'Polygon Mumbai',
-                '0x329': 'Hash Ahead Mainnet',
+                '0x2bf': 'Hash Ahead Mainnet',
+                '0x2c0': 'Hash Ahead ByteBloom',
                 '0x11623': 'Hash Ahead Testnet'
             };
             return chainNames[chainId] || '未知网络';
@@ -270,11 +288,14 @@
                 addLog(`链已切换: ${chainId} (${parseInt(chainId, 16)})`, 'info');
                 updateChainInfo(chainId, getChainName(chainId));
                 
-                if (chainId === HASH_AHEAD_CONFIG.chainId) {
+                if (chainId === HASH_AHEAD_MAINNET_CONFIG.chainId) {
                     updateStatus('✅ 已连接到 Hash Ahead Mainnet', 'success');
-                    addLog('✅ 成功切换到目标链', 'success');
+                    addLog('✅ 成功切换到主链', 'success');
+                } else if (chainId === HASH_AHEAD_SUBCHAIN_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead ByteBloom', 'success');
+                    addLog('✅ 成功切换到子链', 'success');
                 } else {
-                    updateStatus('⚠️ 当前链不是 Hash Ahead Mainnet', 'warning');
+                    updateStatus('⚠️ 当前链不是 Hash Ahead 网络', 'warning');
                 }
             });
 

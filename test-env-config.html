@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环境变量配置测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .config-section {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .config-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+        .label {
+            font-weight: bold;
+            color: #EAAE36;
+        }
+        .value {
+            color: #00FFEA;
+            font-family: monospace;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #51cf66;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hash Ahead 跨链桥环境配置测试</h1>
+    
+    <div class="config-section">
+        <h2>当前环境检测</h2>
+        <div class="config-item">
+            <span class="label">NODE_ENV:</span>
+            <span class="value" id="node-env">检测中...</span>
+        </div>
+    </div>
+
+    <div class="config-section">
+        <h2>主链配置 (Mainnet)</h2>
+        <div class="config-item">
+            <span class="label">Chain ID:</span>
+            <span class="value" id="mainnet-chain-id">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">RPC URL:</span>
+            <span class="value" id="mainnet-rpc-url">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">Chain Name:</span>
+            <span class="value" id="mainnet-chain-name">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">Explorer URL:</span>
+            <span class="value" id="mainnet-explorer-url">加载中...</span>
+        </div>
+    </div>
+
+    <div class="config-section">
+        <h2>子链配置 (Subchain)</h2>
+        <div class="config-item">
+            <span class="label">Chain ID:</span>
+            <span class="value" id="subchain-chain-id">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">RPC URL:</span>
+            <span class="value" id="subchain-rpc-url">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">Chain Name:</span>
+            <span class="value" id="subchain-chain-name">加载中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">Explorer URL:</span>
+            <span class="value" id="subchain-explorer-url">加载中...</span>
+        </div>
+    </div>
+
+    <div class="config-section">
+        <h2>配置验证</h2>
+        <div class="config-item">
+            <span class="label">主链RPC正确性:</span>
+            <span class="value" id="mainnet-rpc-check">检查中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">子链RPC正确性:</span>
+            <span class="value" id="subchain-rpc-check">检查中...</span>
+        </div>
+        <div class="config-item">
+            <span class="label">链ID格式:</span>
+            <span class="value" id="chain-id-format">检查中...</span>
+        </div>
+    </div>
+
+    <script>
+        // 模拟环境变量（实际项目中这些会由webpack注入）
+        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        
+        // 根据环境设置配置
+        const envConfig = isDev ? {
+            // 开发/测试环境
+            VUE_APP_MAINNET_CHAIN_ID: '0x11623', // 71203
+            VUE_APP_MAINNET_RPC_URL: 'https://rpc-testnet.hashahead.org/mrpc',
+            VUE_APP_MAINNET_CHAIN_NAME: 'Hash Ahead Testnet',
+            VUE_APP_MAINNET_EXPLORER_URL: 'https://scan-testnet.hashahead.org/',
+            
+            VUE_APP_SUBCHAIN_CHAIN_ID: '0x11624', // 71204
+            VUE_APP_SUBCHAIN_RPC_URL: 'https://rpc-testnet.hashahead.org',
+            VUE_APP_SUBCHAIN_CHAIN_NAME: 'Hash Ahead Testnet ByteBloom',
+            VUE_APP_SUBCHAIN_EXPLORER_URL: 'https://scan-testnet.hashahead.org/'
+        } : {
+            // 生产环境
+            VUE_APP_MAINNET_CHAIN_ID: '0x2bf', // 703
+            VUE_APP_MAINNET_RPC_URL: 'https://rpc.hashahead.org/mrpc',
+            VUE_APP_MAINNET_CHAIN_NAME: 'Hash Ahead Mainnet',
+            VUE_APP_MAINNET_EXPLORER_URL: 'https://scan.hashahead.org/',
+            
+            VUE_APP_SUBCHAIN_CHAIN_ID: '0x2c0', // 704
+            VUE_APP_SUBCHAIN_RPC_URL: 'https://rpc.hashahead.org',
+            VUE_APP_SUBCHAIN_CHAIN_NAME: 'Hash Ahead ByteBloom',
+            VUE_APP_SUBCHAIN_EXPLORER_URL: 'https://scan.hashahead.org/'
+        };
+
+        function updateElement(id, value, isError = false) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+                element.className = isError ? 'value error' : 'value success';
+            }
+        }
+
+        function validateConfig() {
+            // 显示环境
+            updateElement('node-env', isDev ? 'development' : 'production');
+            
+            // 显示主链配置
+            updateElement('mainnet-chain-id', envConfig.VUE_APP_MAINNET_CHAIN_ID);
+            updateElement('mainnet-rpc-url', envConfig.VUE_APP_MAINNET_RPC_URL);
+            updateElement('mainnet-chain-name', envConfig.VUE_APP_MAINNET_CHAIN_NAME);
+            updateElement('mainnet-explorer-url', envConfig.VUE_APP_MAINNET_EXPLORER_URL);
+            
+            // 显示子链配置
+            updateElement('subchain-chain-id', envConfig.VUE_APP_SUBCHAIN_CHAIN_ID);
+            updateElement('subchain-rpc-url', envConfig.VUE_APP_SUBCHAIN_RPC_URL);
+            updateElement('subchain-chain-name', envConfig.VUE_APP_SUBCHAIN_CHAIN_NAME);
+            updateElement('subchain-explorer-url', envConfig.VUE_APP_SUBCHAIN_EXPLORER_URL);
+            
+            // 验证配置
+            validateRpcUrls();
+            validateChainIds();
+        }
+
+        function validateRpcUrls() {
+            const mainnetRpc = envConfig.VUE_APP_MAINNET_RPC_URL;
+            const subchainRpc = envConfig.VUE_APP_SUBCHAIN_RPC_URL;
+            
+            // 检查主链RPC（应该有/mrpc后缀）
+            const mainnetCorrect = mainnetRpc.includes('/mrpc');
+            updateElement('mainnet-rpc-check', 
+                mainnetCorrect ? '✅ 正确 (包含/mrpc)' : '❌ 错误 (应该包含/mrpc)', 
+                !mainnetCorrect
+            );
+            
+            // 检查子链RPC（应该没有/mrpc后缀）
+            const subchainCorrect = !subchainRpc.includes('/mrpc') && subchainRpc.includes('rpc');
+            updateElement('subchain-rpc-check', 
+                subchainCorrect ? '✅ 正确 (无/mrpc后缀)' : '❌ 错误 (不应该包含/mrpc)', 
+                !subchainCorrect
+            );
+        }
+
+        function validateChainIds() {
+            const mainnetId = envConfig.VUE_APP_MAINNET_CHAIN_ID;
+            const subchainId = envConfig.VUE_APP_SUBCHAIN_CHAIN_ID;
+            
+            const mainnetDecimal = parseInt(mainnetId, 16);
+            const subchainDecimal = parseInt(subchainId, 16);
+            
+            const expectedDiff = isDev ? 1 : 1; // 子链ID应该比主链ID大1
+            const actualDiff = subchainDecimal - mainnetDecimal;
+            
+            const formatCorrect = actualDiff === expectedDiff;
+            updateElement('chain-id-format', 
+                formatCorrect ? 
+                `✅ 正确 (主链:${mainnetDecimal}, 子链:${subchainDecimal})` : 
+                `❌ 错误 (差值应该为${expectedDiff}, 实际为${actualDiff})`, 
+                !formatCorrect
+            );
+        }
+
+        // 页面加载完成后执行验证
+        document.addEventListener('DOMContentLoaded', validateConfig);
+    </script>
+</body>
+</html>

@@ -106,6 +106,33 @@
                 </div>
             </div>
         </van-popup>
+
+        <!-- 链切换提示dialog -->
+        <van-popup v-model="showNetworkSwitchDialog">
+            <div class="w-full flex justify-center items-center bg-transparent">
+                <div
+                    class="w-11/12 text-white flex flex-col justify-start items-center bg-black border border-#E6E6E620 rounded-2xl backdrop-blur-xl bg-opacity-50">
+                    <div class="w-10/12 flex justify-start items-center pt-4">
+                        <div class="w-1/3 bg-#EAAE36 h-1 rounded-full"></div>
+                    </div>
+                    <div class="w-11/12 flex justify-end pt-4 mb-5" @click="showNetworkSwitchDialog = false">
+                        <div class="icon iconfont icon-close text-sm"></div>
+                    </div>
+                    <div class="w-10/12 mb-5">
+                        請切換到 <span class="text-#EAAE36 font-bold">"{{ targetChainName }}"</span> 網絡以進行跨鏈操作
+                    </div>
+                    <div class="w-8/12 flex justify-between items-center text-#EAAE36 mb-6">
+                        <div class="flex w-24 h-7 justify-center items-center border border-#EAAE361E rounded-lg text-sm bg-black"
+                            @click="showNetworkSwitchDialog = false">
+                            取消</div>
+                        <div class="flex w-24 h-7 justify-center items-center border text-black bg-#EAAE36 rounded-lg text-sm border-black"
+                            @click="switchToCorrectChain">
+                            切換</div>
+                    </div>
+                </div>
+            </div>
+        </van-popup>
+
         <!-- 跨鏈成功dialog -->
         <van-popup v-model="showSuccessDialog">
             <div class="w-full flex justify-center items-center bg-transparent">
@@ -196,13 +223,17 @@ export default {
             isSwapped: false, // 控制卡片是否交换位置  
             inputValue: '',  // 初始化输入值
 
-            // mainnetChainId: '0x11623',
-            // appChainId: '0x11624',
-            mainnetChainId: '0x329',
-            appChainId: '0x2BF',
+            // 从环境变量获取链ID
+            mainnetChainId: process.env.VUE_APP_MAINNET_CHAIN_ID, // 主链
+            appChainId: process.env.VUE_APP_SUBCHAIN_CHAIN_ID, // 子链
             showSuccessDialog: false,
             isMainNetOut: true,//當前跨出鏈是否為主網
-            outChainBalance: '0.00'
+            outChainBalance: '0.00',
+
+            // 链切换相关状态
+            showNetworkSwitchDialog: false,
+            targetChainId: '',
+            targetChainName: ''
         }
     },
     created() {
@@ -235,30 +266,141 @@ export default {
                 console.log('getbalance err', err)
             })
         },
+        // 检查当前链是否是正确的from链
+        async checkCurrentChain() {
+            try {
+                if (!window.ethereum) {
+                    Toast.fail('請先連接錢包');
+                    return false;
+                }
+
+                const currentChainId = await window.ethereum.request({
+                    method: 'eth_chainId'
+                });
+
+                // 确定应该在哪条链上（from链）
+                const expectedChainId = !this.isSwapped ? this.mainnetChainId : this.appChainId;
+                const expectedChainName = !this.isSwapped ?
+                    process.env.VUE_APP_MAINNET_CHAIN_NAME :
+                    process.env.VUE_APP_SUBCHAIN_CHAIN_NAME;
+
+                if (currentChainId !== expectedChainId) {
+                    console.log(`Wrong chain detected. Current: ${currentChainId}, Expected: ${expectedChainId}`);
+
+                    // 显示切换链的提示
+                    this.showChainSwitchDialog(expectedChainId, expectedChainName);
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error checking chain:', error);
+                Toast.fail('檢查網絡失敗');
+                return false;
+            }
+        },
+
+        // 显示链切换对话框
+        showChainSwitchDialog(targetChainId, targetChainName) {
+            this.targetChainId = targetChainId;
+            this.targetChainName = targetChainName;
+            this.showNetworkSwitchDialog = true;
+        },
+
+        // 切换到正确的链
+        async switchToCorrectChain() {
+            try {
+                const targetChainId = this.targetChainId;
+
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: targetChainId }],
+                });
+
+                Toast.success('網絡切換成功');
+                this.showNetworkSwitchDialog = false;
+
+                // 切换成功后重新检查并执行跨链
+                setTimeout(() => {
+                    this.handleConfirmCross();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Switch chain error:', error);
+
+                if (error.code === 4902) {
+                    // 链不存在，尝试添加
+                    this.addCorrectChain();
+                } else {
+                    Toast.fail('網絡切換失敗');
+                }
+            }
+        },
+
+        // 添加正确的链
+        async addCorrectChain() {
+            try {
+                const targetChainId = this.targetChainId;
+                const isMainnet = targetChainId === this.mainnetChainId;
+                const targetChainConfig = isMainnet ? this.Config.chainConfig : this.Config.subchainConfig;
+
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [targetChainConfig],
+                });
+
+                Toast.success('網絡添加成功');
+                this.showNetworkSwitchDialog = false;
+
+                // 添加成功后重新检查并执行跨链
+                setTimeout(() => {
+                    this.handleConfirmCross();
+                }, 1000);
+
+            } catch (error) {
+                console.error('Add chain error:', error);
+                Toast.fail('網絡添加失敗');
+            }
+        },
+
         //点击确认跨链按钮
-        handleConfirmCross() {
+        async handleConfirmCross() {
             if (!this.inputValue) {
                 Toast.fail('請輸入跨鏈金額');
                 return
             }
+
+            // 首先检查当前链是否正确
+            const isCorrectChain = await this.checkCurrentChain();
+            if (!isCorrectChain) {
+                return; // 如果链不正确，等待用户切换
+            }
+
             Toast.loading({
                 forbidClick: true,
                 duration: 0
             });
-            let web3Contract = new this.Web3.eth.Contract(this.Config.cross_abi, this.Config.con_addr)
-            console.log('参数', !this.isSwapped ? this.appChainId : this.mainnetChainId, this.Web3.utils.toWei(this.inputValue.toString(), 'ether'))
-            web3Contract.methods.transferCoin(!this.isSwapped ? this.appChainId : this.mainnetChainId, this.Web3.utils.toWei(this.inputValue.toString(), 'ether')).send({
-                from: JSON.parse(localStorage.getItem('walletInfo')).address,
-            }).then(res => {
+
+            try {
+                let web3Contract = new this.Web3.eth.Contract(this.Config.cross_abi, this.Config.con_addr)
+                console.log('参数', !this.isSwapped ? this.appChainId : this.mainnetChainId, this.Web3.utils.toWei(this.inputValue.toString(), 'ether'))
+
+                const result = await web3Contract.methods.transferCoin(
+                    !this.isSwapped ? this.appChainId : this.mainnetChainId,
+                    this.Web3.utils.toWei(this.inputValue.toString(), 'ether')
+                ).send({
+                    from: JSON.parse(localStorage.getItem('walletInfo')).address,
+                });
+
                 this.showSuccessDialog = true
                 this.getOutChainBalance(window.ethereum.selectedAddress)
-                console.log('res', res)
+                console.log('跨链成功', result)
                 Toast.clear()
-            }).catch(err => {
-                Toast.fail('失敗，請重試');
-                console.log('err', err)
-            })
-            console.log(web3Contract)
+            } catch (err) {
+                Toast.fail('跨鏈失敗，請重試');
+                console.log('跨链错误', err)
+                Toast.clear()
+            }
         },
         //跨链金额输入框
         validateInput() {
@@ -271,10 +413,12 @@ export default {
         },
         async rotateIcon() {
             try {
-                console.log('切换网络', [{ chainId: this.isSwapped ? this.mainnetChainId : this.appChainId }])
+                // 确定要切换到的目标链ID（与当前显示相反）
+                const targetChainId = !this.isSwapped ? this.mainnetChainId : this.appChainId;
+                console.log('切换网络', [{ chainId: targetChainId }])
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: this.isSwapped ? this.mainnetChainId : this.appChainId }],
+                    params: [{ chainId: targetChainId }],
                 })
 
                 this.rotation += 360; // 每次点击增加360度
@@ -287,24 +431,13 @@ export default {
                 console.error('切换自定义网络错误', err)
                 if (err.code === 4902) {
                     console.log('自定义网络不存在，去添加自定义网络')
-                    console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
                     try {
+                        // 根据要切换的链选择正确的配置（与当前显示相反）
+                        const targetChainConfig = !this.isSwapped ? this.Config.chainConfig : this.Config.subchainConfig;
+
                         await ethereum.request({
                             method: 'wallet_addEthereumChain',
-                            params: [
-                                {
-                                    chainId: this.isSwapped ? this.mainnetChainId : this.appChainId,
-                                    chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
-                                    rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
-                                    iconUrls: ['https://testnet.hashahead.org/logo.png'],
-                                    blockExplorerUrls: ['https://scan.hashahead.org/'],
-                                    nativeCurrency: {
-                                        name: 'HAH',
-                                        symbol: 'HAH',
-                                        decimals: 18
-                                    }
-                                },
-                            ],
+                            params: [targetChainConfig],
                         });
 
                         this.rotation += 360; // 每次点击增加360度
