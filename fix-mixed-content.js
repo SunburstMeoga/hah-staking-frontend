@@ -47,6 +47,14 @@ function fixHtmlFile(filePath) {
         }
     }
 
+    // 修复移动端元标签警告
+    if (content.includes('apple-mobile-web-app-capable') && !content.includes('mobile-web-app-capable')) {
+        content = content.replace(
+            '<meta name="apple-mobile-web-app-capable" content="yes">',
+            '<meta name="mobile-web-app-capable" content="yes">\n  <meta name="apple-mobile-web-app-capable" content="yes">'
+        );
+    }
+
     // 添加错误处理脚本
     if (!content.includes('Mixed content error handling')) {
         const errorScript = `
