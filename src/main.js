@@ -22,6 +22,44 @@ function detectTPWallet() {
          navigator.userAgent.includes('TokenPocket');
 }
 
+// 检测和处理钱包冲突
+function handleWalletConflicts() {
+  try {
+    const walletInfo = {
+      ethereum: !!window.ethereum,
+      solana: !!window.solana,
+      phantom: !!window.phantom,
+      tronWeb: !!window.tronWeb,
+      tpWallet: !!window.tpWallet
+    };
+
+    console.log('Detected wallets:', walletInfo);
+
+    // 处理 Solana 钱包冲突
+    if (window.solana) {
+      try {
+        // 检查 solana 属性是否可写
+        const descriptor = Object.getOwnPropertyDescriptor(window, 'solana');
+        if (descriptor && !descriptor.writable) {
+          console.warn('Solana property is read-only, this may cause conflicts');
+
+          // 创建一个安全的访问方法
+          window.getSolanaWallet = function() {
+            return window.solana || window._solanaBackup;
+          };
+        }
+      } catch (error) {
+        console.warn('Error checking Solana wallet:', error);
+      }
+    }
+
+    return walletInfo;
+  } catch (error) {
+    console.error('Error in wallet conflict handling:', error);
+    return {};
+  }
+}
+
 // 安全地初始化Web3，处理各种钱包环境
 function initWeb3() {
   try {
@@ -67,8 +105,9 @@ Vue.prototype.reinitWeb3 = function() {
   }
 }
 
-// 添加TP钱包检测方法
+// 添加钱包检测方法
 Vue.prototype.detectTPWallet = detectTPWallet;
+Vue.prototype.handleWalletConflicts = handleWalletConflicts;
 
 Vue.config.productionTip = false
 
@@ -95,6 +134,10 @@ function startVueApp() {
         console.log('TP Wallet detected:', detectTPWallet());
         console.log('Ethereum available:', !!window.ethereum);
         console.log('Web3 provider:', this.Web3.currentProvider ? 'Available' : 'Not available');
+
+        // 执行钱包冲突检测
+        const walletInfo = handleWalletConflicts();
+        console.log('Wallet conflict check completed:', walletInfo);
       },
       errorCaptured(err, instance, info) {
         console.error('Vue error captured:', err, info);

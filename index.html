@@ -81,9 +81,60 @@
       });
     }
 
+    // 钱包冲突检测和处理
+    function handleWalletConflicts() {
+      try {
+        // 检测 Solana 钱包冲突
+        if (typeof window.solana !== 'undefined') {
+          console.log('Solana wallet detected:', window.solana);
+
+          // 如果 solana 属性是只读的，创建一个备份
+          const descriptor = Object.getOwnPropertyDescriptor(window, 'solana');
+          if (descriptor && !descriptor.writable) {
+            console.warn('Solana property is read-only, creating backup');
+            window._solanaBackup = window.solana;
+          }
+        }
+
+        // 检测多个钱包冲突
+        const wallets = [];
+        if (window.ethereum) wallets.push('Ethereum');
+        if (window.solana) wallets.push('Solana');
+        if (window.tronWeb) wallets.push('Tron');
+        if (window.phantom) wallets.push('Phantom');
+
+        if (wallets.length > 1) {
+          console.log('Multiple wallets detected:', wallets.join(', '));
+        }
+
+        return true;
+      } catch (error) {
+        console.warn('Wallet conflict detection failed:', error);
+        return false;
+      }
+    }
+
     // 全局错误处理
     window.addEventListener('error', function(event) {
-      console.error('Global error:', event.error || event.message);
+      const errorMessage = event.error ? event.error.message : event.message;
+      console.error('Global error:', errorMessage);
+
+      // 特殊处理钱包相关错误
+      if (errorMessage && errorMessage.includes('solana')) {
+        console.warn('Solana wallet related error detected');
+        handleWalletConflicts();
+
+        // 阻止错误传播，避免页面崩溃
+        event.preventDefault();
+        return false;
+      }
+
+      // 处理只读属性错误
+      if (errorMessage && errorMessage.includes('read only property')) {
+        console.warn('Read-only property error detected, likely wallet conflict');
+        event.preventDefault();
+        return false;
+      }
 
       // 如果是脚本加载错误，尝试重新加载
       if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
@@ -103,7 +154,18 @@
 
     // Promise错误处理
     window.addEventListener('unhandledrejection', function(event) {
-      console.error('Unhandled promise rejection:', event.reason);
+      const reason = event.reason;
+      console.error('Unhandled promise rejection:', reason);
+
+      // 特殊处理钱包相关的 Promise 错误
+      if (reason && typeof reason === 'object' && reason.message) {
+        if (reason.message.includes('solana') || reason.message.includes('read only property')) {
+          console.warn('Wallet-related promise rejection, preventing crash');
+          event.preventDefault();
+          return;
+        }
+      }
+
       // 防止Promise错误导致白屏
       event.preventDefault();
     });
@@ -113,6 +175,11 @@
       console.warn('Webpack require not available');
       return {};
     };
+
+    // 页面加载完成后执行钱包冲突检测
+    window.addEventListener('load', function() {
+      setTimeout(handleWalletConflicts, 1000);
+    });
   </script>
 </head>
 

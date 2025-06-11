@@ -167,7 +167,7 @@
                 <!-- <div class="w-11/12 mx-auto py-4 font-bold text-white">Select Token</div> -->
                 <div @click="showList = !showList"
                     class="w-11/12 bg-transparent rounded-xl flex justify-between items-center mx-auto p-2 hover:bg-black transition-colors duration-150"
-                    v-for="(item, index) in 4" :key="index">
+                    v-for="(_, index) in 4" :key="index">
                     <div class="flex justify-start items-center h-9">
                         <div class="flex justify-start items-end ">
                             <div class="w-7 h-7 rounded-full ">
@@ -200,7 +200,7 @@ import VotedNodeCard from '@/components/VotedNodeCard'
 
 import HLoading from '@/components/HLoading'
 
-import { nodeList, nodeDetails } from '@/request/api'
+
 import { amountFormat } from '@/utils/format'
 import { Toast, Popup } from 'vant'
 export default {
