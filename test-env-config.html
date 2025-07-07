@@ -127,12 +127,12 @@
             VUE_APP_SUBCHAIN_EXPLORER_URL: 'https://scan-testnet.hashahead.org/'
         } : {
             // 生产环境
-            VUE_APP_MAINNET_CHAIN_ID: '0x329', // 809 (修复：使用正确的链ID)
+            VUE_APP_MAINNET_CHAIN_ID: '0x329', // 809 (主链/mrpc端点)
             VUE_APP_MAINNET_RPC_URL: 'https://rpc.hashahead.org/mrpc',
             VUE_APP_MAINNET_CHAIN_NAME: 'Hash Ahead Mainnet',
             VUE_APP_MAINNET_EXPLORER_URL: 'https://scan.hashahead.org/',
 
-            VUE_APP_SUBCHAIN_CHAIN_ID: '0x32a', // 810 (修复：子链ID应该是主链ID+1)
+            VUE_APP_SUBCHAIN_CHAIN_ID: '0x2bf', // 703 (应用链ByteBloom)
             VUE_APP_SUBCHAIN_RPC_URL: 'https://rpc.hashahead.org',
             VUE_APP_SUBCHAIN_CHAIN_NAME: 'Hash Ahead ByteBloom',
             VUE_APP_SUBCHAIN_EXPLORER_URL: 'https://scan.hashahead.org/'
