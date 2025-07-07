@@ -196,18 +196,22 @@ export default {
             isSwapped: false, // 控制卡片是否交换位置  
             inputValue: '',  // 初始化输入值
 
-            // mainnetChainId: '0x11623',
-            // appChainId: '0x11624',
-            mainnetChainId: '0x329',
-            appChainId: '0x2BF',
+            // 根据环境变量自动配置链ID
+            mainnetChainId: process.env.VUE_APP_MAINNET_CHAIN_ID,
+            appChainId: process.env.VUE_APP_APPCHAIN_CHAIN_ID,
             showSuccessDialog: false,
-            isMainNetOut: true,//當前跨出鏈是否為主網
+            isMainNetOut: true, // 當前跨出鏈是否為主網
             outChainBalance: '0.00'
         }
     },
     created() {
         console.log('init ........')
         console.log('登录状态', localStorage.getItem('connectStatus'))
+        console.log('环境配置:')
+        console.log('主链ID:', this.mainnetChainId)
+        console.log('应用链ID:', this.appChainId)
+        console.log('主链RPC:', process.env.VUE_APP_MAINNET_RPC_URL)
+        console.log('应用链RPC:', process.env.VUE_APP_APPCHAIN_RPC_URL)
     },
     computed: {
 
@@ -287,7 +291,8 @@ export default {
                 console.error('切换自定义网络错误', err)
                 if (err.code === 4902) {
                     console.log('自定义网络不存在，去添加自定义网络')
-                    console.log([this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'])
+                    const targetRpcUrl = this.isSwapped ? process.env.VUE_APP_MAINNET_RPC_URL : process.env.VUE_APP_APPCHAIN_RPC_URL
+                    console.log('目标RPC URL:', targetRpcUrl)
                     try {
                         await ethereum.request({
                             method: 'wallet_addEthereumChain',
@@ -295,7 +300,7 @@ export default {
                                 {
                                     chainId: this.isSwapped ? this.mainnetChainId : this.appChainId,
                                     chainName: this.isSwapped ? 'Hash Ahead Mainnet' : 'Hash Ahead ByteBloom',
-                                    rpcUrls: [this.isSwapped ? 'https://rpc.hashahead.org/mrpc' : 'https://rpc.hashahead.org'],
+                                    rpcUrls: [targetRpcUrl],
                                     iconUrls: ['https://testnet.hashahead.org/logo.png'],
                                     blockExplorerUrls: ['https://scan.hashahead.org/'],
                                     nativeCurrency: {
