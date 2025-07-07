@@ -1,0 +1,151 @@
+# Nginx配置示例 - HAH Staking Frontend
+# 修复重定向循环问题
+
+server {
+    listen 80;
+    server_name vote.hashahead.org;
+
+    # 强制重定向到HTTPS（避免循环）
+    if ($host = vote.hashahead.org) {
+        return 301 https://$host$request_uri;
+    }
+    return 404;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name vote.hashahead.org;
+
+    # SSL证书配置
+    ssl_certificate /path/to/your/certificate.crt;
+    ssl_certificate_key /path/to/your/private.key;
+
+    # 防止重定向循环
+    set $redirect_to_https 0;
+    if ($scheme != "https") {
+        set $redirect_to_https 1;
+    }
+    if ($redirect_to_https = 1) {
+        return 301 https://$server_name$request_uri;
+    }
+    
+    # SSL安全配置
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    
+    # 安全头部
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options DENY;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Content-Security-Policy "upgrade-insecure-requests; default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https: wss:; font-src 'self' https:; object-src 'none'; media-src 'self' https:; frame-src 'none';";
+    
+    # 网站根目录
+    root /var/www/hah-staking-frontend/dist;
+    index index.html;
+    
+    # Gzip压缩
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/json
+        application/javascript
+        application/xml+rss
+        application/atom+xml
+        image/svg+xml;
+    
+    # 静态资源缓存
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    }
+    
+    # API代理（如果需要）
+    location /api/ {
+        proxy_pass https://test-vote.hashahead.org/dev-api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # CORS头部（如果需要）
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range";
+        
+        if ($request_method = 'OPTIONS') {
+            return 204;
+        }
+    }
+    
+    # Vue Router历史模式支持
+    location / {
+        try_files $uri $uri/ /index.html;
+        
+        # 添加安全头部
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options DENY;
+        add_header X-XSS-Protection "1; mode=block";
+    }
+    
+    # 错误页面
+    error_page 404 /index.html;
+    error_page 500 502 503 504 /50x.html;
+    
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+    
+    # 禁止访问隐藏文件
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+    
+    # 禁止访问备份文件
+    location ~ ~$ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+    
+    # 日志配置
+    access_log /var/log/nginx/hah-staking-access.log;
+    error_log /var/log/nginx/hah-staking-error.log;
+}
+
+# 额外的安全配置
+# 隐藏Nginx版本
+server_tokens off;
+
+# 限制请求大小
+client_max_body_size 10M;
+
+# 超时设置
+client_body_timeout 12;
+client_header_timeout 12;
+keepalive_timeout 15;
+send_timeout 10;
+
+# 限制连接数（可选）
+# limit_conn_zone $binary_remote_addr zone=conn_limit_per_ip:10m;
+# limit_req_zone $binary_remote_addr zone=req_limit_per_ip:10m rate=5r/s;
+
+# server {
+#     # 在主server块中添加
+#     limit_conn conn_limit_per_ip 20;
+#     limit_req zone=req_limit_per_ip burst=10 nodelay;
+# }

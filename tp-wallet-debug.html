@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>TP钱包调试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .debug-section {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .debug-item {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #333;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .label {
+            font-weight: bold;
+            color: #EAAE36;
+        }
+        .value {
+            color: #00FFEA;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+        .success {
+            color: #51cf66;
+        }
+        .warning {
+            color: #ffd43b;
+        }
+        button {
+            background-color: #EAAE36;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #d4941f;
+        }
+        .log-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #111;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TP钱包环境调试</h1>
+    
+    <div class="debug-section">
+        <h2>环境检测</h2>
+        <div class="debug-item">
+            <span class="label">User Agent:</span>
+            <div class="value" id="user-agent"></div>
+        </div>
+        <div class="debug-item">
+            <span class="label">是否为移动端:</span>
+            <span class="value" id="is-mobile"></span>
+        </div>
+        <div class="debug-item">
+            <span class="label">TP钱包检测:</span>
+            <span class="value" id="tp-wallet-detected"></span>
+        </div>
+        <div class="debug-item">
+            <span class="label">window.ethereum:</span>
+            <span class="value" id="window-ethereum"></span>
+        </div>
+        <div class="debug-item">
+            <span class="label">window.tpWallet:</span>
+            <span class="value" id="window-tpwallet"></span>
+        </div>
+        <div class="debug-item">
+            <span class="label">window.tokenpocket:</span>
+            <span class="value" id="window-tokenpocket"></span>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>钱包功能测试</h2>
+        <button onclick="testConnection()">测试连接</button>
+        <button onclick="testChainId()">获取链ID</button>
+        <button onclick="testAccounts()">获取账户</button>
+        <button onclick="clearLogs()">清除日志</button>
+        
+        <div class="debug-item">
+            <span class="label">当前账户:</span>
+            <span class="value" id="current-account">未连接</span>
+        </div>
+        <div class="debug-item">
+            <span class="label">当前链ID:</span>
+            <span class="value" id="current-chain">未知</span>
+        </div>
+        <div class="debug-item">
+            <span class="label">连接状态:</span>
+            <span class="value" id="connection-status">未连接</span>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>实时日志</h2>
+        <div class="log-container" id="log-container"></div>
+    </div>
+
+    <script>
+        // 日志函数
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('log-container').innerHTML = '';
+        }
+
+        // 检测函数
+        function detectTPWallet() {
+            return window.tpWallet || window.tokenpocket || 
+                   (window.ethereum && window.ethereum.isTokenPocket) ||
+                   navigator.userAgent.includes('TokenPocket');
+        }
+
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // 更新环境信息
+        function updateEnvironmentInfo() {
+            document.getElementById('user-agent').textContent = navigator.userAgent;
+            document.getElementById('is-mobile').textContent = isMobile() ? '是' : '否';
+            document.getElementById('tp-wallet-detected').textContent = detectTPWallet() ? '是' : '否';
+            document.getElementById('window-ethereum').textContent = window.ethereum ? '存在' : '不存在';
+            document.getElementById('window-tpwallet').textContent = window.tpWallet ? '存在' : '不存在';
+            document.getElementById('window-tokenpocket').textContent = window.tokenpocket ? '存在' : '不存在';
+        }
+
+        // 测试连接
+        async function testConnection() {
+            addLog('开始测试连接...', 'info');
+            
+            try {
+                const provider = window.ethereum || window.tpWallet;
+                
+                if (!provider) {
+                    addLog('错误: 未找到钱包提供者', 'error');
+                    return;
+                }
+
+                addLog('找到钱包提供者，尝试连接...', 'success');
+                
+                const accounts = await provider.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                if (accounts && accounts.length > 0) {
+                    document.getElementById('current-account').textContent = accounts[0];
+                    document.getElementById('connection-status').textContent = '已连接';
+                    addLog(`连接成功: ${accounts[0]}`, 'success');
+                } else {
+                    addLog('连接失败: 未获取到账户', 'error');
+                }
+            } catch (error) {
+                addLog(`连接错误: ${error.message}`, 'error');
+                console.error('Connection error:', error);
+            }
+        }
+
+        // 测试链ID
+        async function testChainId() {
+            addLog('开始获取链ID...', 'info');
+            
+            try {
+                const provider = window.ethereum || window.tpWallet;
+                
+                if (!provider) {
+                    addLog('错误: 未找到钱包提供者', 'error');
+                    return;
+                }
+
+                const chainId = await provider.request({
+                    method: 'eth_chainId'
+                });
+
+                document.getElementById('current-chain').textContent = `${chainId} (${parseInt(chainId, 16)})`;
+                addLog(`链ID获取成功: ${chainId} (${parseInt(chainId, 16)})`, 'success');
+            } catch (error) {
+                addLog(`获取链ID错误: ${error.message}`, 'error');
+                console.error('Chain ID error:', error);
+            }
+        }
+
+        // 测试账户
+        async function testAccounts() {
+            addLog('开始获取账户...', 'info');
+            
+            try {
+                const provider = window.ethereum || window.tpWallet;
+                
+                if (!provider) {
+                    addLog('错误: 未找到钱包提供者', 'error');
+                    return;
+                }
+
+                const accounts = await provider.request({
+                    method: 'eth_accounts'
+                });
+
+                if (accounts && accounts.length > 0) {
+                    document.getElementById('current-account').textContent = accounts[0];
+                    addLog(`账户获取成功: ${accounts[0]}`, 'success');
+                } else {
+                    addLog('未找到已连接的账户', 'warning');
+                }
+            } catch (error) {
+                addLog(`获取账户错误: ${error.message}`, 'error');
+                console.error('Accounts error:', error);
+            }
+        }
+
+        // 页面加载完成后执行
+        window.addEventListener('load', function() {
+            addLog('页面加载完成', 'info');
+            updateEnvironmentInfo();
+            
+            // 检查钱包可用性
+            let attempts = 0;
+            const maxAttempts = 20;
+            
+            function checkWallet() {
+                attempts++;
+                addLog(`检查钱包可用性 (尝试 ${attempts}/${maxAttempts})`, 'info');
+                
+                const provider = window.ethereum || window.tpWallet;
+                
+                if (provider) {
+                    addLog('钱包提供者已就绪', 'success');
+                    updateEnvironmentInfo();
+                    return;
+                }
+                
+                if (attempts < maxAttempts) {
+                    setTimeout(checkWallet, 200);
+                } else {
+                    addLog('钱包提供者检查超时', 'error');
+                }
+            }
+            
+            checkWallet();
+        });
+
+        // 全局错误处理
+        window.addEventListener('error', function(event) {
+            addLog(`全局错误: ${event.error.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            addLog(`未处理的Promise错误: ${event.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

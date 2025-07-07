@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链切换功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .chain-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔗 Hash Ahead 链切换功能测试</h1>
+    
+    <div class="test-container">
+        <h2>当前状态</h2>
+        <div id="status-display"></div>
+        <div id="chain-info" class="chain-info"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>测试操作</h2>
+        <button onclick="checkCurrentChain()">检查当前链</button>
+        <button onclick="switchToHashAhead()">切换到 Hash Ahead Mainnet</button>
+        <button onclick="addHashAheadNetwork()">添加 Hash Ahead 网络</button>
+        <button onclick="connectWallet()">连接钱包</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>测试日志</h2>
+        <div id="test-logs"></div>
+    </div>
+
+    <script>
+        // Hash Ahead 主链配置（生产环境）
+        const HASH_AHEAD_MAINNET_CONFIG = {
+            chainId: '0x2bf', // 703 in decimal
+            chainName: 'Hash Ahead Mainnet',
+            rpcUrls: ['https://rpc.hashahead.org/mrpc'],
+            nativeCurrency: {
+                name: 'HAH',
+                symbol: 'HAH',
+                decimals: 18
+            },
+            blockExplorerUrls: ['https://scan.hashahead.org/'],
+            iconUrls: ['https://testnet.hashahead.org/logo.png']
+        };
+
+        // Hash Ahead 子链配置（生产环境）
+        const HASH_AHEAD_SUBCHAIN_CONFIG = {
+            chainId: '0x2c0', // 704 in decimal
+            chainName: 'Hash Ahead ByteBloom',
+            rpcUrls: ['https://rpc.hashahead.org'],
+            nativeCurrency: {
+                name: 'HAH',
+                symbol: 'HAH',
+                decimals: 18
+            },
+            blockExplorerUrls: ['https://scan.hashahead.org/'],
+            iconUrls: ['https://testnet.hashahead.org/logo.png']
+        };
+
+        function addLog(message, type = 'info') {
+            const logsDiv = document.getElementById('test-logs');
+            const logEntry = document.createElement('div');
+            logEntry.className = `status ${type}`;
+            logEntry.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status-display');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+
+        function updateChainInfo(chainId, chainName = '未知') {
+            const chainInfoDiv = document.getElementById('chain-info');
+            chainInfoDiv.innerHTML = `
+                <strong>当前链ID:</strong> ${chainId} (${parseInt(chainId, 16)})<br>
+                <strong>链名称:</strong> ${chainName}<br>
+                <strong>目标链ID:</strong> ${HASH_AHEAD_CONFIG.chainId} (${parseInt(HASH_AHEAD_CONFIG.chainId, 16)})<br>
+                <strong>状态:</strong> ${chainId === HASH_AHEAD_CONFIG.chainId ? '✅ 正确链' : '❌ 错误链'}
+            `;
+        }
+
+        async function checkCurrentChain() {
+            try {
+                if (!window.ethereum) {
+                    updateStatus('❌ 未检测到 MetaMask', 'error');
+                    addLog('未检测到 MetaMask 或其他以太坊钱包', 'error');
+                    return;
+                }
+
+                const chainId = await window.ethereum.request({
+                    method: 'eth_chainId'
+                });
+
+                addLog(`检测到当前链ID: ${chainId} (${parseInt(chainId, 16)})`, 'info');
+                
+                if (chainId === HASH_AHEAD_MAINNET_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead Mainnet', 'success');
+                    addLog('当前已连接到正确的主链', 'success');
+                } else if (chainId === HASH_AHEAD_SUBCHAIN_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead ByteBloom', 'success');
+                    addLog('当前已连接到正确的子链', 'success');
+                } else {
+                    updateStatus('⚠️ 当前链不是 Hash Ahead 网络', 'warning');
+                    addLog('需要切换到 Hash Ahead 网络', 'warning');
+                }
+
+                updateChainInfo(chainId, getChainName(chainId));
+                
+            } catch (error) {
+                updateStatus('❌ 检查链失败', 'error');
+                addLog(`检查链失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function switchToHashAhead() {
+            try {
+                if (!window.ethereum) {
+                    addLog('未检测到 MetaMask', 'error');
+                    return;
+                }
+
+                addLog('正在尝试切换到 Hash Ahead Mainnet...', 'info');
+                updateStatus('🔄 正在切换网络...', 'info');
+
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: HASH_AHEAD_MAINNET_CONFIG.chainId }],
+                });
+
+                addLog('✅ 成功切换到 Hash Ahead Mainnet', 'success');
+                updateStatus('✅ 网络切换成功', 'success');
+                
+                // 重新检查链状态
+                setTimeout(checkCurrentChain, 1000);
+
+            } catch (error) {
+                addLog(`切换网络失败: ${error.message}`, 'error');
+                
+                if (error.code === 4902) {
+                    addLog('链未添加到钱包，尝试添加网络...', 'warning');
+                    updateStatus('⚠️ 链未添加，需要先添加网络', 'warning');
+                    setTimeout(addHashAheadNetwork, 1000);
+                } else {
+                    updateStatus('❌ 网络切换失败', 'error');
+                }
+            }
+        }
+
+        async function addHashAheadNetwork() {
+            try {
+                if (!window.ethereum) {
+                    addLog('未检测到 MetaMask', 'error');
+                    return;
+                }
+
+                addLog('正在尝试添加 Hash Ahead Mainnet 到钱包...', 'info');
+                updateStatus('🔄 正在添加网络...', 'info');
+
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [HASH_AHEAD_MAINNET_CONFIG],
+                });
+
+                addLog('✅ 成功添加 Hash Ahead Mainnet 到钱包', 'success');
+                updateStatus('✅ 网络添加成功', 'success');
+                
+                // 添加成功后尝试切换
+                setTimeout(switchToHashAhead, 1000);
+
+            } catch (error) {
+                addLog(`添加网络失败: ${error.message}`, 'error');
+                updateStatus('❌ 网络添加失败', 'error');
+            }
+        }
+
+        async function connectWallet() {
+            try {
+                if (!window.ethereum) {
+                    addLog('未检测到 MetaMask', 'error');
+                    return;
+                }
+
+                addLog('正在连接钱包...', 'info');
+                updateStatus('🔄 正在连接钱包...', 'info');
+
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                addLog(`✅ 钱包连接成功，地址: ${accounts[0]}`, 'success');
+                updateStatus('✅ 钱包连接成功', 'success');
+                
+                // 连接成功后检查链
+                setTimeout(checkCurrentChain, 1000);
+
+            } catch (error) {
+                addLog(`连接钱包失败: ${error.message}`, 'error');
+                updateStatus('❌ 钱包连接失败', 'error');
+            }
+        }
+
+        function getChainName(chainId) {
+            const chainNames = {
+                '0x1': 'Ethereum Mainnet',
+                '0x3': 'Ropsten Testnet',
+                '0x4': 'Rinkeby Testnet',
+                '0x5': 'Goerli Testnet',
+                '0x38': 'BSC Mainnet',
+                '0x61': 'BSC Testnet',
+                '0x89': 'Polygon Mainnet',
+                '0x13881': 'Polygon Mumbai',
+                '0x2bf': 'Hash Ahead Mainnet',
+                '0x2c0': 'Hash Ahead ByteBloom',
+                '0x11623': 'Hash Ahead Testnet'
+            };
+            return chainNames[chainId] || '未知网络';
+        }
+
+        // 监听链变化
+        if (window.ethereum) {
+            window.ethereum.on('chainChanged', (chainId) => {
+                addLog(`链已切换: ${chainId} (${parseInt(chainId, 16)})`, 'info');
+                updateChainInfo(chainId, getChainName(chainId));
+                
+                if (chainId === HASH_AHEAD_MAINNET_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead Mainnet', 'success');
+                    addLog('✅ 成功切换到主链', 'success');
+                } else if (chainId === HASH_AHEAD_SUBCHAIN_CONFIG.chainId) {
+                    updateStatus('✅ 已连接到 Hash Ahead ByteBloom', 'success');
+                    addLog('✅ 成功切换到子链', 'success');
+                } else {
+                    updateStatus('⚠️ 当前链不是 Hash Ahead 网络', 'warning');
+                }
+            });
+
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length > 0) {
+                    addLog(`账户已切换: ${accounts[0]}`, 'info');
+                } else {
+                    addLog('钱包已断开连接', 'warning');
+                    updateStatus('⚠️ 钱包已断开连接', 'warning');
+                }
+            });
+        }
+
+        // 页面加载时自动检查
+        window.addEventListener('load', () => {
+            addLog('页面加载完成，开始检查钱包状态...', 'info');
+            
+            if (window.ethereum) {
+                addLog('✅ 检测到以太坊钱包', 'success');
+                checkCurrentChain();
+            } else {
+                updateStatus('❌ 未检测到 MetaMask', 'error');
+                addLog('请安装 MetaMask 或在 MetaMask 浏览器中打开此页面', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

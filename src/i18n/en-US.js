@@ -111,6 +111,23 @@ const en = {
         checkNetwork: 'Check your network',
         checkMessage: 'Currently this page is only supported in HAH,If switching networks fails, switch networks manually',
         confirmButtonText: 'Switch networks'
+,
+
+        // New chain switching related prompts
+        wrongNetwork: 'Wrong Network',
+        wrongNetworkMessage: 'You are currently connected to the wrong network. Please switch to Hash Ahead Mainnet to continue.',
+        switchNetwork: 'Switch Network',
+        addNetwork: 'Add Network',
+        switchNetworkFailed: 'Failed to switch network',
+        addNetworkFailed: 'Failed to add network',
+        networkNotAdded: 'Network Not Added',
+        networkNotAddedMessage: 'Hash Ahead Mainnet is not added to your wallet. Would you like to add this network?',
+        switchingNetwork: 'Switching network...',
+        addingNetwork: 'Adding network...',
+        networkSwitched: 'Network switched successfully',
+        networkAdded: 'Network added successfully',
+        cancel: 'Cancel',
+        retry: 'Retry'
     },
     footBar: {
         title: 'Powered by Hash Ahead',
@@ -145,6 +162,8 @@ const en = {
         confirmBtn: 'Confirm',
         confirmChangeChainOne: 'Switch to',
         confirmChangeChainTwo: 'Exit HAH',
+        switchToTargetChain: 'Switch to {targetChain} to continue?',
+        addTargetChain: '{targetChain} is not added to your wallet. Would you like to add this network?',
         success: 'Success!',
         from: 'From ',
         to: 'To ',

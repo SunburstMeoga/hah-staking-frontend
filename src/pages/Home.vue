@@ -25,7 +25,7 @@ import VotedNodeCard from '@/components/VotedNodeCard'
 
 import HLoading from '@/components/HLoading'
 
-import { nodeList, nodeDetails, delegateList, delegateDetails } from '@/request/api'
+import { delegateList, delegateDetails } from '@/request/api'
 import { amountFormat } from '@/utils/format'
 import { Toast } from 'vant'
 export default {
@@ -50,9 +50,17 @@ export default {
         // console.log('init ........')
         // console.log('登录状态', localStorage.getItem('connectStatus'))
         // this.getNodeList()
-        setTimeout(() => {
+
+        // 检查MetaMask是否可用，如果不可用则立即加载数据
+        if (!window.ethereum) {
+            console.warn('MetaMask not detected, loading data immediately')
             this.getDelegateList()
-        }, 3000);
+        } else {
+            // 如果MetaMask可用，等待一段时间确保完全初始化
+            setTimeout(() => {
+                this.getDelegateList()
+            }, 3000);
+        }
     },
     computed: {
         //总投票量
@@ -112,26 +120,42 @@ export default {
                     item.showMore = false
                     item.rank = index + 1
                     //当前用户在该节点的投票信息
-                    let details = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": window.ethereum.selectedAddress }, "id": 83 })
-                    details.data.result.map((_item, _index) => {
-                        if (_item.delegateaddress == item.address) {
-                            item.details = details.data.result
+                    try {
+                        // 安全地获取用户地址
+                        let userAddress = null
+                        if (window.ethereum && window.ethereum.selectedAddress) {
+                            userAddress = window.ethereum.selectedAddress
+                        } else if (this.$store.state.walletInfo && this.$store.state.walletInfo.address) {
+                            userAddress = this.$store.state.walletInfo.address
                         }
-                    })
-                    console.log(details)
-                    let counts = { 0: 0, 1: 0, 2: 0 };
-                    details.data.result.forEach(vote => { //统计 进行中，已贖回，停止復投中的数据
-                        if (counts.hasOwnProperty(vote.status)) {
-                            counts[vote.status]++;
+
+                        if (userAddress) {
+                            let details = await delegateDetails({ "jsonrpc": "2.0", "method": "listpledgevotes", "params": { "owneraddress": userAddress }, "id": 83 })
+                            details.data.result.map((_item, _index) => {
+                                if (_item.delegateaddress == item.address) {
+                                    item.details = details.data.result
+                                }
+                            })
+                            console.log(details)
+                            let counts = { 0: 0, 1: 0, 2: 0 };
+                            details.data.result.forEach(vote => { //统计 进行中，已贖回，停止復投中的数据
+                                if (counts.hasOwnProperty(vote.status)) {
+                                    counts[vote.status]++;
+                                }
+                            });
+                            console.log(details)
+                            this.counts = counts
+                        } else {
+                            console.warn('User address not available, skipping vote details fetch')
                         }
-                    });
-                    console.log(details)
-                    this.counts = counts
+                    } catch (error) {
+                        console.error('Error fetching delegate details:', error)
+                    }
                 }))
                 // this.totalVotes = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.votes, 10), 0);
                 // this.totalIncome = this.nodeDataList.reduce((sum, item) => sum + parseInt(item.reward, 10), 0);
                 console.log('节点列表', this.nodeDataList)
-                this.nodeDataList.map((item, index) => {
+                this.nodeDataList.map((item) => {
                     if (item.details && item.details.length > 0) {
                         item.votedList = item.details.filter(_item => _item.delegateaddress === item.address)
                         item.nodeReward = item.votedList.reduce((sum, detail) => {

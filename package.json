@@ -7,7 +7,13 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build:https": "node build-https.js",
+    "build:prod": "npm run build && npm run build:https",
+    "fix:mixed-content": "node fix-mixed-content.js",
+    "fix:mobile": "node fix-mobile-warnings.js",
+    "fix:all": "npm run fix:mixed-content && npm run fix:mobile",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@vant/touch-emulator": "^1.4.0",
