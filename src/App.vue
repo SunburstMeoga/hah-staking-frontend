@@ -30,30 +30,15 @@
     </van-popup>
 
     <!-- 链切换弹窗 -->
-    <chain-popup
-      :show.sync="showChainSwitchPopup"
-      :message="$t('newWord.switchToTargetChain')"
-      :target-chain="Config.chainName"
-      :cancel-text="$t('newWord.cancelBtn')"
-      :confirm-text="$t('dialog.switchNetwork')"
-      :loading="chainSwitchLoading"
-      @confirm="handleSwitchNetwork"
-      @cancel="handleCancelSwitchNetwork"
-      @close="handleCancelSwitchNetwork"
-    />
+    <chain-popup :show.sync="showChainSwitchPopup" :message="$t('newWord.switchToTargetChain')"
+      :target-chain="Config.chainName" :cancel-text="$t('newWord.cancelBtn')" :confirm-text="$t('dialog.switchNetwork')"
+      :loading="chainSwitchLoading" @confirm="handleSwitchNetwork" @cancel="handleCancelSwitchNetwork"
+      @close="handleCancelSwitchNetwork" />
 
     <!-- 链添加弹窗 -->
-    <chain-popup
-      :show.sync="showChainAddPopup"
-      :message="$t('newWord.addTargetChain')"
-      :target-chain="Config.chainName"
-      :cancel-text="$t('newWord.cancelBtn')"
-      :confirm-text="$t('dialog.addNetwork')"
-      :loading="chainAddLoading"
-      @confirm="handleAddNetwork"
-      @cancel="handleCancelAddNetwork"
-      @close="handleCancelAddNetwork"
-    />
+    <chain-popup :show.sync="showChainAddPopup" :message="$t('newWord.addTargetChain')" :target-chain="Config.chainName"
+      :cancel-text="$t('newWord.cancelBtn')" :confirm-text="$t('dialog.addNetwork')" :loading="chainAddLoading"
+      @confirm="handleAddNetwork" @cancel="handleCancelAddNetwork" @close="handleCancelAddNetwork" />
   </div>
 </template>
 
@@ -284,7 +269,8 @@ export default {
             console.log('链已切换，当前链id:', chainChanged)
             this.$store.commit('getChainId', chainChanged)
 
-            if (chainChanged !== this.Config.chainId) {
+            // 忽略大小写比较链ID
+            if (chainChanged.toLowerCase() !== this.Config.chainId.toLowerCase()) {
               console.log(`Network changed to wrong chain: ${chainChanged}`)
               this.showNetworkSwitchDialog()
             } else {
@@ -322,8 +308,8 @@ export default {
         console.log('当前链id', chainId);
         this.$store.commit('getChainId', chainId);
 
-        // 检查是否为目标链
-        if (chainId !== this.Config.chainId) {
+        // 检查是否为目标链（忽略大小写）
+        if (chainId.toLowerCase() !== this.Config.chainId.toLowerCase()) {
           console.log(`Wrong network detected. Current: ${chainId}, Expected: ${this.Config.chainId}`);
           this.showNetworkSwitchDialog();
         } else {

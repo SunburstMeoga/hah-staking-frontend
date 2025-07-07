@@ -289,7 +289,8 @@ export default {
                     process.env.VUE_APP_MAINNET_CHAIN_NAME :
                     process.env.VUE_APP_SUBCHAIN_CHAIN_NAME;
 
-                if (currentChainId !== expectedChainId) {
+                // 忽略大小写比较链ID
+                if (currentChainId.toLowerCase() !== expectedChainId.toLowerCase()) {
                     console.log(`Wrong chain detected. Current: ${currentChainId}, Expected: ${expectedChainId}`);
 
                     // 显示切换链的提示
